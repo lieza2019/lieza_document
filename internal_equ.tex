@@ -1,0 +1,1176 @@
+\pagebreak
+
+\begin{Definition}
+  {項形式変換(TERM TRANSDUCER)} \label{term_tranceducer}
+  項形式変換$\mathcal{F}: t \rightarrow T$を以下のように定義する.
+  \begin{displaymath}
+    \begin{array}{rll}
+      \mathcal{F}(t_0) &\stackrel{\mathrm{def}}{:=} &t_0\
+       \text{\it s.t.}\ (t_0, \mathcal{R}_0) \in \Gamma_{gnd}  \\
+       
+      \mathcal{F}(t_1) &\stackrel{\mathrm{def}}{:=} &t_1\
+       \text{\it s.t.}\ (t_1, \mathcal{R}_1) \in \Gamma_{def}  \\
+      
+      \mathcal{F}(\circ) &\stackrel{\mathrm{def}}{:=}
+      & \epsilon^{\mathpzc{id}(\circ)}  \\
+      
+      \mathcal{F}(t_1 \wedge t_2) &\stackrel{\mathrm{def}}{:=}
+      & {\bigl(\mathcal{F}(t_1) \wedge \mathcal{F}(t_2) \bigr)}^{
+         \mathpzc{id}(t_1 \wedge t_2)}  \\
+      
+      \mathcal{F}(t_1 \vee t_2) &\stackrel{\mathrm{def}}{:=}
+      & {\bigl(\mathcal{F}(t_1) \vee \mathcal{F}(t_2) \bigr)}^{
+         \mathpzc{id}(t_1 \vee t_2)}  \\
+      
+      \mathcal{F}\bigl(\{t_1 \ldots t_n\} \bigr) &\stackrel{\mathrm{def}}{:=}
+      & \left\{ \begin{array}{ll}
+         \bigl(\epsilon^{\mathpzc{id}(\{\})} \wedge \bot \bigr)^{
+          \mathpzc{id}(\{\})}
+           & \text{\it if}\ n \!=\! 0  \\
+         {\bigl(\mathcal{F}(t_1) \wedge \bot \bigr)}^{\mathpzc{id}(\{t_1\})}
+           & \text{\it if}\ n \!=\! 1  \\
+         {\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl({
+          \{t_2 \ldots t_n\}}^i \bigr) \Bigr)}^i\;\; \text{\it where}\
+           i = \mathpzc{id}\bigl(\{t_1 \cdots t_n\} \bigr)
+            & \text{\it if}\ n \!\ge\! 2
+        \end{array} \right. \\
+      
+      \mathcal{F}\bigl([t_1 \ldots t_n] \bigr) &\stackrel{\mathrm{def}}{:=}
+      & \left\{ \begin{array}{ll}
+        {\bigl(\bot \wedge \mathcal{F}(t_1) \bigr)}^{\mathpzc{id}([t_1])}
+         & \text{\it if}\ n \!=\! 1  \\
+        {\Bigl(\mathcal{F}\bigl({[t_2 \ldots t_n]}^i \bigr) \wedge
+         \mathcal{F}(t_1) \Bigr)}^i\;\; \text{\it where}\
+          i = \mathpzc{id}\bigl([t_1 \cdots t_n] \bigr)
+           & \text{\it if}\ n \!\ge\! 2
+       \end{array} \right.  \\
+      
+      \mathcal{F}\bigl(\langle t_1 \ldots t_n \rangle \bigr)
+      &\stackrel{\mathrm{def}}{:=}
+      & \left\{ \begin{array}{ll}
+         {\bigl(\bot \vee \mathcal{F}(t_1) \bigr)}^{\mathpzc{id}(
+           \langle t_1 \rangle)}
+            & \text{\it if}\ n \!=\! 1  \\
+         {\Bigl(\mathcal{F}\bigl({\langle t_2 \ldots t_n \rangle}^i
+          \bigr) \vee \mathcal{F}(t_1) \Bigr)}^i\;\;
+           \text{\it where}\ i = \mathpzc{id}\bigl(
+            \langle t_1 \cdots t_n \rangle \bigr)
+             & \text{\it if}\ n \!\ge\! 2
+        \end{array} \right.  \\
+      
+      \mathcal{F}({t_1}^?) &\stackrel{\mathrm{def}}{:=}
+      & \mathcal{F}(t_1)  \\
+      
+      \mathcal{F}(t^\leftarrow_1) &\stackrel{\mathrm{def}}{:=}
+      & \mathcal{F}(t_1)  \\
+      
+      \mathcal{F}(t^\rightarrow_1) &\stackrel{\mathrm{def}}{:=}
+      & \mathcal{F}(t_1)
+      
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+  
+\pagebreak
+\begin{Definition}{論理的同値性(INTUITIONISTIC EQUIVALENCE OVER
+ INTERNAL TERMS)}
+\label{equality_on_INTERNALS}
+  項$T$の論理的同値項(INTUITIONISTIC EQUIVALENTS OVER INTERNAL TERMS) $T'$を
+  以下のように定義する.
+  $T'$が$T$論理的同値項であることを$T \>\dot{\cong}\> T'$と表記する.
+  \begin{displaymath}
+    \begin{array}{c}
+
+      \begin{array}{rl}
+        \dfrac{
+          \dfrac{}{T \equiv T'}
+        }{
+          T \cong T'
+        }  &  (\text{\it Identity-inter})
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T \cong T'\
+          \text{\it s.t the last applied rule for}\ T \cong T'\
+           \text{\it isn't}\ (\text{\it Symmetry-inter})
+        }{
+          T' \cong T
+        }  &  (\text{\it Symmetry-inter})
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong T_2 \quad T_2 \cong T_3
+        }{
+          T_1 \cong T_3
+        }  &  (\text{\it Transivity-inter})
+      \end{array}  \\
+      \\
+      
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{T_1 \cong T_1' \quad T_2 \cong T_2'}{
+            T_1 \!\wedge\! T_2 \cong T_1' \!\wedge\! T_2'
+          }  &  (\text{\it Transparency-Cas-inter})
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{T_1 \cong T_1' \quad T_2 \cong T_2'}{
+              T_1 \!\vee\! T_2 \cong T_1' \!\vee\! T_2'
+            }  &  (\text{\it Transparency-Par-inter})
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong T'_1 \quad T_2 \cong T'_2 \
+        }{
+          T_1 \cong T_2\ \text{\it s.t.}\
+           T'_2 \in T_{r_1} \bowtie_\wedge \cdots \bowtie_\wedge T_{r_n} =
+            T'_1
+        }  &  (\text{\it Associativity-Cas-inter})
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong T'_1 \quad T_2 \cong T'_2 \
+        }{
+          T_1 \vee T_2 \cong T'' \ \text{\it s.t.}\
+           T'' \in T_{r_1} \bowtie_\vee \cdots \bowtie_\vee T_{r_n} =
+            T'_1 \vee T'_2
+        }  &  (\text{\it Associativity-Par-inter})
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T \cong T'
+        }{
+          T \cong T' \wedge \bot\ \text{\it s.t.}\
+           \mathpzc{id}(T' \wedge \bot) \neq \mathpzc{id}(T') 
+        }  &  \text{\it (Link-Cat0}_1\text{\it -inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong T'_1
+           \quad T_2 \cong T'_{21} \wedge \bot
+        }{
+          T_1 \wedge T_2 \cong T'_1 \wedge (T'_{21} \wedge \bot)\
+           \text{\it s.t.}\ 
+            \mathpzc{id}\bigl(T'_1 \wedge (T'_{21} \wedge \bot) \bigr)
+             = \mathpzc{id}(T'_{21} \wedge \bot)
+        }  &  \text{\it (LinkH-Cat0}_2\text{\it -inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong T'_1
+           \quad T_2 \cong T_{21} \wedge T_{22}\
+            \text{\it s.t.}\ \mathpzc{id}(T_{21} \wedge T_{22}) =
+             \mathpzc{id}(T_{22})\ \text{\it if}\;\; T_{22} \neq \bot
+        }{
+          T_1 \wedge T_2 \cong
+           T'_1 \wedge (T_{21} \wedge T_{22})\ \text{\it s.t.}\
+            \mathpzc{id}\bigl(T'_1 \wedge (T_{21} \wedge T_{22}) \bigr) =
+             \mathpzc{id}(T_{21} \wedge T_{22})
+        } 
+        &  \text{\it (LinkH-Cat0}_\infty\text{\it -inter)}
+      \end{array} \\
+      \\                 
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong T'_{11} \wedge \bot
+           \quad T_2 \cong T'_2
+        }{
+          T_1 \wedge T_2 \cong T'_{11} \wedge (T'_2 \wedge \bot)\
+           \text{\it s.t.}\ 
+            \mathpzc{id}\bigl(T'_{11} \wedge (T'_2 \wedge \bot) \bigr)
+             = \mathpzc{id}(T'_2 \wedge \bot)
+        }  &  \text{\it (LinkT-Cat0}_2\text{\it -inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong T_{11} \wedge T_{12}\ \text{\it s.t.}\
+          \mathpzc{id}(T_{11} \wedge T_{12}) = \mathpzc{id}(T_{12})\
+          \text{\it if}\;\; T_{12} \neq \bot
+          \quad T_2 \cong T'_2
+        }{
+          T_1 \wedge T_2 \cong \mathpzc{App}_{\{\}}(
+          T_{11} \wedge T_{12}, T'_2 )
+        }  &  \text{\it (LinkT-Cat0}_\infty\text{\it -inter)}
+      \end{array} \\
+      \begin{array}{l}
+        \text{\it where}  \\
+        \mathpzc{App}_{\{\}}(T_1, T_2) \,\stackrel{\mathrm{def}}{:=}\,
+         \left\{ \begin{array}{l}
+           {\bigl(T_{11} \wedge {(T_2 \wedge \bot)}^m \bigr)}^m
+            \quad \text{\it if}\;\; T_1 = T_{11} \wedge \bot\
+             \text{\it s.t.}\ m = \mathpzc{id}(T_1)  \\
+              {\bigl(T_{11} \wedge \mathpzc{App}_{\{\}}(T_{12}, T_2)
+               \bigr)}^m \begin{array}[t]{l}
+                 \text{\it if}\;\; T_1 = T_{11} \wedge T_{12},\
+                  T_{12} \neq \bot  \\
+                 \text{\it s.t.}\ \mathpzc{id}(T_1) = \mathpzc{id}(T_{12}),\
+                  m = \mathpzc{id}(T_1)
+               \end{array}  \\
+           T_1 \quad \text{\it otherwise}
+         \end{array} \right.  \\
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T \cong T'
+        }{
+          T \cong \bot \wedge T'\ \text{\it s.t.}\
+           \mathpzc{id}(\bot \wedge T') \neq \mathpzc{id}(T')
+        }  &  \text{\it (Link-Cat1}_1\text{\it -inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong T'_1
+           \quad T_2 \cong \bot \wedge T'_{21}
+        }{
+          T_1 \wedge T_2 \cong (\bot \wedge T'_{21}) \wedge T'_1\
+           \text{\it s.t.}\ 
+            \mathpzc{id}\bigl((\bot \wedge T'_{21}) \wedge T'_1  \bigr)
+             = \mathpzc{id}(\bot \wedge T'_{21})
+        }  &  \text{\it (LinkH-Cat1}_2\text{\it -inter)}
+      \end{array}  \\
+      
+    \end{array}
+  \end{displaymath}
+  
+  \begin{displaymath}
+    \begin{array}{c}
+
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong T'_1
+          \quad T_2 \cong T_{21} \wedge T_{22}\
+           \text{\it s.t.}\ \mathpzc{id}(T_{21} \wedge T_{22}) =
+            \mathpzc{id}(T_{21})\ \text{\it if}\;\; T_{21} \neq \bot
+        }{
+          T_1 \wedge T_2 \cong
+           (T_{21} \wedge T_{22}) \wedge T'_1\ \text{\it s.t.}\
+            \mathpzc{id}\bigl((T_{21} \wedge T_{22}) \wedge T'_1 \bigr) =
+             \mathpzc{id}(T_{21} \wedge T_{22})
+        } 
+        &  \text{\it (LinkH-Cat1}_\infty\text{\it -inter)}
+      \end{array}\\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong \bot \wedge T'_{11}
+           \quad T_2 \cong T'_2
+        }{
+          T_1 \wedge T_2 \cong (\bot \wedge T'_2) \wedge T'_{11}\
+          \text{\it s.t.}\ 
+          \mathpzc{id}\bigl((\bot \wedge T'_2) \wedge T'_{11}  \bigr)
+           = \mathpzc{id}(\bot \wedge T'_2)
+        }  &  \text{\it (LinkT-Cat1}_2\text{\it -inter)}
+      \end{array}  \\
+      \\
+            
+      \begin{array}{l}
+        \begin{array}{rl}
+          \dfrac{
+            T_1 \cong T_{11} \wedge T_{12}\ \text{\it s.t.}\
+             \mathpzc{id}(T_{11} \wedge T_{12}) = \mathpzc{id}(T_{11})\
+              \text{\it if}\;\; T_{11} \neq \bot
+               \quad T_2 \cong T'_2
+          }{
+            T_1 \wedge T_2 \cong \mathpzc{App}_{[\,]}(
+             T_{11} \wedge T_{12}, T'_2 )
+          }  &  \text{\it (LinkT-Cat1}_\infty\text{\it -inter)}
+        \end{array} \\
+        \text{\it where}  \\
+        \mathpzc{App}_{[\,]}(T_1, T_2) \,\stackrel{\mathrm{def}}{:=}\,
+         \left\{ \begin{array}{l}
+           {\bigl({(\bot \wedge T_2)}^m \wedge T_{11} \bigr)}^m
+            \quad \text{\it if}\ T_1 = \bot \wedge T_{11}\
+             \text{\it s.t.}\ m = \mathpzc{id}(T_1)  \\
+           {\bigl(\mathpzc{App}_{[\,]}(T_{12}, T_2) \wedge T_{11} \bigr)}^m
+            \begin{array}[t]{l}
+              \text{\it if}\ T_1 = T_{12} \wedge T_{11}\
+               T_{12} \neq \bot  \\
+              \text{\it s.t.}\ \mathpzc{id}(T_1) = \mathpzc{id}(T_{12}),\
+               m = \mathpzc{id}(T_1) 
+            \end{array}  \\
+           T_1 \quad \text{\it otherwise}
+         \end{array} \right.
+      \end{array}\\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T \cong T'\ \text{\it s.t.}\ T \neq \bot \vee T'_1
+        }{
+          T \cong \bot \vee T'\ \text{\it s.t.}\
+           \mathpzc{id}(\bot \vee T') \neq \mathpzc{id}(T')
+        }  &  \text{\it (Link-Dup}_1\text{\it -inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong T'_1
+           \quad T_2 \cong \bot \vee T'_{21}
+        }{
+          T_1 \wedge T_2 \cong (\bot \vee T'_{21}) \vee T'_1\
+           \text{\it s.t.}\ 
+            \mathpzc{id}\bigl((\bot \vee T'_{21}) \vee T'_1  \bigr)
+             = \mathpzc{id}(\bot \vee T'_{21})
+        }  &  \text{\it (LinkH-Dup}_2\text{\it -inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong T'_1
+          \quad T_2 \cong T_{21} \vee T_{22}\
+           \text{\it s.t.}\ \mathpzc{id}(T_{21} \vee T_{22}) =
+            \mathpzc{id}(T_{21})\ \text{\it if}\;\; T_{21} \neq \bot
+        }{
+          T_1 \vee T_2 \cong
+           (T_{21} \vee T_{22}) \vee T'_1\ \text{\it s.t.}\
+            \mathpzc{id}\bigl((T_{21} \vee T_{22}) \vee T'_1 \bigr) =
+             \mathpzc{id}(T_{21} \vee T_{22})
+        } 
+        &  \text{\it (LinkH-Dup}_\infty\text{\it -inter)}
+      \end{array} \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          T_1 \cong \bot \vee T'_{11}
+          \quad T_2 \cong T'_2
+        }{
+          T_1 \vee T_2 \cong (\bot \vee T'_2) \vee T'_{11}\
+          \text{\it s.t.}\ 
+          \mathpzc{id}\bigl((\bot \vee T'_2) \vee T'_{11}  \bigr)
+          = \mathpzc{id}(\bot \vee T'_2)
+        }  &  \text{\it (LinkT-Dup}_2\text{\it -inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{l}
+        \begin{array}{rl}
+          \dfrac{
+            T_1 \cong T_{11} \vee T_{12}\ \text{\it s.t.}\
+             \mathpzc{id}(T_{11} \vee T_{12}) = \mathpzc{id}(T_{11})\
+              \text{\it if}\;\; T_{11} \neq \bot
+               \quad T_2 \cong T'_2
+          }{
+            T_1 \vee T_2 \cong \mathpzc{App}_{\langle\rangle}(
+             T_{11} \vee T_{12}, T'_2 )
+          }  &  \text{\it (LinkT-Dup}_\infty\text{\it -inter)}
+        \end{array} \\
+        \text{\it where}  \\
+        \mathpzc{App}_{\langle\rangle}(T_1, T_2)
+         \,\stackrel{\mathrm{def}}{:=}\, \left\{ \begin{array}{l}
+           {\bigl({(\bot \wedge T_2)}^m \vee T_{11} \bigr)}^m
+            \quad \text{\it if}\ T_1 = \bot \vee T_{11}\
+             \text{\it s.t.}\ m = \mathpzc{id}(T_1)  \\
+              {\bigl(\mathpzc{App}_{\langle\rangle}(T_{12}, T_2) \vee T_{11}
+               \bigr)}^m
+            \begin{array}[t]{l}
+              \text{\it if}\ T_1 = T_{12} \vee T_{11}\
+               T_{12} \neq \bot  \\
+              \text{\it s.t.}\ \mathpzc{id}(T_1) = \mathpzc{id}(T_{12}),\
+               m = \mathpzc{id}(T_1) 
+            \end{array}  \\
+           T_1 \quad \text{\it otherwise}
+         \end{array} \right.
+      \end{array}  \\
+      \\
+
+      \begin{array}{rl}
+        \begin{array}{rl}
+          \dfrac{
+            \bigl(\epsilon^{\mathpzc{id}(\epsilon \wedge \bot)} \wedge
+             \bot \bigr) \wedge T \cong T'
+          }{
+            T \cong T'
+          }  &  (\text{\it RevealH-Cas-inter})
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{
+              T \wedge \bigl(\epsilon^{\mathpzc{id}(\epsilon \wedge \bot)}
+               \wedge \bot \bigr) \cong T'
+            }{
+              T \cong T'
+            }  &  (\text{\it RevealT-Cas-inter})
+          \end{array}
+      \end{array}  \\
+      \\
+
+      \begin{array}{rl}
+        \begin{array}{rl}
+          \dfrac{
+            \bigl(\epsilon^{\mathpzc{id}(\epsilon \wedge \bot)} \wedge
+            \bot \bigr) \vee T \cong T'
+          }{
+            T \cong T'
+          }  &  (\text{\it RevealH-Par-inter})
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{
+              T \vee \bigl(\epsilon^{\mathpzc{id}(\epsilon \wedge \bot)}
+               \wedge \bot \bigr) \cong T'
+            }{
+              T \cong T'
+            }  &  (\text{\it RevealT-Par-inter})
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \begin{array}{rl}
+          \dfrac{T \cong T'}{
+            \bigl(\epsilon^{\mathpzc{id}(\epsilon \wedge \bot)} \wedge
+             \bot \bigr) \wedge T \cong T'
+          }  &  (\text{\it PhonyH-Cas-inter})
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{T \cong T'}{
+              T \wedge \bigl(\epsilon^{\mathpzc{id}(\epsilon \wedge \bot)}
+               \wedge \bot \bigr) \cong T'
+            }  &  (\text{\it PhonyT-Cas-inter})
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \begin{array}{rl}
+          \dfrac{T \cong T'}{
+            \bigl(\epsilon^{\mathpzc{id}(\epsilon \wedge \bot)} \wedge
+             \bot \bigr) \vee T \cong T'
+          }  &  (\text{\it PhonyH-Par-inter})
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{T \cong T'}{
+              T \vee \bigl(\epsilon^{\mathpzc{id}(\epsilon \wedge \bot)}
+               \wedge \bot \bigr) \cong T'
+            }  &  (\text{\it PhonyT-Par-inter})
+          \end{array}
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+
+
+\begin{Lemma}{soundness of equivalence preservation}
+  \label{soundness_of_equivalence_preservation}
+  \[ t \simeq t' \,\Rightarrow\, \mathcal{F}(t) \cong \mathcal{F}(t') \]
+  \begin{Proof}
+    Proof is induction on derivation for $t \simeq t'$.
+    
+    $(\Rightarrow)$: Case (Identity): Now we can assume $t \equiv t'$, from
+    def. of (Identity). Then $\mathcal{F}(t) \equiv \mathcal{F}(t')$ from
+    def. of $\mathcal{F}$ より $\mathcal{F}(t) \cong \mathcal{F}(t')$,
+    by (Identity-inter).
+    
+    Case (Symmetry): 前提$t \simeq t'$より$t' \simeq t$, from def. of
+    (Symmetry). Then $\mathcal{F}(t') = \mathcal{F}(t)$, by I.H. よって
+    $\mathcal{F}(t) = \mathcal{F}(t')$, from (Symmetry-inter).
+    
+    Case (Transitivity): 前提$t \simeq t'$より we can assume the existences
+    of $t''$ s.t. $t \simeq t''$ and $t'' \simeq t'$,
+    from def. of (Transitivity).
+    Then, $\mathcal{F}(t) \cong \mathcal{F}(t'')$ and
+    $\mathcal{F}(t'') \cong \mathcal{F}(t')$, both are by I.H.
+    よって$\mathcal{F}(t) \cong \mathcal{F}(t')$, from (Transitivity-inter).
+    
+    Case (Transparency-Cas): 前提$t \simeq t'$より we can assume that
+    $t_1 \wedge t_2 \simeq t'_1 \wedge t'_2$ where
+    $t$ is $t_1 \wedge t_2$, and $t'$ is $t'_1 \wedge t'_2$.
+    ここで$t_1 \simeq t'_1$ and $t_2 \simeq t'_2$, from def. of
+    (Trasnsparency-Cas). よって$\mathcal{F}(t_1) \cong \mathcal{F}(t'_1)$
+    and  $\mathcal{F}(t_2) \cong \mathcal{F}(t'_2)$, both are by I.H. より
+    $\mathcal{F}(t_1) \wedge \mathcal{F}(t_2) \cong
+    \mathcal{F}(t'_1) \wedge \mathcal{F}(t'_2)$,
+    from (Transparency-Cas-inter).
+    ここで from def. of $\mathcal{F}$, $\mathcal{F}(t) =
+    \mathcal{F}(t_1 \wedge t_2) = \mathcal{F}(t_1) \wedge \mathcal{F}(t_2)$ 
+    および$\mathcal{F}(t') = \mathcal{F}(t'_1 \wedge t'_2) =
+    \mathcal{F}(t'_1) \wedge \mathcal{F}(t'_2)$.
+    ゆえに$\mathcal{F}(t) \cong \mathcal{F}(t')$.
+    
+    Case (Transparency-Par): Same way as the case of (Transparency-Cas).
+    
+    Case (Associativity-Cas): 前提$t \simeq t'$より we can assume
+    the existences of $t_1,\, t_2,\, t_3$ s.t.
+    $t \simeq t_1 \wedge (t_2 \wedge t_3)$ and
+    $t' \simeq (t_1 \wedge t_2) \wedge t_3$,
+    from def. of (Associativity-Cas).
+    Then, $\mathcal{F}(t) \cong \mathcal{F}\bigl(t_1 \wedge (t_2 \wedge t_3)
+    \bigr)$ and $\mathcal{F}(t') \cong \mathcal{F}\bigl((t_1 \wedge t_2)
+    \wedge t_3 \bigr)$, both are by I.H.
+    ここで$\mathcal{F}\bigl(t_1 \wedge (t_2 \wedge t_3) \bigr) =
+    \mathcal{F}(t_1) \wedge \mathcal{F}(t_2 \wedge t_3) =
+    \mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2) \wedge \mathcal{F}(t_3)
+    \bigr)$であり,
+    同様に$\mathcal{F}\bigl((t_1 \wedge t_2) \wedge t_3 \bigr) =
+    \mathcal{F}(t_1 \wedge t_2) \wedge \mathcal{F}(t_3) =
+    \bigl(\mathcal{F}(t_1) \wedge \mathcal{F}(t_2) \bigr) \wedge
+    \mathcal{F}(t_3)$, from def. of $\mathcal{F}$. よって
+    $\mathcal{F}(t) = \mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2)
+    \wedge \mathcal{F}(t_3) \bigr)$,
+    $\mathcal{F}(t') = \bigl(\mathcal{F}(t_1) \wedge \mathcal{F}(t_2)
+    \bigr) \wedge \mathcal{F}(t_3)$より$\mathcal{F}(t) \cong \mathcal{F}(t')$,
+    from (Associativity-Cas-inter).
+    
+    Case (Associativity-Par): Same way as the case of (Associativity-Cas).
+    
+    Case $(\text{\it Associativity-Cat0}_1)$: We can assume the fact that
+    $\mathcal{F}(t) \cong \mathcal{F}(t')$ from I,H. Then we obtain that
+    $\mathcal{F}(t) \cong \bigl(\mathcal{F}(t') \wedge \bot \bigr)$ from
+    $\text{\it (Link-Cat0}_1\text{\it -inter)}$. ここで from def. of
+    $\mathcal{F}$, $\mathcal{F}\bigl(\{t'\}\bigr) = \bigl(\mathcal{F}(t')
+    \wedge \bot \bigr)$より, $\mathcal{F}(t) \cong \mathcal{F}\bigl(
+    \{t'\} \bigr)$.
+    
+    Case $(\text{\it AssociativityH-Cat0}_\infty)$: $(n = 2)$: From I.H.
+    we can assume that
+    $\mathcal{F}(t) \cong \mathcal{F}\bigl(t_1 \wedge \{t_2\} \bigr)
+    = \mathcal{F}(t_1) \wedge \mathcal{F}\bigl(\{t_2\} \bigr) =
+    \mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2) \wedge \bot \bigr)$.
+    ここで$\mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2) \wedge \bot \bigr)
+    \cong \mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2) \wedge \bot \bigr)$
+    where $\mathpzc{id}\Bigl(\mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2)
+    \wedge \bot \bigr) \Bigr) = \mathpzc{id}\bigl(\mathcal{F}(t_2) \wedge
+    \bot \bigr)$成立 from $\text{\it (LinkH-Cat0}_2\text{\it -inter)}$,
+    since. $\mathcal{F}(t_1) \cong \mathcal{F}(t_1)$,
+    $\bigl(\mathcal{F}(t_2) \wedge \bot \bigr) \cong \bigl(\mathcal{F}(t_2)
+    \wedge \bot \bigr)$ both are from (Identityf-inter). Then we obtain that
+    $\mathcal{F}(t) \cong \mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2)
+    \wedge \bot \bigr) \equiv \mathcal{F}\bigl(\{t_1, t_2\} \bigr)$ for
+    $\mathpzc{id}\Bigl(\mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2) \wedge
+    \bot \bigr) \Bigr) = \mathpzc{id}\bigl(\mathcal{F}(t_2) \wedge \bot
+    \bigr)$, by (Transitivity-inter).
+    $(n \ge 3)$: From I.H. we find that
+    $\mathcal{F}(t) \cong \mathcal{F}\bigl(t_1 \wedge \{t_2 \cdots t_n\}
+    \bigr) = \mathcal{F}(t_1) \wedge \mathcal{F}\bigl(\{t_2 \cdots t_n \}
+    \bigr) = \mathcal{F}(t_1) \wedge \Bigl(\mathcal{F}(t_2) \wedge
+    \mathcal{F}\bigl(\{t_3 \cdots t_n\} \bigr) \Bigr)$, where
+    $\mathpzc{id}\Bigl(\mathcal{F}(t_2) \wedge \mathcal{F}\bigl(\{t_3 \cdots
+    t_n\} \bigr) \Bigr) = \mathpzc{id}\Bigl(\mathcal{F}\bigl(\{t_3 \cdots
+    t_n\} \bigr) \Bigr)$. ここで
+    $\mathcal{F}(t_1) \wedge \Bigl(\mathcal{F}(t_2) \wedge
+    \mathcal{F}\bigl(\{t_3 \cdots t_n\} \bigr) \Bigr) \cong
+    \mathcal{F}(t_1) \wedge \Bigl(\mathcal{F}(t_2) \wedge
+    \mathcal{F}\bigl(\{t_3 \cdots t_n\} \bigr) \Bigr)$ where
+    $\mathpzc{id}\biggl(\mathcal{F}(t_1) \wedge \Bigl(\mathcal{F}(t_2) \wedge
+    \mathcal{F}\bigl(\{t_3 \cdots t_n\} \bigr) \Bigr) \biggr) =
+    \mathpzc{id}\Bigl(\mathcal{F}(t_2) \wedge \mathcal{F}\bigl(\{t_3 \cdots
+    t_n\} \bigr) \Bigr)$ on r.h.s. 成立
+    from $\text{\it (LinkH-Cat0}_\infty\text{\it -inter)}$, since
+    $\mathcal{F}(t_1) \cong \mathcal{F}(t_1)$ and
+    $\Bigl(\mathcal{F}(t_2) \wedge \mathcal{F}\bigl(\{t_3 \cdots
+    t_n\} \bigr) \Bigr) \cong \Bigl(\mathcal{F}(t_2) \wedge
+    \mathcal{F}\bigl(\{t_3 \cdots t_n\} \bigr) \Bigr)$ both are from
+    (Identity-inter). Then we obtain the conclusion that
+    $\mathcal{F}(t) \cong \mathcal{F}(t_1) \wedge \Bigl(\mathcal{F}(t_2)
+    \wedge \mathcal{F}\bigl(\{t_3 \cdots t_n\} \bigr) \Bigr) \equiv
+    \mathcal{F}\bigl(\{t_1, t_2 \cdots t_n\} \bigr)$ for 
+    $\mathpzc{id}\biggl(\mathcal{F}(t_1) \wedge \Bigl(\mathcal{F}(t_2) \wedge
+    \mathcal{F}\bigl(\{t_3 \cdots t_n\} \bigr) \Bigr) \biggr) =
+    \mathpzc{id}\Bigl(\mathcal{F}(t_2) \wedge \mathcal{F}\bigl(\{t_3 \cdots
+    t_n\} \bigr) \Bigr)$, by (Transivity-inter).
+    
+    Case $(\text{\it AssociativityT-Cat0}_\infty)$: $(n = 2)$: From I.H.
+    We can assume that
+    $\mathcal{F}(t) \cong \mathcal{F}\bigl(\{t_1\} \wedge t_2 \bigr)
+    = \mathcal{F}\bigl(\{t_1\} \bigr) \wedge \mathcal{F}(t_2) =
+    \bigl(\mathcal{F}(t_1) \wedge \bot \bigr) \wedge \mathcal{F}(t_2)$.
+    ここで$\bigl(\mathcal{F}(t_1) \wedge \bot \bigr) \wedge \mathcal{F}(t_2)
+    \cong \mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2) \wedge \bot \bigr)$
+    where $\mathpzc{id}\Bigl(\mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2)
+    \wedge \bot \bigr) \Bigr) = \mathpzc{id}\bigl(\mathcal{F}(t_2) \wedge
+    \bot \bigr)$成立 from $\text{\it (LinkT-Cat0}_2\text{\it -inter)}$,
+    since $\bigl(\mathcal{F}(t_1) \wedge \bot \bigr) \cong
+    \bigl(\mathcal{F}(t_1) \wedge \bot \bigr)$ and $\mathcal{F}(t_2) \cong
+    \mathcal{F}(t_2)$ both are from (Identityf-inter). Then we obtain that
+    $\mathcal{F}(t) \cong \mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2)
+    \wedge \bot \bigr) \equiv \mathcal{F}\bigl(\{t_1, t_2\} \bigr)$ for
+    $\mathpzc{id}\Bigl(\mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2) \wedge
+    \bot \bigr) \Bigr) = \mathpzc{id}\bigl(\mathcal{F}(t_2) \wedge \bot
+    \bigr)$, by (Transitivity-inter).
+    $(n \ge 3)$: From I.H. we find that
+    $\mathcal{F}(t) \cong \mathcal{F}\bigl(\{t_1 \cdots t_n\} \wedge
+    t_{n+1} \bigr) = \mathcal{F}\bigl(\{t_1 \cdots t_n \} \bigr) \wedge
+    \mathcal{F}(t_{n+1}) = \Bigl(\mathcal{F}(t_1) \wedge
+    \mathcal{F}\bigl(\{t_2 \cdots t_n\} \bigr) \Bigr) \wedge
+    \mathcal{F}(t_{n+1})$, where
+    $\mathpzc{id}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(\{t_2 \cdots
+    t_n\} \bigr) \Bigr) = \mathpzc{id}\Bigl(\mathcal{F}\bigl(\{t_2 \cdots
+    t_n\} \bigr) \Bigr)$. ここで
+    $\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(\{t_2 \cdots
+    t_n\} \bigr) \Bigr) \wedge \mathcal{F}(t_{n+1}) \cong
+    \mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(\{t_2
+    \cdots t_n\} \bigr), \mathcal{F}(t_{n+1}) \Bigr)$成立 from
+    $\text{\it (LinkT-Cat0}_\infty\text{\it -inter)}$, since
+    $\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(\{t_2 \cdots
+    t_n\} \bigr) \Bigr) \cong \Bigl(\mathcal{F}(t_1) \wedge
+    \mathcal{F}\bigl(\{t_2 \cdots t_n\} \bigr) \Bigr)$ and
+    $\mathcal{F}(t_{n+1}) \cong \mathcal{F}(t_{n+1})$
+    both are from (Identity-inter).
+    The reason for it is as above, we obtain the fact that
+    $\mathcal{F}(t) \cong \Bigl(\mathcal{F}(t_1) \wedge
+    \mathcal{F}\bigl(\{t_2 \cdots t_n\} \bigr) \Bigr) \wedge
+    \mathcal{F}(t_{n+1}) \cong \mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1)
+    \wedge \mathcal{F}\bigl(\{t_2 \cdots t_n\} \bigr),
+    \mathcal{F}(t_{n+1}) \Bigr)$ by (Transivity-inter). ここで
+    $\mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(
+    \{t_2 \cdots t_n\} \bigr), \mathcal{F}(t_{n+1}) \Bigr) =
+    \mathcal{F}\bigl(\{t_1 \cdots t_{n+1}\} \bigr)$ where
+    $\mathpzc{id}\bigl(\{t_1 \cdots t_{n+1}\} \bigr) = \mathpzc{id}\Bigl(
+    \mathcal{F}(t_1) \wedge \mathcal{F}\bigl(\{t_2 \cdots t_n\} \bigr)
+    \Bigr)$ from
+    Claim \ref{claim_for_soundness_of_equivalence_preservation}より,
+    $\mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1) \wedge
+    \mathcal{F}\bigl(\{t_2 \cdots t_n\} \bigr), \mathcal{F}(t_{n+1}) \Bigr)
+    \equiv \mathcal{F}\bigl(\{t_1 \cdots t_{n+1}\} \bigr)$ for any of
+    $\mathpzc{id}\bigl(\{t_1 \cdots t_{n+1}\} \bigr)$, then
+    $\mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1) \wedge
+    \mathcal{F}\bigl(\{t_2 \cdots t_n\} \bigr), \mathcal{F}(t_{n+1}) \Bigr) 
+    \cong \mathcal{F}\bigl(\{t_1 \cdots t_{n+1}\} \bigr)$を得る. ゆえに
+    $\mathpzc{F}(t) \cong \mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1) \wedge
+    \mathcal{F}\bigl(\{t_2 \cdots t_n\} \bigr), \mathcal{F}(t_{n+1}) \Bigr)
+    \cong \mathcal{F}\bigl(\{t_1 \cdots t_{n+1}\} \bigr)$成立 from
+    (Transivity-inter) again.
+    
+    Case $(\text{\it Associativity-Cat1}_1)$: Same way as the case of
+    $(\text{\it Associativity-Cat0}_1)$.
+    
+    Case $(\text{\it AssociativityH-Cat1}_\infty)$: Same way as the case of
+    $(\text{\it Associativity-Cat0}_n)$.
+
+    Case $(\text{\it AssociativityT-Cat1}_\infty)$: Same way as the case of
+    $(\text{\it AssociativityT-Cat0}_n)$.
+    
+    Case $(\text{\it Associativity-Dup}_1)$: Same way as the case of
+    $(\text{\it Associativity-Cat1}_1)$.
+    
+    Case $(\text{\it AssociativityH-Dup}_\infty)$: Same way as the case of
+    $(\text{\it Associativity-Cat1}_n)$.
+
+    Case $(\text{\it AssociativityT-Dup}_\infty)$: Same way as the case of
+    $(\text{\it AssociativityT-Cat1}_n)$.
+    
+    Case (RevealH-Cas): 前提$\{\} \wedge t \simeq t'$, which comes from
+    def. of (RevealH-Cas), より$\mathcal{F}\bigl(\{\} \wedge t \bigr) \cong
+    \mathcal{F}(t')$, from I.H. ここで$\mathcal{F}\bigl(\{\} \wedge t \bigr)
+    = \Bigl(\mathcal{F}\bigl(\{\} \bigr) \wedge \mathcal{F}(t) \Bigr) =
+    \bigl((\epsilon \wedge \bot) \wedge \mathcal{F}(t) \bigr)$, from def. of
+    $\mathcal{F}$より, we find the fact that
+    $\bigl((\epsilon \wedge \bot) \wedge \mathcal{F}(t) \bigr) \cong
+    \mathcal{F}(t')$. Then we can conclude
+    $\mathcal{F}(t) \cong \mathcal{F}(t')$ from (RevealH-Cas-inter).
+    
+    Case (RevealT-Cas): 前提$t \wedge \{\} \cong t'$, which comes from
+    def. of (RevealT-Cas), より$\mathcal{F}\bigl(\{\} \wedge t \bigr) \cong
+    \mathcal{F}(t')$, from I.H. ここで$\mathcal{F}\bigl(t \wedge \{\} \bigr)
+    = \Bigl(\mathcal{F}(t) \wedge \mathcal{F}\bigl(\{\} \bigr) \Bigr) =
+    \bigl(\mathcal{F}(t) \wedge (\epsilon \wedge \bot) \bigr)$, from def. of
+    $\mathcal{F}$. より$\bigl(\mathcal{F}(t) \wedge (\epsilon \wedge \bot)
+    \bigr) \cong \mathcal{F}(t')$成立といえる. Hence we eventually obtained
+    the fact as our conclusion that $\mathcal{F}(t) \cong \mathcal{F}(t')$
+    from (RevealT-Cas-inter).
+    
+    Case (RevealH-Par): Same way as the case of (RevealH-Cas).
+    
+    Case (RevealT-Para): Same way as the case of (RevealT-Cas).
+    
+    Case (PhonyH-Cas): We mention the 前提 of $t \simeq t'$, which is the
+    prerequisite of this rule, we find that
+    $\mathcal{F}(t) \cong \mathcal{F}(t')$ by I.H. Then we can get the
+    fact that $\bigl((\epsilon \wedge \bot) \wedge \mathcal{F}(t)\bigr)
+    \cong \mathcal{F}(t')$, from (PhonyH-Cas-inter). ここで
+    $\mathcal{F}\bigl(\{\} \wedge t \bigr) = \Bigl(\mathcal{F}\bigl(\{\}
+    \bigr) \wedge \mathcal{F}(t) \Bigr) = \bigl((\epsilon \wedge \bot)
+    \wedge \mathcal{F}(t) \bigr)$ from def. of $\mathcal{F}$より
+    $\mathcal{F}\bigl(\{\} \wedge t \bigr) \cong \mathcal{F}(t')$を得る.
+    
+    Case (PhonyT-Cas): Proof is similar to the case of Case (PhonyH-Cas).
+    
+    Case (PhonyH-Par): Same way as the case of (PhonyH-Cas).
+    
+    Case (PhonyT-Par): Same way as the case of (PhonyT-Cas).
+    
+    Case (Optional-L): Accrding to the prerequisite of this rule,
+    we can find that $\mathcal{F}(t) \cong \mathcal{F}(t')$.
+    Then we can obtain that $\mathcal{F}(t^?) \cong \mathcal{F}(t')$
+    as a conclusion, since the fact of that
+    $\mathcal{F}(t^?) = \mathcal{F}(t)$ from def. of $\mathcal{F}$.
+
+    Case (Optional-R): Proof is similar to the case of (Optional-L).
+
+    Case (AltL-L): Proof is simillar to the case of (Optional-L).
+    
+    Case (AltL-R): Proof is simillar to the case of (Optional-R).
+
+    Case (AltR-L): Proof is simillar to the case of (AltL-L).
+    
+    Case (AltR-R): Proof is simillar to the case of (AltR-R).
+    $\Box$
+  \end{Proof}
+\end{Lemma}
+
+
+\begin{Claim}{}
+  \label{claim_for_soundness_of_equivalence_preservation}
+  \[ \begin{array}{l}
+       \mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(
+        \{t_2 \cdots t_n\} \bigr), \mathcal{F}(t_{n+1}) \Bigr) =
+         \mathcal{F}\bigl(\{t_1 \cdots t_{n+1} \} \bigr)\ \text{\it s.t.}\
+          n \ge 2\\
+       \quad \text{\it where} \begin{array}[t]{l}
+         \mathpzc{id}\Bigl(\mathcal{F}(t_1) \wedge \mathpzc{F}\bigl(
+          \{t_2 \cdots t_n \} \bigr) \Bigr) =
+           \mathpzc{id}\Bigl(\mathcal{F}\bigl(\{t_2 \cdots t_n \} \bigr)
+            \Bigr)\ \text{\it on l.h.s.}  \\
+         \text{\it and}\ \mathpzc{id}\bigl(\{t_1 \cdots t_{n+1} \} \bigr) =
+          \mathpzc{id}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(
+           \{t_2 \cdots t_n\} \bigr) \Bigr)\ \text{\it on r.h.s.}
+       \end{array}
+     \end{array}
+  \]
+  Proof is induction on structure of
+  $\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(\{t_2 \cdots t_n\}\bigr)
+  \Bigr)$ as the first argument of $\mathpzc{App}_{\{\}}$.
+  
+  (B.C.): From def. of $\mathpzc{App}_{\{\}}$ and $\mathcal{F}$,
+  we will see that
+  $\mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(
+  \{t_2\} \bigr), \mathcal{F}(t_3) \Bigr) =
+  \mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2)
+  \wedge \bot \bigr), \mathcal{F}(t_3) \Bigr) =
+  \Bigl(\mathcal{F}(t_1) \wedge \mathpzc{App}_{\{\}}\bigl(\mathcal{F}(t_2)
+  \wedge \bot, \mathcal{F}(t_3) \bigr) \Bigr) =
+  {\biggl(\mathcal{F}(t_1) \wedge {\Bigl(\mathcal{F}(t_2) \wedge
+  {\bigl(\mathcal{F}(t_3) \wedge \bot \bigr)}^i \Bigr)}^i \biggr)}^i$, where
+  $i = \mathpzc{id}\bigl(\mathcal{F}(t_3) \wedge \bot \bigr) =
+  \mathpzc{id}\bigl(\mathcal{F}(t_2) \wedge \bot \bigr) =
+  \mathpzc{id}\Bigl(\mathcal{F}(t_1) \wedge \bigl(\mathcal{F}(t_2) \wedge
+  \bot \bigr) \Bigr) =
+  \mathpzc{id}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(\{t_2\} \bigr)
+  \Bigr)$. 一方, we can also find the fact that
+  $\mathcal{F}\bigl(\{t_1, t_2, t_3\} \bigr) =
+  {\biggl(\mathcal{F}(t_1) \wedge {\Bigl(\mathcal{F}(t_2) \wedge
+  {\bigl(\mathcal{F}(t_3) \wedge \bot \bigr)}^j \Bigr)}^j \biggr)}^j$, where
+  we assume $j$ as $\mathpzc{id}\Bigl(\mathcal{F}\bigl(\{t_1, t_2, t_3\}
+  \bigr) \Bigr)$, from def. of $\mathcal{F}$. Then
+  $\mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(
+  \{t_2\} \bigr), \mathcal{F}(t_3) \Bigr) =
+  {\biggl(\mathcal{F}(t_1) \wedge {\Bigl(\mathcal{F}(t_2) \wedge
+  {\bigl(\mathcal{F}(t_3) \wedge \bot \bigr)}^i \Bigr)}^i \biggr)}^i =
+  \mathcal{F}\bigl(\{t_1, t_2, t_3\} \bigr)$, where we assume that
+  $\mathpzc{id}\Bigl(\mathcal{F}\bigl(\{t_1, t_2, t_3\} \bigr) \Bigr) = i =
+  \mathpzc{id}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(\{t_2\} \bigr)
+  \Bigr)$.
+  
+  (I.C.): This case corresponds to the condition of $n \ge 3$. From def. of
+  $\mathpzc{App}_{\{\}}$ and $\mathcal{F}$, we will see that
+  $\mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(
+  \{t_2 \cdots t_n\} \bigr), \mathcal{F}(t_{n+1}) \Bigr) =
+  \biggl(\mathcal{F}(t_1) \wedge \mathpzc{App}_{\{\}}\Bigl(\mathcal{F}
+  \bigl(\{t_2 \cdots t_n\} \bigr), \mathcal{F}(t_{n+1}) \Bigr) \biggr) =
+  \biggl(\mathcal{F}(t_1) \wedge \mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_2)
+  \wedge \mathcal{F}\bigl(\{t_3 \cdots t_n\} \bigr), \mathcal{F}(t_{n+1})
+  \Bigr) \biggr)$, where we should mention the fact that
+  $\mathpzc{id}\Bigl(\mathcal{F}(t_2) \wedge \mathcal{F} \bigl(
+  \{t_3 \cdots t_n\} \bigr) \Bigr) = \mathpzc{id}\Bigl(\mathcal{F} \bigl(
+  \{t_3 \cdots t_n\} \bigr) \Bigr) = \mathpzc{id}\Bigl(\mathcal{F} \bigl(
+  \{t_2 \cdots t_n\} \bigr) \Bigr)$. Then we can apply I.H. on its subterm
+  as $\mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_2) \wedge \mathcal{F}\bigl(
+  \{t_3 \cdots t_n\} \bigr), \mathcal{F}(t_{n+1}) \Bigr)$, which enable us
+  to express (r.h.s.) as below
+  $\biggl(\mathcal{F}(t_1) \wedge \mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_2)
+  \wedge \mathcal{F}\bigl(\{t_3 \cdots t_n\} \bigr), \mathcal{F}(t_{n+1})
+  \Bigr) \biggr) =
+  \Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(\{t_2 \cdots t_n\} \bigr)
+  \Bigr) = \mathcal{F}\bigl(\{t_1, t_2, \cdots t_{n+1}\} \bigr)$ s.t.
+  $\mathpzc{id}\Bigl(\mathcal{F}\bigl(\{t_1, t_2, \cdots t_{n+1}\} \bigr)
+  \Bigr) = \mathpzc{id}\Bigl(\mathcal{F}\bigl(\{t_2, \cdots t_n\} \bigr)
+  \Bigr)$ taking def. of $\mathcal{F}$ into our account. Hence we now have
+  succeeded in resulting that
+  $\mathpzc{App}_{\{\}}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(
+  \{t_2 \cdots t_n\} \bigr), \mathcal{F}(t_{n+1}) \Bigr) =
+  \mathcal{F}\bigl(\{t_1 \cdots t_{n+1}\} \bigr)$, since
+  $\mathpzc{id}\Bigl(\mathcal{F}\bigl(\{t_1 \cdots t_{n+1}\} \bigr) \Bigr) =
+  \mathpzc{id}\Bigl(\mathcal{F}(t_1) \wedge \mathcal{F}\bigl(
+  \{t_2 \cdots t_n\} \bigr) \Bigr) =
+  \mathpzc{id}\Bigl(\mathcal{F}\bigl(\{t_2 \cdots t_n\} \bigr) \Bigr)$
+  form 前提 of this case, this claim.
+  $\Box$
+\end{Claim}
+
+
+\pagebreak
+\begin{Definition}{項形式逆変換(TERM DISTRANSDUCER)}
+\label{term_distranceducer}
+  項形式逆変換$\mathcal{F}^{-1}: T \rightarrow t$を以下のように定義する.
+  \begin{displaymath}
+    \begin{array}{rll}
+      \mathcal{F}^{-1}(T) &\stackrel{\mathrm{def}}{:=} &T \quad
+       \text{\it if}\;\; T \cong t_0\ \text{\it s.t.}\ (t_0, \mathcal{R}_0)
+        \!\in\! \Gamma_{gnd}  \\
+      
+      \mathcal{F}^{-1}(T) &\stackrel{\mathrm{def}}{:=} &T \quad
+       \text{\it if}\;\; T \cong t_1\ \text{\it s.t.}\ (t_1, \mathcal{R}_1)
+        \!\in\! \Gamma_{def}  \\
+      
+      \mathcal{F}^{-1}(T \wedge \bot)  &\stackrel{\mathrm{def}}{:=}
+      &\left\{\begin{array}[c]{ll}
+        {\{\}}^{\mathpzc{id}(\epsilon)}
+        & \text{\it if}\;\; \mathpzc{id}(\epsilon \wedge \bot) =
+         \mathpzc{id}(\epsilon)  \\
+        {\bigl\{\mathcal{F}^{-1}(T) \bigr\}}^{\mathpzc{id}(T \wedge
+         \bot)}
+        & \text{\it otherwise}
+      \end{array} \right.  \\
+      
+      \mathcal{F}^{-1}(\bot \wedge T)  &\stackrel{\mathrm{def}}{:=}
+      & {\bigl[\mathcal{F}^{-1}(T) \bigr]}^{\mathpzc{id}(\bot \wedge T)} \\
+      
+      \mathcal{F}^{-1}(T_1 \wedge T_2) &\stackrel{\mathrm{def}}{:=}
+      &\left\{\begin{array}[c]{ll}
+         {\bigl\{\mathcal{F}^{-1}(T_1), t_2 \cdots t_n \bigr\}}^j
+          & \!\!\! \begin{array}[t]{l}
+            \text{\it if}\;\; \mathpzc{id}(T_1 \wedge T_2) =
+             \mathpzc{id}(T_2) \\
+            \text{\it where}\ {\{t_2 \cdots t_n \}}^j =
+             \mathcal{F}^{-1}(T_2)
+          \end{array}  \\
+         {\bigl[\mathcal{F}^{-1}(T_2), t_2 \cdots t_n \bigr]}^j\
+          & \!\!\! \begin{array}[t]{l}
+            \text{\it if}\;\; \mathpzc{id}(T_1 \wedge T_2) =
+             \mathpzc{id}(T_1) \\
+            \text{\it where}\ {[t_2 \cdots t_n ]}^j =
+             \mathcal{F}^{-1}(T_1)  \\ 
+          \end{array}  \\
+         {\bigl(\mathcal{F}^{-1}(T_1) \wedge
+          \mathcal{F}^{-1}(T_2) \bigr)}^{\mathpzc{id}(T_1 \wedge T_2)}
+         & \text{\it otherwise, e.g.}\; \mathpzc{id}(T_1 \wedge T_2) \neq
+             \mathpzc{id}(T_1)\ \text{\it nor}\ \mathpzc{id}(T_2)
+       \end{array} \right.  \\
+      
+      \mathcal{F}^{-1}(\bot \vee T)  &\stackrel{\mathrm{def}}{:=}
+      & {\bigl\langle \mathcal{F}^{-1}(T) \bigr\rangle}^{\mathpzc{id}(
+         \bot \vee T)} \\
+      
+      \mathcal{F}^{-1}(T_1 \vee T_2) &\stackrel{\mathrm{def}}{:=}
+      &\left\{\begin{array}[c]{ll}
+         {\bigl\langle \mathcal{F}^{-1}(T_2), t_2 \cdots
+          t_n \bigr\rangle}^j\
+         & \!\!\! \begin{array}[t]{l}
+            \text{\it if}\;\; \mathpzc{id}(T_1 \wedge T_2) =
+             \mathpzc{id}(T_1) \\
+            \text{\it where}\ {\langle t_2 \cdots t_n \rangle}^j =
+             \mathcal{F}^{-1}(T_1)  \\ 
+          \end{array}  \\
+         {\bigl(\mathcal{F}^{-1}(T_1) \vee
+          \mathcal{F}^{-1}(T_2) \bigr)}^{\mathpzc{id}(T_1 \vee T_2)}
+         & \text{\it otherwise, e.g.}\; \mathpzc{id}(T_1 \vee T_2) \neq
+            \mathpzc{id}(T_1) 
+       \end{array} \right.  \\
+      
+      \mathcal{F}^{-1}(\epsilon)
+      & \stackrel{\mathrm{def}}{:=}  &  \circ^{\mathpzc{id}(\epsilon)}
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+
+
+\begin{Lemma}{reflexivity over transduction}
+\label{reflexivity_over_transduction}
+  \[ \mathcal{F}^{-1}\bigl(\mathcal{F}(t) \bigr) \simeq t
+  \]
+  \begin{Proof}
+    Proof is induction on structure of t.
+    
+    Case $t_0$ s.t. $(t_0, \mathcal{R}_0) \in \Gamma_{gnd}$:
+    Trivially O.K. from def. of $\mathcal{F}$ and $\mathcal{F}^{-1}$.
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_0) \bigr) =
+    \mathcal{F}^{-1}(t_0) = t_0$. Then we have
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_0) \bigr) \simeq t_0$ by
+    (Identity).
+    
+    Case $t_1$ s.t. $(t_1, \mathcal{R}_1) \in \Gamma_{def}$: Similar to the
+    case of $t_0$ s.t. $(t_0, \mathcal{R}_0) \in \Gamma_{gnd}$.
+    
+    Case $t_1 \wedge t_2$: By I.H. we have
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \simeq t_1$ and
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \simeq t_2$.
+    According to them above, we will see the equivalence of that
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \wedge
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \simeq t_1 \wedge t_2$
+    s.t. $\mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr)
+    \wedge \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr) \not\in
+    \biggl\{\mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr)
+    \Bigr), \mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr)
+    \Bigr) \biggr\}$ from (Transparency-Cas). 一方 from def of
+    $\mathcal{F}$, $\mathcal{F}(t_1 \wedge t_2) = \bigl(\mathcal{F}(t_1)
+    \wedge \mathcal{F}(t_2) \bigr)$, where
+    $\mathpzc{id}\bigl(\mathcal{F}(t_1) \wedge \mathcal{F}(t_2) \bigr) =
+    \mathpzc{id}(t_1 \wedge t_2)$ which satisfies that
+    $\mathpzc{id}(t_1 \wedge t_2) \not\in \Bigl\{\mathpzc{id}\bigl(
+    \mathcal{F}(t_1) \bigr), \mathpzc{id}\bigl(\mathcal{F}(t_2) \bigr)
+    \Bigr\}$, then we can find the fact that
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1 \wedge t_2) \bigr) =
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \wedge \mathcal{F}(t_2) \bigr) =
+    \Bigl(\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \wedge
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr)$, where
+    $\mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \wedge
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr) =
+    \mathpzc{id}\bigl(\mathcal{F}(t_1) \wedge \mathcal{F}(t_2) \bigr) =
+    \mathpzc{id}(t_1 \wedge t_2) \not\in \biggl\{\mathpzc{id}\Bigl(
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \Bigr),
+    \mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr)
+    \biggr\}$, since both $\mathpzc{id}\bigl(\mathcal{F}(t_1) \bigr) =
+    \mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \Bigr)$
+    and $\mathpzc{id}\bigl(\mathcal{F}(t_2) \bigr) = \mathpzc{id}\Bigl(
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr)$ are 成立,
+    for which we can make proof based on simple structual induction accrding
+    to def. of $\mathcal{F}^{-1}$. Hence we can eventually determine that
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1 \wedge t_2) \bigr) \simeq
+    t_1 \wedge t_2$.
+    
+    Case $t_1 \vee t_2$: Similar to the case of $t_1 \wedge t_2$.
+    
+    Case $\{\}$: We can easily reveal the equivalence of that
+    $\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl(\{\} \bigr) \Bigr) =
+    \mathpzc{F}^{-1}\Bigl(\bigl(\epsilon^{\mathpzc{id}(\{\})} \wedge \bot
+    \bigr)^{\mathpzc{id}(\{\})} \Bigr) =
+    {\{\}}^{\mathpzc{id}(\{\})}$ from def. of
+    $\mathcal{F}$ and $\mathcal{F}^{-1}$. Then we found that
+    $\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl(\{\} \bigr) \Bigr) \simeq \{\}$
+    from (Identity).
+    
+    Case $\{t_1, t_2\}$:
+    In this case, we have a fact that
+    $\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl(\{t_1, t_2\} \bigr) \Bigr) =
+    {\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr\}}^j$ where
+    $j = \mathpzc{id}\bigl(\{t_1, t_2\} \bigr)$, since
+    $\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl(\{t_1, t_2\} \bigr) \Bigr) =
+    \mathcal{F}^{-1}\biggl({\Bigl(\mathpzc{F}(t_1) \wedge \mathpzc{F}\bigl(
+    {\{t_2\}}^j \bigr) \Bigr)}^j \biggr) =
+    \mathcal{F}^{-1}\biggl(\Bigl(\mathcal{F}(t_1) \wedge $
+    ${{\bigl(\mathcal{F}(t_2) \wedge \bot \bigr)}^j \Bigr)}^j \biggr) =
+    {\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr\}}^j$ for
+    $\mathcal{F}^{-1}\Bigl({\bigl(\mathcal{F}(t_2) \wedge \bot \bigr)}^j
+    \Bigr) = {\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr)
+    \Bigr\}}^j$. Now taking it into account, we can derive
+    $\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl(\{t_1, t_2\} \bigr) \Bigr) =
+    {\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr\}}^j \simeq       
+    {\{t_1, t_2 \}}^j$ as below.
+    From the fact that $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \simeq
+    t_2$, which we obtain by I.H. we have
+    $\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr\} \simeq
+    \{t_2\}$ by applying (Associativity-$\text{\it Cat0}_1$) \& (Symmetry)
+    on its r.h.s and l.h.s. for each, according to the same sceme of above,
+    we eventually found that
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \wedge \Bigl\{
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr\} \simeq
+    t_1 \wedge \{t_2\}$ holds from (Transparency-Cas), where
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \simeq t_1$ also
+    comes from I.H. Then we may get
+    $\{t_1, t_2 \} \simeq \mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr)
+    \wedge \Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr\}$
+    by (AssociativityH-$\text{\it Cat0}_\infty$) \& (Symmetry).
+    Consequenty, we can see the equivalency on r.h.s. as
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \wedge \Bigl\{
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr\} \simeq
+    \Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr\}$ where
+    $\mathpzc{id}\biggl(\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr\} \biggr) \not\in
+    \biggl\{\mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr)
+    \Bigr),$\\
+    $\mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr)
+    \biggr\}$, then we obtain
+    $\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr\}
+    \simeq \{t_1, t_2\}$ by using (Transivity) and (Symmetry). Here, we
+    mention the fact of above as
+    $\mathpzc{id}\biggl(\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl(\{t_1, t_2\}
+    \bigr) \Bigr) \biggr) = \mathpzc{id}\bigl(\{t_1, t_2\} \bigr) \not\in
+    \biggl\{\mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr)
+    \Bigr), \mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr)
+    \Bigr) \biggr\}$,\\ and can conclude as that
+    $\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl(\{t_1, t_2\} \bigr) \Bigr) =
+    \Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \Bigr\} \simeq
+    \{t_1, t_2\}$.
+    
+    Case $\{t_1 \cdots t_n\}$, $n \ge 3$:
+    In this case, we first mention the fact that
+    $\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl(\{t_1 \cdots t_n\} \bigr) \Bigr)
+    = \Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr)$
+    ${\cdots \mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\}}^j$ where
+    $j = \mathpzc{id}\bigl(\{t_1 \cdots t_n\} \bigr) \not\in
+    \bigcup_{i=1}^n \biggl\{\mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(
+    \mathcal{F}(t_i) \bigr) \Bigr) \biggr\}$, for which we can make
+    the proof by simple induction on structure of the term of
+    $\{t_1 \cdots t_n\}$ as follow,
+    $\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl(\{t_1 \cdots t_n\} \bigr) \Bigr)
+    = \mathcal{F}^{-1}\biggl({\Bigl(\mathcal{F}(t_1) \wedge
+    \mathcal{F}\bigl({\{t_2 \cdots t_n\}}^j \bigr) \Bigr)}^j \biggr) =
+    \Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \cdots$
+    ${\mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\}}^j$ because of
+    $\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl({\{t_1 \cdots t_n \}}^j \bigr)
+    \Bigr) = {\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_2) \bigr) \cdots
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\}}^j$.
+    Next, we proceed to show that
+    $\Bigr\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_{n-1}) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\} \simeq
+    \{t_{n-1}, t_n\}$. Beginnig from the equivalency of
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \simeq t_n$, which
+    comes from I.H. we can derive
+    $\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\} \simeq
+    \{t_n\}$ by applying (Associativity-$\text{\it Cat0}_1$) on both l.h.s.
+    and r.h.s. with (Symmetry) if needed. Then, with the fact that
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_{n-1}) \bigr) \simeq t_{n-1}$
+    from I.H. we have a construction of
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_{n-1}) \bigr) \wedge \Bigl\{
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\} \simeq
+    \{t_{n-1}, t_n\}$ by (Transparency-Cas) \&
+    (AssociativityH-$\text{\it Cat0}_\infty$), and we can find that
+    $\Bigr\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_{n-1}) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\} \simeq
+    \{t_{n-1}, t_n\}$ where
+    $\mathpzc{id}\biggl(\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_{n-1})
+    \bigr), \mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\} \biggr)
+    \not\in \biggl\{\mathpzc{id}\Bigl(\mathcal{F}^{-1}\bigl(
+    \mathcal{F}(t_{n-1}) \bigr) \Bigr), \mathpzc{id}\Bigl(
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr) \biggr\}$,
+    according to the similar scheme in the case of $n =2$ e.g.
+    $t = \{t_1, t_2\}$.\\
+    Consequently, we can derive the successive one as
+    $\Bigr\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_{n-2}) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_{n-1}) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\} \simeq
+    \{t_{n-2}, t_{n-1}, t_n\}$ from
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_{n-2}) \bigr) \wedge
+    {\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_{n-1}) \bigr),
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\}} \simeq
+    t_{n-2} \wedge \{t_{n-1}, t_n\}$ according to the scheme of above.
+    We continue to construct the equivalencies in this fashion as above,
+    we can eventually find that
+    $\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \cdots
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\} \simeq
+    \{t_1 \cdots t_n \}$ where
+    $\mathpzc{id}\biggl(\Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1)
+    \bigr) \cdots$\\
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\}
+    \biggr) \not\in \bigcup_{i=1}^n \biggl\{\mathpzc{id}\Bigl(
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_i) \bigr) \Bigr) \biggr\}$,
+    which the r.h.s. of
+    $\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl(\{t_1 \cdots t_n\} \bigr) \Bigr)
+    = \Bigl\{\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr)$\\
+    $\cdots \mathcal{F}^{-1}\bigl(\mathcal{F}(t_n) \bigr) \Bigr\}$
+    satisfies as mentioned above. Hence we can conclude that
+    $\mathcal{F}^{-1}\Bigl(\mathcal{F}\bigl(\{t_1 \cdots t_n\} \bigr) \Bigr)
+    \simeq \{t_1 \cdots t_n\}$ where $n \ge 3$.
+    
+    Case $[t_1 \cdots t_n]$: Similar to the case of $\{t_1 \cdots t_n\}$.
+    
+    Case $\langle t_1 \cdots t_n \rangle$:
+    Similar to the case of $[t_1 \cdots t_n]$.
+    
+    Case $\circ$:
+    This case is trivial from def. of $\mathcal{F}$ and $\mathcal{F}^{-1}$
+    as follow,
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(\circ) \bigr) =
+    \mathcal{F}^{-1}\bigl(\epsilon^{\mathpzc{id}(\circ)} \bigr) =
+    {\circ}^{\mathpzc{id}(\circ)}$, then
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(\circ) \bigr) \simeq \circ$ from
+    (Identity).
+    
+    Case ${t_1}^?$:
+    We begin from the fact of
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \simeq t_1$, which
+    comes from I.H. and the assumption that the last applied rule on
+    that isn't (Symmetry), we can derive a equivalent of
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \simeq {t_1}^?$ by
+    (Optional-R). Here we mention that
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}({t_1}^?) \bigr) =
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr)$ from def of
+    $\mathcal{F}$, then we revealed the equivalency of that
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}({t_1}^?) \bigr) =
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \simeq {t_1}^?$.
+    Otherwise, in the condition of that our latter assumption doesn't hold,
+    e.g. the last applied rule on
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \simeq t_1$ is just
+    (Symmetry), that condition implies the equivalency of
+    $t_1 \simeq \mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr)$ from def.
+    of (Symmetry). Therefore we can derive that
+    ${t_1}^? \simeq \mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr)$ by
+    applying (Optional-L) on it. Then eventually, we also obtain same
+    conclution
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}({t_1}^?) \bigr) =
+    \mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \simeq {t_1}^?$ as
+    the former case of above, since the last applied rule of
+    ${t_1}^? \simeq \mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr)$ isn't
+    (Symmetry), which enables us to obtain the equivalency of
+    $\mathcal{F}^{-1}\bigl(\mathcal{F}(t_1) \bigr) \simeq {t_1}^?$ by
+    (Symmetry).
+    
+    Case ${t_1}^\leftarrow$: Similar to the case of ${t_1}^?$.
+    
+    Case ${t_1}^\rightarrow$: Similar to the case of ${t_1}^\leftarrow$.
+    $\Box$
+  \end{Proof}
+\end{Lemma}
+
+
+\begin{Lemma}{equivalence over transduction}
+  \label{equivalence_over_transduction}
+  \[ T \cong T' \,\Rightarrow\, \mathcal{F}^{-1}(T) \simeq
+      \mathcal{F}^{-1}(T')
+  \]
+  \begin{Proof}
+    $\Box$
+  \end{Proof}
+\end{Lemma}
+
+
+\begin{Lemma}{completeness of equivalence preservation}
+  \label{soundness_of_equivalence_preservation}
+  \[ t \simeq \mathcal{F}^{-1}(T') \,\Leftarrow\, \mathcal{F}(t) \cong T'
+  \]
+  \begin{Proof}
+    From Lemma \ref{equivalence_over_transduction}, we can determine the
+    equivalency of that $\mathcal{F}^{-1}\bigl(\mathcal{F}(t) \bigr)
+    \simeq \mathcal{F}^{-1}(T')$. Here we can still make it more adiquite
+    form as $\mathcal{F}^{-1}(T') \simeq \mathcal{F}^{-1}\bigl(
+    \mathcal{F}(t) \bigr)$ using (Symmetry) if needed.
+    一方 reflexive equivalency as $\mathcal{F}^{-1}\bigl(
+    \mathcal{F}(t) \bigr) \simeq t$ also holds from Lemma
+    \ref{reflexivity_over_transduction}. Hence we can obtain the conclusion
+    that $t \simeq \mathcal{F}^{-1}(T')$ by using (Transivity) and
+    (Symmetry) respectively.
+    $\Box$
+  \end{Proof}
+\end{Lemma}

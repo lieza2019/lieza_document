@@ -1,0 +1,377 @@
+\pagebreak
+
+\begin{Definition}{内部表現項に関する型照合(内的汎照合:POLYMORPHIC
+  MATCHING ON INTERNAL TERMS)}
+  内部表現項$T$の, 型$\mathcal{R}$に対する内的汎照合を, 以下のように
+  定義する.
+  \begin{displaymath}
+    \begin{array}{c}
+      
+      \begin{array}{rl}
+        \dfrac{
+          T \cong t_0 \quad (t_0, \mathcal{R}_0) \in \Gamma_\text{\it gnd}
+        }{
+          \bigl\{(T, t_0, \mathcal{R}_0, \text{\it gnd}, \phi ) \bigr\}
+           \vdash T \blacktriangleright \mathcal{R}_0          
+        }  &  \text{\it (T-Atom0-inter)}
+      \end{array}\\
+      \\
+      \begin{array}{rl}
+        \dfrac{
+          T \cong t_1 \quad (t_1, \mathcal{R}_1) \in \Gamma_\text{\it def}
+        }{
+          \bigl\{(T, t_1, \mathcal{R}_1, \text{\it def}, \phi) \bigr\}
+           \vdash T \blacktriangleright \mathcal{R}_1
+        }  &  \text{\it (T-Atom1-inter)}
+      \end{array}  \\
+      \\
+
+      \begin{array}{rl}
+        \dfrac{
+          \begin{array}{c}
+            \Lambda_1 \vdash T_1 \blacktriangleright \mathcal{R}_1
+             \quad \Lambda_2 \vdash T_2 \blacktriangleright
+              \mathcal{R}_2 \quad
+               \mathpzc{Dom}(\Lambda_1) \cap \mathpzc{Dom}(\Lambda_2)
+                = \phi \\
+            T \cong T_1 \wedge T_2\ \text{\it where}\
+             T,\, T_1 \!\wedge\! T_2 \not\in
+              \mathpzc{Dom}(\Lambda_1 \cup \Lambda_2)
+          \end{array}
+        }{
+          \Bigl\{\bigl(T, T_1 \wedge T_2,
+           \mathcal{R}_1 \wedge \mathcal{R}_2, \wedge,
+            (\Lambda_1 \cup \Lambda_2) \bigr) \Bigr\}
+             \cup (\Lambda_1 \cup \Lambda_2) \vdash
+              T \blacktriangleright \mathcal{R}_1 \wedge
+               \mathcal{R}_2
+        }  &  (\text{\it T-Cas-inter})
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          \begin{array}{c}
+            \Lambda_1 \vdash T_1 \blacktriangleright \mathcal{R}_1
+             \quad \Lambda_2 \vdash T_2 \blacktriangleright
+              \mathcal{R}_2 \quad
+               \mathpzc{Dom}(\Lambda_1) \cap \mathpzc{Dom}(\Lambda_2)
+                = \phi  \\
+            T \cong T_1 \vee T_2\ \text{\it where}\
+             T,\, T_1 \!\vee\! T_2 \not\in
+              \mathpzc{Dom}(\Lambda_1 \cup \Lambda_2)
+          \end{array}
+        }{
+          \Bigl\{\bigl(T, T_1 \vee T_2, \mathcal{R}_1 \vee \mathcal{R}_2,
+           \vee, (\Lambda_1 \cup \Lambda_2) \bigr) \Bigr\} \cup
+            (\Lambda_1 \cup \Lambda_2) \vdash
+             T \blacktriangleright \mathcal{R}_1 \vee \mathcal{R}_2
+        }  &  (\text{\it T-Par-inter})
+      \end{array}  \\
+      \\
+            
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            T \cong \epsilon
+            \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}.
+          }{
+            \bigl\{(T, \epsilon, {\mathcal{R}_1}^*, \text{\it nil}, \phi)
+             \bigr\} \vdash T \blacktriangleright {\mathcal{R}_1}^*
+          }  &  (\text{\it nil}\,)  \\
+          \\
+          \dfrac{
+            \Lambda' \vdash T' \blacktriangleright \mathcal{R}_1 \quad
+             T \cong T'\ \text{\it where}\ T \not\in \mathpzc{Dom}(\Lambda')
+          }{
+            \bigl\{(T, T', {\mathcal{R}_1}^*, \text{\it sol}, \Lambda' )
+             \bigr\} \cup \Lambda'
+              \vdash T \blacktriangleright {\mathcal{R}_1}^*
+          }  &  (\text{\it sol}\,)  \\
+          \\
+          \dfrac{
+            \begin{array}{c}
+              \Lambda_h \vdash T_h \blacktriangleright \mathcal{R}_1 \quad
+               \Lambda_t \vdash T_t \blacktriangleright {\mathcal{R}_1}^*
+                \quad \mathpzc{Dom}(\Lambda_h) \cap
+                 \mathpzc{Dom}(\Lambda_t)= \phi  \\
+              T \cong T_h \wedge T_t\
+               \text{\it where} \!\begin{array}[t]{l}
+                 \mathpzc{id}(T_h \wedge T_t) = \mathpzc{id}(T_t) \\
+                 T,\, T_h \!\wedge\! T_t \not\in
+                  \mathpzc{Dom}(\Lambda_h \cup \Lambda_t)
+               \end{array}
+            \end{array}
+          }{
+            \Bigl\{\bigl(T, T_h \wedge T_t, {\mathcal{R}_1}^*, \infty,
+             (\Lambda_h \cup \Lambda_t) \bigr) \Bigr\} \cup
+              (\Lambda_h \cup \Lambda_t) \vdash
+               T \blacktriangleright {\mathcal{R}_1}^*
+          }  &  (\infty)
+        \end{array} \right\}  &  \text{\it (T-Cat0-inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \Lambda' \vdash T' \blacktriangleright \mathcal{R}_1 \quad
+             T \cong T'\ \text{\it where}\
+              T \not\in \mathpzc{Dom}(\Lambda')
+          }{
+            \bigl\{(T, T', {\mathcal{R}_1}^+, \text{\it sol}, \Lambda')
+             \bigr\} \cup \Lambda' \vdash
+              T \blacktriangleright {\mathcal{R}_1}^+
+          }  &  (\text{\it sol}\,)  \\
+          \\
+          \dfrac{
+            \begin{array}{c}
+              \Lambda_h \vdash T_h \blacktriangleright \mathcal{R}_1 \quad
+               \Lambda_t \vdash T_t \blacktriangleright {\mathcal{R}_1}^+
+                \quad \mathpzc{Dom}(\Lambda_h) \cap
+                 \mathpzc{Dom}(\Lambda_t) = \phi  \\
+              T \cong T_t \wedge T_h\
+               \text{\it where} \!\begin{array}[t]{l}
+                 \mathpzc{id}(T_t \wedge T_h) = \mathpzc{id}(T_t) \\
+                 T,\, T_t \!\wedge\! T_h \not\in
+                  \mathpzc{Dom}(\Lambda_h \cup \Lambda_t)
+               \end{array} 
+            \end{array}
+          }{
+            \Bigl\{\bigl(T, T_t \wedge T_h, {\mathcal{R}_1}^+, \infty,
+             (\Lambda_h \cup \Lambda_t) \bigr) \Bigr\} \cup
+              (\Lambda_h \cup \Lambda_t) \vdash
+               T \blacktriangleright {\mathcal{R}_1}^+
+          }  &  (\infty)
+        \end{array} \right\}  &  \text{\it (T-Cat1-inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \Lambda' \vdash T' \blacktriangleright \mathcal{R}_1 \quad
+             T \cong T'\ \text{\it where}\
+              T \not\in \mathpzc{Dom}(\Lambda')
+          }{
+            \bigl\{(T, T', {\mathcal{R}_1}^\downarrow, \text{\it sol},
+             \Lambda') \bigr\} \cup \Lambda' \vdash
+              T \blacktriangleright {\mathcal{R}_1}^\downarrow
+          }  &  (\text{\it sol}\,)  \\
+          \\
+          \dfrac{
+            \begin{array}{c}
+              \Lambda_h \vdash T_h \blacktriangleright \mathcal{R}_1 \quad
+               \Lambda_t \vdash T_t \blacktriangleright
+                {\mathcal{R}_1}^\downarrow \quad
+                 \mathpzc{Dom}(\Lambda_h) \cap \mathpzc{Dom}(\Lambda_t)
+                  = \phi  \\
+              T \cong T_t \vee T_h\ \text{\it where}
+               \!\begin{array}[t]{l}
+                 \mathpzc{id}(T_t \vee T_h) = \mathpzc{id}(T_t) \\
+                 T,\, T_t \!\vee\! T_h \not\in
+                  \mathpzc{Dom}(\Lambda_h \cup \Lambda_t)
+               \end{array}
+            \end{array}
+          }{
+            \Bigl\{\bigl(T, T_t \vee T_h, {\mathcal{R}_1}^\downarrow,
+             \infty, (\Lambda_h \cup \Lambda_t) \bigr) \Bigr\} \cup
+              (\Lambda_h \cup \Lambda_t) \vdash
+               T \blacktriangleright {\mathcal{R}_1}^\downarrow
+          }  &  (\infty)
+        \end{array} \right\}  &  \text{\it (T-Dup-inter)}
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+  
+  \begin{displaymath}
+    \begin{array}{c}
+      
+      \begin{array}{rl}
+        \left.\begin{array}{rl}
+          \dfrac{
+            \Lambda_1 \vdash T' \blacktriangleright \mathcal{R}_1 \quad
+             T \cong T' \ \text{\it where}\
+              T \not\in \mathpzc{Dom}(\Lambda_1)
+          }{
+            \bigl\{(T, T',\mathcal{R}_1 \wedge {\mathcal{R}_2}^*, \wedge,
+             \Lambda_1 ) \bigr\} \cup \Lambda_1 \vdash T
+              \blacktriangleright
+               \mathcal{R}_1 \wedge {\mathcal{R}_2}^*
+          }  &  (\text{\it L})  \\
+          \\
+          \dfrac{
+            \Lambda_2 \vdash T' \blacktriangleright \mathcal{R}_2 \quad
+             T \cong T' \ \text{\it where}\
+              T \not\in \mathpzc{Dom}(\Lambda_2)
+          }{
+            \bigl\{(T, T',{\mathcal{R}_1}^* \wedge \mathcal{R}_2, \wedge,
+             \Lambda_2 ) \bigr\} \cup \Lambda_2 \vdash T
+              \blacktriangleright {\mathcal{R}_1}^* \wedge
+               \mathcal{R}_2
+          }  &  (\text{\it R})
+        \end{array}\right\}  &  \text{\it (T-Phony-Cas-inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left.\begin{array}{rl}
+          \dfrac{
+            \Lambda_1 \vdash T' \blacktriangleright \mathcal{R}_1 \quad
+             T \cong T' \ \text{\it where}\
+              T \not\in \mathpzc{Dom}(\Lambda_1)
+          }{
+            \bigl\{(T, T',\mathcal{R}_1 \vee {\mathcal{R}_2}^*, \vee,
+             \Lambda_1 ) \bigr\} \cup \Lambda_1 \vdash T
+              \blacktriangleright
+               \mathcal{R}_1 \vee {\mathcal{R}_2}^*
+          }  &  (\text{\it L})  \\
+          \\
+          \dfrac{
+            \Lambda_2 \vdash T' \blacktriangleright \mathcal{R}_2 \quad
+             T \cong T' \ \text{\it where}\
+              T \not\in \mathpzc{Dom}(\Lambda_2)
+          }{
+            \bigl\{(T, T',{\mathcal{R}_1}^* \vee \mathcal{R}_2, \vee,
+             \Lambda_2 ) \bigr\} \cup \Lambda_2 \vdash T
+              \blacktriangleright
+               {\mathcal{R}_1}^* \vee \mathcal{R}_2
+          }  &  (\text{\it R})
+        \end{array}\right\}  &  \text{\it (T-Phony-Par-inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            T \cong \epsilon
+             \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}.
+          }{
+            \bigl\{(T, \epsilon, {\mathcal{R}_1}^?, \text{\it nil}, \phi)
+             \bigr\} \vdash T \blacktriangleright {\mathcal{R}_1}^?
+          }  &  (\text{\it nil}\,)  \\
+          \\
+          \dfrac{
+            \Lambda' \vdash T' \blacktriangleright \mathcal{R}_1 \quad
+             T \cong T'\ \text{\it where}\
+              T \not\in \mathpzc{Dom}(\Lambda')
+          }{
+            \bigl\{(T, T', {\mathcal{R}_1}^?, \text{\it sol},
+             \Lambda') \bigr\} \cup \Lambda' \vdash
+              T \blacktriangleright {\mathcal{R}_1}^?
+          }  &  (\text{\it sol}\,)
+        \end{array} \right\}  &  \text{\it (T-Opt-inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \Lambda_L \vdash T' \blacktriangleright \mathcal{R}_1 \quad
+             T \cong T'\ \text{\it where}\
+              T \not\in \mathpzc{Dom}(\Lambda_L)
+               \quad \mathcal{R}_2 \,\text{\it is}\, \text{\it Any}.
+          }{
+            \bigl\{(T, T', \mathcal{R}_1|\mathcal{R}_2,
+             \text{\it L}, \Lambda_L) \bigr\} \cup \Lambda_L \vdash
+              T \blacktriangleright \mathcal{R}_1|\mathcal{R}_2
+          }  &  (\text{\it L})  \\
+          \\
+          \dfrac{
+            \Lambda_L \not\vdash T' \blacktriangleright
+             \mathcal{R}_1|\mathcal{R}_2\ (\text{\it L})
+              \quad \Lambda_R \vdash T' \blacktriangleright \mathcal{R}_2
+               \quad T \cong T'\ \text{\it where}\
+                T \not\in \mathpzc{Dom}(\Lambda_R)
+          }{
+            \bigl\{(T, T', \mathcal{R}_1|\mathcal{R}_2,
+             \text{\it R}, \Lambda_R) \bigr\} \cup \Lambda_R \vdash
+              T \blacktriangleright \mathcal{R}_1|\mathcal{R}_2
+          }  &  (\text{\it R})
+        \end{array} \right\}  &  \text{\it (T-Alt-inter)}
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+  
+  \begin{displaymath}
+    \begin{array}{c}
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \Lambda' \vdash T' \blacktriangleright \mathcal{R}_1 \quad
+             T \cong T' \wedge T_\epsilon\ \text{\it where}\
+              T_\epsilon \in \mathcal{E}, T \not\in \mathpzc{Dom}(\Delta')
+          }{
+            \bigl\{(T, T' \wedge T_\epsilon, \mathcal{R}_1, \wedge,
+             \Lambda') \bigr\} \cup \Lambda' \vdash
+              T \blacktriangleright \mathcal{R}_1
+          }  &  (\text{\it L})  \\
+          \\
+          \dfrac{
+            \Lambda' \vdash T' \blacktriangleright \mathcal{R}_1 \quad
+            T \cong T_\epsilon \wedge T'\ \text{\it where}\
+             T_\epsilon \in \mathcal{E}, T \not\in \mathpzc{Dom}(\Delta')
+          }{
+            \bigl\{(T, T_\epsilon \wedge T', \mathcal{R}_1, \wedge,
+             \Lambda') \bigr\} \cup \Lambda' \vdash
+              T \blacktriangleright \mathcal{R}_1
+          }  &  (\text{\it R})
+        \end{array} \right\}  &  \text{\it (T-Reveal-Cas-inter)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \Lambda' \vdash T' \blacktriangleright \mathcal{R}_1 \quad
+            T \cong T' \vee T_\epsilon\ \text{\it where}\
+             T_\epsilon \in \mathcal{E}, T \not\in \mathpzc{Dom}(\Delta')
+          }{
+            \bigl\{(T, T' \vee T_\epsilon, \mathcal{R}_1, \vee,
+             \Lambda') \bigr\} \cup \Lambda' \vdash
+              T \blacktriangleright \mathcal{R}_1
+          }  &  (\text{\it L})  \\
+          \\
+          \dfrac{
+            \Lambda' \vdash T' \blacktriangleright \mathcal{R}_1 \quad
+             T \cong T_\epsilon \vee T'\ \text{\it where}\
+              T_\epsilon \in \mathcal{E}, T \not\in \mathpzc{Dom}(\Delta')
+          }{
+            \bigl\{(T, T_\epsilon \vee T', \mathcal{R}_1, \vee,
+             \Lambda') \bigr\} \cup \Lambda' \vdash
+              T \blacktriangleright \mathcal{R}_1
+          }  &  (\text{\it R})
+        \end{array} \right\}  &  \text{\it (T-Reveal-Par-inter)}
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+
+
+\pagebreak
+\begin{Lemma}{soundness on internal matching.}
+  \label{soundness_on_internal_matching}
+  \[ \Delta \vdash t \triangleright \mathcal{R} \,\Rightarrow\,
+      \Lambda \vdash \mathcal{F}(t) \blacktriangleright \mathcal{R} \]
+  \begin{Proof}
+    Proof is simple structual induction on the derivation of
+    $\Delta \vdash t \triangleright \mathcal{R}$.
+    $\Box$
+  \end{Proof}      
+\end{Lemma}
+
+
+\begin{Lemma}{completeness on internal matching.}
+  \label{completeness_on_internal_matching}
+  \[ \Lambda \vdash T \blacktriangleright \mathcal{R} \,\Rightarrow\,
+      \Delta \vdash \mathcal{F}^{-1}(T) \triangleright \mathcal{R} \]
+  \begin{Proof}
+    Proof is simple structual induction on the derivation of
+    $\Lambda \vdash T \blacktriangleright \mathcal{R}$.
+    $\Box$
+  \end{Proof}      
+\end{Lemma}

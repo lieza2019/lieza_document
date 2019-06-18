@@ -1,0 +1,2900 @@
+% Use only LaTeX2e, calling the article.cls class and 12-point type.
+
+\documentclass[12pt]{article}
+
+% Users of the {thebibliography} environment or BibTeX should use the
+% scicite.sty package, downloadable from *Science* at
+% www.sciencemag.org/about/authors/prep/TeX_help/ .
+% This package should properly format in-text
+% reference calls and reference-list numbers.
+
+\usepackage{scicite}
+
+% Use times if you have the font installed; otherwise, comment out the
+% following line.
+
+\usepackage{times}
+
+% The preamble here sets up a lot of new/revised commands and
+% environments.  It's annoying, but please do *not* try to strip these
+% out into a separate .sty file (which could lead to the loss of some
+% information when we convert the file to other formats).  Instead, keep
+% them in the preamble of your main LaTeX source file.
+
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx, tabularx, graphicx, moreverb}
+\usepackage{mathrsfs}
+\usepackage{theorem}
+\usepackage{comment}
+\newtheorem{Definition}{Definition}[section]
+\newtheorem{Property}{Property}[section]
+\newtheorem{Corollary}{Corollary}[section]
+\newtheorem{Lemma}{Lemma}[section]
+\newtheorem{Claim}{Claim}[section]
+\newtheorem{Proof}{Proof.}
+\renewcommand{\theProof}{}
+
+\usepackage{bussproofs}
+
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+
+
+% The following parameters seem to provide a reasonable page setup.
+
+\topmargin 0.0cm
+\oddsidemargin 0.2cm
+\textwidth 16cm 
+\textheight 21cm
+\footskip 1.0cm
+
+
+%The next command sets up an environment for the abstract to your paper.
+
+\newenvironment{sciabstract}{%
+\begin{quote} \bf}
+{\end{quote}}
+
+
+% If your reference list includes text notes as well as references,
+% include the following line; otherwise, comment it out.
+
+\renewcommand\refname{References and Notes}
+
+% The following lines set up an environment for the last note in the
+% reference list, which commonly includes acknowledgments of funding,
+% help, etc.  It's intended for users of BibTeX or the {thebibliography}
+% environment.  Users who are hand-coding their references at the end
+% using a list environment such as {enumerate} can simply add another
+% item at the end, and it will be numbered automatically.
+
+\newcounter{lastnote}
+\newenvironment{scilastnote}{%
+\setcounter{lastnote}{\value{enumiv}}%
+\addtocounter{lastnote}{+1}%
+\begin{list}%
+{\arabic{lastnote}.}
+{\setlength{\leftmargin}{.22in}}
+{\setlength{\labelsep}{.5em}}}
+{\end{list}}
+
+
+% Include your paper's title here
+
+\title{A Typed language for Interlocking Logic Programming} 
+
+
+% Place the author information here.  Please hand-code the contact
+% information and notecalls; do *not* use \footnote commands.  Let the
+% author contact information appear immediately below the author names
+% as shown.  We would also prefer that you don't change the type-size
+% settings shown here.
+
+\author
+{A. Goto,$^{1\ast}$ K. Sakari,$^{1}$ R. Matsuda$^{2}$\\
+\\
+\normalsize{$^{1}$Department of Chemistry, University of Wherever,}\\
+\normalsize{An Unknown Address, Wherever, ST 00000, USA}\\
+\normalsize{$^{2}$Another Unknown Address, Palookaville, ST 99999, USA}\\
+\\
+\normalsize{$^\ast$To whom correspondence should be addressed; E-mail:  jsmith@wherever.edu.}
+}
+
+% Include the date command, but leave its argument blank.
+
+\date{}
+
+
+
+%%%%%%%%%%%%%%%%% END OF PREAMBLE %%%%%%%%%%%%%%%%
+
+
+
+\begin{document} 
+
+% Double-space the manuscript.
+
+\baselineskip24pt
+
+% Make the title.
+
+\maketitle 
+
+
+
+% Place your abstract within the special {sciabstract} environment.
+
+\begin{sciabstract}
+  Recent progressive Artificial Inteligence technology brings drastically
+  distribution to many of industorial fields including railway and
+  signalling engineering. This paper proposes one of the way to
+  make use the type theory based A.I. technology on railway signalling
+  engineering field.
+\end{sciabstract}
+
+
+
+% In setting up this template for *Science* papers, we've used both
+% the \section* command and the \paragraph* command for topical
+% divisions.  Which you use will of course depend on the type of paper
+% you're writing.  Review Articles tend to have displayed headings, for
+% which \section* is more appropriate; Research Articles, when they have
+% formal topical divisions at all, tend to signal them with bold text
+% that runs into the paragraph, for which \paragraph* is the right
+% choice.  Either way, use the asterisk (*) modifier, as shown, to
+% suppress numbering.
+
+\section*{Motivation}
+
+Interlocking equipment acts as the vital role of train traffic safety. And
+its internal logic is ordinary described in the form of ``wired logic
+notation'', for the fact that interlocking equipment is constructed of
+relays.
+Nowadays we have developped electronic ones, called as electronic
+interlocking equipment, which consists of electronic components including
+microcomputers, and its interlocking logic is implemented in computer
+program instead.
+However electronic interlocking equipment isn't seem to be well accepted in
+railway enginerring domain. In fact most of railway signaling engineers
+aren't still used to make use microcomputer based programming to implement
+interlocking logic.
+In a sense, it's adequate way to use ordinary wired logic notation to
+implement interlocking logic on electronic interlocking equipment,
+accounting on the fact that the engineers have plenty experience in design
+of traditional relay-based interlocking equipment.
+
+This research tries to find the methods to obtain modern environment
+for designing, manufacturing and debugging in interlocking
+equipment development process, and increase our productivity.
+
+
+\section*{Introduction}
+Matching system on interlocking logic structures.
+In this paper, we suggest the type theory based matching system on
+interlocking logic structures. Our matching system bringns a capability of
+pattern recongnition on interlocking logic structures, which encourges us to
+realize automated verification its logical consistency and correctness.
+
+
+\section*{Basic Logic}
+In this section, we present our basic logic. As the first step, we define
+the terms and typing rules on our typing system.
+
+\begin{Definition}[Terms]
+  We define the Terms $t$ range over $\mathbb{T}$ as follow.
+  \[ t \;\stackrel{\mathrm{def}}{:=}\!
+      \begin{array}[t]{l}
+             t_0 \ \text{\it s.t.}\; (t_0, \mathcal{R}_0) \!\in\!
+              \Gamma_{gnd}\ |\ 
+             t_1 \ \text{\it s.t.}\; (t_1, \mathcal{R}_1) \!\in\!
+              \Gamma_{def}\ |\
+             t_1 \wedge t_2
+        \ |\ t_1 \vee t_2 \ |  \\
+        \{\} \ |\ \{t_1 \cdots t_n \}
+        \ |\ [t_1 \cdots t_n ]
+        \ |\ \langle t_1 \cdots t_n \rangle \ |\
+        \circ \ |\  {t_1}^? \ |\ {t_1}^{\leftarrow} \ |\
+        \ {t_1}^{\rightarrow} 
+      \end{array}
+  \]
+\end{Definition}
+
+We sometime call the terms $t \in \mathbb{T}$ defined above as canonical
+terms in certain situation.
+
+
+\begin{Definition}[Types]
+  We define the Types $\mathcal{R}$ range over $\mathbb{R}$ as follow.
+  \[ \mathcal{R} \;\stackrel{\mathrm{def}}{:=}\!
+  \begin{array}[t]{l}
+    \mathcal{R}_0 \ \text{\it s.t.}\; (t_0, \mathcal{R}_0) \!\in\!
+     \Gamma_{gnd}\ |\ 
+    \mathcal{R}_1\ \text{\it s.t.}\; (t_1, \mathcal{R}_1) \!\in\!
+     \Gamma_{def}\ |\
+    \mathcal{R}_1 \wedge \mathcal{R}_2 \ |\
+     \mathcal{R}_1 \vee \mathcal{R}_2 \ |  \\
+    {\mathcal{R}_1}^* \ |\ {\mathcal{R}_1}^+ \ |\
+    {\mathcal{R}_1}^\downarrow \ |\ {\mathcal{R}_1}^? \ |\
+    (\mathcal{R}_1 | \mathcal{R}_2)
+  \end{array}
+  \]
+\end{Definition}
+
+
+\begin{Definition}[Binding]
+  We define a set of pairs of $(t, \mathcal{R})$ where
+  $t \in \mathbb{T}$ and $\mathcal{R} \in \mathbb{R}$, e.g.
+  $\bigl\{(t, \mathcal{R}) \ |\ t \in \mathbb{T},\
+  \mathcal{R} \in \mathbb{R} \bigr\}$, as Binding ranging over $\Gamma$.
+\end{Definition}
+
+
+\begin{Definition}[Binding domain]
+  We define a set of terms $t$ comming from $\Gamma$ s.t.
+  $\bigl\{ t \ |\ (t, \mathcal{R}) \in \Gamma \bigr\}$, as
+  $\mathpzc{Dom}(\Gamma)$, e.g.
+  \[ \mathpzc{Dom}(\Gamma) \,\stackrel{\mathrm{def}}{:=}\,
+      \bigl\{ t \ |\ (t, \mathcal{R}) \in \Gamma \bigr\}
+  \]
+\end{Definition}
+
+
+We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
+
+
+\begin{Corollary} \label{dom_bin_join}w
+  \[ \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2) =
+      \mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}(\Gamma_2)
+  \]
+  \begin{Proof}
+    Proof is dirctrly from def. of $\mathpzc{Dom}$.
+    
+    $\mathpzc{Dom}(\Gamma_1 \cup \Gamma_2) \subseteq
+    \mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}(\Gamma_2)$:
+    From def. of $\mathpzc{Dom}$, we suppose that
+    $t \in \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2) =
+    \bigl\{t' \ |\ (t', \mathcal{R}') \in (\Gamma_1 \cup \Gamma_2)
+    \bigr\}$, then $t$ is $t'_1$ s.t. $(t'_1, \mathcal{R}'_1) \in \Gamma_1$
+    or $t'_2$ s.t. $(t'_2, \mathcal{R}'_2) \in \Gamma_2$, which means
+    $t \in \mathpzc{Dom}(\Gamma_1)$ or $t \in \mathpzc{Dom}(\Gamma_2)$ from
+    def. of $\mathpzc{Dom}$. Hence
+    $t \in \bigl(\mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}(\Gamma_2) \bigr)$.
+    
+    $\mathpzc{Dom}(\Gamma_1 \cup \Gamma_2) \supseteq
+    \mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}(\Gamma_2)$:
+    Now we suppose $t \in \bigl(\mathpzc{Dom}(\Gamma_1) \cup
+    \mathpzc{Dom}(\Gamma_2) \bigr)$. Then from def. of $\mathpzc{Dom}$,
+    $t$ belongs to $\Bigl(\bigl\{ t'_1 \ |\ (t'_1, \mathcal{R}'_1) \!\in\!
+    \Gamma_1 \bigr\} \cup \bigl\{ t'_2 \ |\ (t'_2, \mathcal{R}'_2) \!\in\!
+    \Gamma_2 \bigr\} \Bigr)$, which implies that
+    $t$ is in $\bigl\{ t'_1 \ |\ (t'_1, \mathcal{R}'_1) \in \Gamma_1 \bigr\}$
+    or $\bigl\{ t'_2 \ |\ (t'_2, \mathcal{R}'_2) \in \Gamma_2 \bigr\}$.
+    Here we assume $t \in \bigl\{ t'_1 \ |\ (t'_1, \mathcal{R}'_1) \in
+    \Gamma_1 \bigr\} = \bigl\{ t'' \ |\ (t'', \mathcal{R}'') \in
+    (\Gamma_1 \cup \Gamma_2) \bigr\} = \mathpzc{Dom}(\Gamma_1 \cup
+    \Gamma_2)$, and the counterpart case is also. Hence
+    we can conclude that $t$ is also in
+    $\bigl\{ t' \ |\ (t', \mathcal{R}') \in (\Gamma_1 \cup \Gamma_2)
+    \bigr\} = \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2)$, from def. of
+    $\mathpzc{Dom}$.
+    $\Box$
+  \end{Proof}
+\end{Corollary}
+
+
+\begin{Corollary} \label{dom_mul_join}
+  \[ \mathpzc{Dom}\Biggl(\bigcup_{j=1}^{n} \Gamma_j \Biggr) =
+      \bigcup_{j=1}^{n} \mathpzc{Dom}(\Gamma_j)
+  \]
+  \begin{Proof}
+    Proof is induction on $n$, as num. of
+    $\, \Gamma_j$ s.t. $\mathpzc{Dom}(\Gamma_j)$.
+    
+    B.C.): $n = 1$: Trivial.
+    $n = 2$: From corollary \ref{dom_bin_join},
+    $\mathpzc{Dom}(\Gamma_1 \cup \Gamma_2) = \mathpzc{Dom}(\Gamma_1) \cup
+    \mathpzc{Dom}(\Gamma_2)$.
+    
+    I.S.): $n \ge 3$: $\mathpzc{Dom}\bigl(\bigcup_{j=1}^{n} \Gamma_j \bigr)
+    = \mathpzc{Dom}\bigl(\Gamma_1 \cup \bigcup_{j=2}^{n} \Gamma_j \bigr) =
+    \mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}\bigl(
+    \bigcup_{j=2}^{n} \Gamma_j \bigr)$, from corollary \ref{dom_bin_join}.
+    Consequently we find that $\mathpzc{Dom}(\Gamma_1) \cup
+    \mathpzc{Dom}\bigl(\bigcup_{j=2}^{n} \Gamma_j \bigr) =
+    \mathpzc{Dom}(\Gamma_1) \cup \bigl(\bigcup_{j=2}^{n}
+    \mathpzc{Dom}(\Gamma_j) \bigr)$, by induction hypothesis. Hence
+    $\mathpzc{Dom}\bigl(\bigcup_{j=1}^{n} \Gamma_j) =
+    \mathpzc{Dom}(\Gamma_1) \cup
+    \bigl(\bigcup_{j=2}^{n} \mathpzc{Dom}(\Gamma_j) \bigr) =
+    \bigcup_{j=1}^{n} \mathpzc{Dom}(\Gamma_j)$.
+    $\Box$
+  \end{Proof}
+\end{Corollary}
+
+
+\pagebreak
+\begin{Definition}[Typing rules on pure canonical terms]
+  We define the typing rules on canonical terms as follow.
+  Here canonical term $t$ ranges over $\mathbb{T}$, and type $\mathcal{R}$
+  does over $\mathbb{R}$.
+  
+  \begin{displaymath}
+    \begin{array}{c}
+      
+      \begin{array}{rl}
+        \begin{array}{rl}
+          \dfrac{
+            (t_0, \mathcal{R}_0) \!\in\! \Gamma_{gnd}
+          }{
+            \bigl\{(t_0, \mathcal{R}_0) \bigr\} \vdash t_0 : \mathcal{R}_0
+          }  &  \!\! \text{\it (T-Atom0-canon)}
+        \end{array}
+        
+        & \begin{array}{rl}
+            \dfrac{
+              (t_1, \mathcal{R}_1) \!\in\! \Gamma_{def}
+            }{
+              \bigl\{(t_1, \mathcal{R}_1) \bigr\} \vdash t_1 : \mathcal{R}_1
+            }  &  \!\! \text{\it (T-Atom1-canon)}
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          \begin{array}{c}
+            \Gamma_1 \vdash t_1 : \mathcal{R}_1
+             \quad \Gamma_2 \vdash t_2 : \mathcal{R}_2
+              \quad \mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2)
+              = \phi  \\
+              t_1 \wedge t_2 \not\in \bigl(\mathpzc{Dom}(\Gamma_1) \cup
+               \mathpzc{Dom}(\Gamma_2) \bigr)
+          \end{array}
+        }{
+          \bigl\{(t_1 \wedge t_2, \mathcal{R}_1 \wedge \mathcal{R}_2)
+           \bigr\} \cup (\Gamma_1 \cup \Gamma_2) \vdash
+            t_1 \wedge t_2 : \mathcal{R}_1 \wedge \mathcal{R}_2
+        }  &  \text{\it (T-Cas-canon)}  \\
+        \\
+        
+        \dfrac{
+          \begin{array}{c}
+            \Gamma_1 \vdash t_1 : \mathcal{R}_1
+             \quad \Gamma_2 \vdash t_2 : \mathcal{R}_2
+              \quad \mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2)
+               = \phi  \\
+            t_1 \vee t_2 \not\in \bigl(\mathpzc{Dom}(\Gamma_1) \cup
+             \mathpzc{Dom}(\Gamma_2) \bigr)
+          \end{array}
+        }{
+          \bigl\{(t_1 \vee t_2, \mathcal{R}_1 \vee \mathcal{R}_2) \bigr\}
+           \cup (\Gamma_1 \cup \Gamma_2) \vdash
+            t_1 \vee t_2 : \mathcal{R}_1 \vee \mathcal{R}_2
+        }  &  \text{\it (T-Par-canon)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \mathcal{R}_1\,\text{\it is}\, \text{\it Any}
+          }{
+            \Bigl\{\bigl(\{\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \vdash
+             \{\}: {\mathcal{R}_1}^*
+          }  &  (\text{\it nil}\,)  \\
+          \\
+          \dfrac{
+            \begin{array}{c}
+              \Gamma_1 \vdash t_1 : \mathcal{R}_1 \,\cdots\,
+               \Gamma_n \vdash t_n : \mathcal{R}_1,\
+                \text{\it where}\ n \ge 1  \\
+              \mathpzc{Dom}(\Gamma_j) \!\cap\! \mathpzc{Dom}(\Gamma_k) \!=\!
+               \phi \ \text{\it s.t.}\; j \!\neq\! k
+              \quad \{t_1 \cdots t_n \} \not\in
+               \bigcup_{j=1}^{n}\mathpzc{Dom}(\Gamma_j)
+            \end{array}
+          }{
+            \Bigl\{\bigl(\{t_1 \cdots t_n \}, {\mathcal{R}_1}^* \bigr)
+             \Bigr\} \cup {\displaystyle \bigcup_{j = 1}^{n}} \Gamma_j
+              \vdash \{t_1 \cdots t_n \} : {\mathcal{R}_1}^*
+          }  &  (\infty)
+        \end{array} \right\}  &  \text{\it (T-Cat0-canon)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          \begin{array}{c}
+            \Gamma_1 \vdash t_1 : \mathcal{R}_1 \,\cdots\,
+             \Gamma_n \vdash t_n : \mathcal{R}_1,\
+              \text{\it where}\ n \ge 1 \\
+            \mathpzc{Dom}(\Gamma_j) \cap \mathpzc{Dom}(\Gamma_k) = \phi
+             \ \text{\it s.t.}\; j \!\neq\! k
+            \quad [t_1 \cdots t_n ] \not\in \bigcup_{j=1}^{n}
+             \mathpzc{Dom}(\Gamma_j)
+          \end{array}
+        }{
+          \Bigl\{\bigl([t_1 \cdots t_n], {\mathcal{R}_1}^+ \bigr) \Bigr\}
+           \cup {\displaystyle \bigcup_{j = 1}^{n}} \Gamma_j
+            \vdash [t_1 \cdots t_n] : {\mathcal{R}_1}^+
+        }  &  \text{\it (T-Cat1-canon)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          \begin{array}{c}
+            \Gamma_1 \vdash t_1 : \mathcal{R}_1 \,\cdots\,
+             \Gamma_n \vdash t_n : \mathcal{R}_1\
+              \text{\it where}\ n \ge 1 \\
+            \mathpzc{Dom}(\Gamma_j) \cap \mathpzc{Dom}(\Gamma_k) = \phi
+             \ \text{\it s.t.}\; j \!\neq\! k
+            \quad \langle t_1 \cdots t_n \rangle \not\in \bigcup_{j=1}^{n}
+             \mathpzc{Dom}(\Gamma_j)
+          \end{array}
+        }{
+          \Bigl\{\bigl(\langle t_1 \cdots t_n \rangle,
+          {\mathcal{R}_1}^\downarrow \bigr) \Bigr\}
+          \cup {\displaystyle \bigcup_{j = 1}^{n}} \Gamma_j \vdash
+          \langle t_1 \cdots t_n \rangle : {\mathcal{R}_1}^\downarrow
+        }  &  \text{\it (T-Dup-canon)}
+      \end{array}  \\
+      
+    \end{array}
+  \end{displaymath}
+  
+  \begin{displaymath}
+    \begin{array}{c}
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
+          }{
+            \bigl\{(\circ, {\mathcal{R}_1}^? ) \bigr\} \vdash
+            \circ : {\mathcal{R}_1}^?
+          }  &  (\text{\it nil}\,)  \\
+          \\
+          \dfrac{
+            \Gamma_1 \vdash t_1 : \mathcal{R}_1
+            \quad {t_1}^? \not\in \mathpzc{Dom}(\Gamma_1)
+          }{
+            \bigl\{({t_1}^?, {\mathcal{R}_1}^?) \bigr\} \cup \Gamma_1 \vdash
+                   {t_1}^? : {\mathcal{R}_1}^?
+          }  &  (\text{\it sol}\,)
+        \end{array} \right\}  &  \text{\it (T-Opt-canon)}
+      \end{array}  \\
+      
+      \\
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \Gamma_1 \vdash t_1 : \mathcal{R}_1
+            \quad \mathcal{R}_2 \,\text{\it is}\, \text{\it Any}
+            \quad {t_1}^{\leftarrow} \not\in \mathpzc{Dom}(\Gamma_1)
+          }{
+            \bigl\{({t_1}^\leftarrow, \mathcal{R}_1 | \mathcal{R}_2)
+             \bigr\} \cup \Gamma_1 \vdash {t_1}^\leftarrow :
+              \mathcal{R}_1 | \mathcal{R}_2
+          }  &  (\text{\it L}\,)  \\
+          \\
+          \dfrac{
+            \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
+            \quad \Gamma_1 \vdash t_1 : \mathcal{R}_2
+            \quad {t_1}^{\rightarrow} \not\in \mathpzc{Dom}(\Gamma_1)
+          }{
+            \bigl\{({t_1}^{\rightarrow}, \mathcal{R}_1 | \mathcal{R}_2)
+             \bigr\} \cup \Gamma_1 \vdash {t_1}^\rightarrow :
+              \mathcal{R}_1 | \mathcal{R}_2
+          }  &  (\text{\it R}\,)
+        \end{array} \right\}  &  \text{\it (T-Alt-canon)}
+      \end{array}  
+    \end{array}
+  \end{displaymath}  
+\end{Definition}
+
+
+\begin{Definition}[Subterms]
+  We define the set of subterms of a given term $t \in \mathbb{T}$ as follow.
+  \begin{displaymath}
+    \begin{array}{lll}
+      \mathpzc{sub}(t) &:=
+      & \left\{ \begin{array}{ll}
+          \{t \}  &
+           \text{\it if}\;
+            \left\{ \! \begin{array}{l}
+              t = t_0\ \text{\it s,t.}\
+               (t_0, \mathcal{R}_0) \in \Gamma_{gnd}  \\
+              t = t_1\ \text{\it s.t.}\
+               (t_1, \mathcal{R}_1) \in \Gamma_{def}  \\
+              t = \{\}  \\
+              t = \circ
+            \end{array} \right.  \\
+          \{t \} \cup \bigl(\mathpzc{sub}(t_1) \cup \mathpzc{sub}(t_2)
+           \bigr)  &
+           \text{\it if}\;\; t = t_1 \wedge t_2,\ t_1 \vee t_2  \\
+          \{t \} \cup \bigl(\bigcup^{n}_{j=1} \mathpzc{sub}(t_j) \bigr)  &
+           \text{\it if}\;\; t = \{t_1 \cdots t_n \},
+            \ [t_1 \cdots t_n ], \ \langle t_1 \cdots t_n \rangle  \\
+          \{{t_1}^? \} \cup \mathpzc{sub}(t_1)  &
+           \text{\it if}\;\; t = {t_1}^?  \\
+          \{{t_1}^\leftarrow \} \cup \mathpzc{sub}(t_1)  &
+           \text{\it if}\;\; t = {t_1}^\leftarrow \\
+          \{{t_1}^\rightarrow \} \cup \mathpzc{sub}(t_1)  &
+           \text{\it if}\;\; t = {t_1}^\rightarrow
+        \end{array} \right.
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+
+
+\begin{Corollary}
+  \label{self_similarity_on_subterms}
+  \[ \mathpzc{sub}(t') \subseteq \mathpzc{sub}(t),\ \text{\it for any}\
+      t' \in \mathpzc{sub}(t)
+  \]
+  \begin{Proof}
+    Proof is simple induction on sturcture of $t$.
+    Here we show the proof only for the most significant case.
+    
+    Case $\{t_1, \cdots t_n\}$:
+    We suppose $\mathpzc{sub}\bigl(\{t_1, \cdots t_n\} \bigr) =
+    \bigl\{\{t_1, \cdots t_n\} \bigr\} \cup
+    \bigl(\bigcup_{j=1}^n \mathpzc{sub}(t_j) \bigr)$ from def. of
+    $\mathpzc{sub}$. For the case of $t'$ comming from
+    $\mathpzc{sub}(t_j)$, e.g. $t' \in \mathpzc{sub}(t_j) \subseteq
+    \mathpzc{sub}\bigl(\{t_1, \cdots t_n\} \bigr)$, we say
+    $\mathpzc{sub}(t') \subseteq \mathpzc{sub}(t_j)$ from
+    induction hypothesis.
+    $\Box$
+  \end{Proof}
+\end{Corollary}
+
+
+\begin{Property}
+  \label{dom_of_Gamma}
+  \[ \text{\it if}\ \Gamma \vdash t : \mathcal{R},\ \text{\it then}\
+      \mathpzc{Dom}(\Gamma) = \mathpzc{sub}(t).
+  \]
+  \begin{Proof}
+    Proof is simple induction on structure of $t$ s.t.
+    $\Gamma \vdash t : \mathcal{R}$.
+    Here we show the proof only for the most significant case.
+    
+    Case (T-Cat0-canon-$\infty$): From def. of (T-Cat0-canon-$\infty$),
+    we let
+    $\Gamma = \Bigl\{\bigl(\{t_1 \cdots t_n \}, {\mathcal{R}_1}^* \bigr)
+    \Bigr\} \cup \bigcup_{j = 1}^{n} \Gamma_j$. And from
+    the facts of $\Gamma_1 \vdash t_1 : \mathcal{R}_1 \cdots
+    \Gamma_n \vdash t_n : \mathcal{R}_1$ comming from def. of
+    (T-Cat0-canon-$\infty$), we can find that
+    $\mathpzc{Dom}(\Gamma_1) = \mathpzc{sub}(t_1) \cdots
+    \mathpzc{Dom}(\Gamma_n) = \mathpzc{sub}(t_n)$ by I.H.
+    Accounting on the fact of
+    $\mathpzc{Dom}(\Gamma_1) \cup \cdots \cup \mathpzc{Dom}(\Gamma_n) =
+    \bigcup_{j=1}^n \mathpzc{Dom}(\Gamma_j)$, we can express it as
+    $\bigcup_{j=1}^n \mathpzc{Dom}(\Gamma_j) = \mathpzc{sub}(t_1)
+    \cup \cdots \cup \mathpzc{sub}(t_n)$. By now we can show that
+    $\mathpzc{Dom}(\Gamma) = \mathpzc{Dom}\biggl(\Bigl\{\bigl(
+    \{t_1 \cdots t_n \}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
+    \bigcup_{j = 1}^{n} \Gamma_j \biggr) =
+    \mathpzc{Dom}\biggl(\Bigl\{\bigl(\{t_1 \cdots t_n \}, {\mathcal{R}_1}^*
+    \bigr) \Bigr\} \biggr) \cup
+    \mathpzc{Dom}\bigl(\bigcup_{j = 1}^{n} \Gamma_j \bigr) =
+    \bigl\{\{t_1 \cdots t_n \} \bigr\} \cup  \bigcup_{j = 1}^{n}
+    \mathpzc{Dom}(\Gamma_j) = \bigl\{\{t_1 \cdots t_n \} \bigr\}
+    \cup \bigl(\mathpzc{sub}(t_1) \cup \cdots \cup \mathpzc{sub}(t_n)
+    \bigr) = \mathpzc{sub}\bigl(\{t_1 \cdots t_n\} \bigr)$ as desired,
+    from def. of $\mathpzc{Dom}(\Gamma)$ and
+    $\mathpzc{sub}\bigl(\{t_1 \cdots t_n\} \bigr)$.
+    $\Box$
+  \end{Proof}
+\end{Property}
+
+
+\begin{Definition}[Size of terms]
+  We define size of a given term $t \in \mathbb{T}$ as follow.
+  \begin{displaymath}
+    \begin{array}{lll}
+      \mathpzc{size}(t) &:=
+      & \left\{ \begin{array}{ll}
+          1  & \text{\it if}\;
+                \left\{ \! \begin{array}{l}
+                  t = t_0\ \text{\it s,t.}\
+                   (t_0, \mathcal{R}_0) \in \Gamma_{gnd}  \\
+                  t = t_1\ \text{\it s.t.}\
+                   (t_1, \mathcal{R}_1) \in \Gamma_{def}  \\
+                  t = \{\}  \\
+                  t = \circ
+                \end{array} \right.  \\
+          \bigl(\mathpzc{size}(t_1) + \mathpzc{size}(t_2) \bigr) + 1  &
+           \text{\it if}\;\; t = t_1 \wedge t_2,\ t_1 \vee t_2  \\
+          \bigl(\sum_{j=1}^{n} \mathpzc{size}(t_j) \bigr) + 1  &
+           \text{\it if}\;\; t = \{t_1 \cdots t_n \},
+            \ [t_1 \cdots t_n ], \ \langle t_1 \cdots t_n \rangle  \\
+          \mathpzc{size}(t_1) + 1  &
+           \text{\it if}\; \left\{ \! \begin{array}{l}
+             t = {t_1}^?  \\
+             t = {t_1}^\leftarrow \\
+             t = {t_1}^\rightarrow
+           \end{array} \right.
+        \end{array} \right.
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+
+
+\begin{Property}
+  \label{termsize_constraint_on_Gamma}
+  \[ \text{\it if}\ \Gamma \vdash t : \mathcal{R}, \text{\it then}\
+      \mathpzc{size}(t) \ge \mathpzc{size}(t')\ \text{\it s.t.}\
+       t' \in \mathpzc{Dom}(\Gamma)
+  \]
+  \begin{Proof}
+    Proof is directly from def. of size of terms, with property
+    \ref{dom_of_Gamma}.
+    $\Box$
+  \end{Proof}
+\end{Property}
+
+
+In above section, we develop 
+\pagebreak
+\begin{Definition}[Intuitionistic equivalence over canonical terms]
+  \label{equality_on_CANONICALS}
+  We define the set of intuitionistic equivalence terms of $t$ as follow.
+  We write $t \simeq t'$ if $t$ is intuitionistic equivalent to $t'$.
+  
+  \begin{displaymath}
+    \begin{array}{c}
+      
+      \begin{array}{rll}
+        \begin{array}{rl}
+          \dfrac{t \equiv t'}{
+            t \simeq t'
+          }  &  (\text{\it Identity})
+        \end{array}
+        
+        & \begin{array}{rl}
+            \dfrac{
+              t \simeq t'\
+            }{
+              t' \simeq t
+            }  &  (\text{\it Symmetry})        
+          \end{array}  \\
+      \end{array}  \\
+      \\
+      \begin{array}{rl}
+        \dfrac{t_1 \simeq t_2 \quad t_2 \simeq t_3}{
+          t_1 \simeq t_3
+        }  &  (\text{\it Transitivity})
+      \end{array}  \\
+      \\
+      
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{t_1 \simeq t'_1 \quad t_2 \simeq t'_2}{
+            t_1 \!\wedge\! t_2 \simeq t'_1 \!\wedge\! t'_2
+          }  &  (\text{\it Transparency-Cas})
+        \end{array}
+        
+        & \begin{array}{rl}
+            \dfrac{t_1 \simeq t'_1 \quad t_2 \simeq t'_2}{
+              t_1 \!\vee\! t_2 \simeq t'_1 \!\vee\! t'_2
+            }  &  (\text{\it Transparency-Par})
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{ t \simeq (t_1 \wedge t_2) \wedge t_3 \quad
+          t' \simeq t_1 \wedge (t_2 \wedge t_3) }{
+          t \simeq t'
+        }  &  (\text{\it Associativity-Cas})
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{ t \simeq (t_1 \vee t_2) \vee t_3 \quad
+          t' \simeq t_1 \vee (t_2 \wedge t_3) }{
+          t \simeq t'
+        }  &  (\text{\it Associativity-Par})
+      \end{array}  \\
+      \\
+      
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{ t \simeq t' }{ t \simeq \{t'\} }
+          & (\text{\it Associativity-Cat0}_1)
+        \end{array}
+        & \begin{array}[c]{l}
+            \begin{array}{rl}
+              \dfrac{
+                t \simeq t_1 \wedge \{t_2 \cdots t_n \}
+              }{
+                t \simeq \{t_1, t_2 \cdots t_n \}
+              }  &  (\text{\it AssociativityH-Cat0}_\infty)
+            \end{array}  \\
+            \\
+            \begin{array}{rl}
+              \dfrac{
+                t \simeq \{t_1 \cdots t_n \} \wedge t_{n+1}
+              }{
+                t \simeq \{t_1 \cdots t_n, t_{n+1} \}
+              }  &  (\text{\it AssociativityT-Cat0}_\infty)
+            \end{array}
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{ t \simeq t' }{ t \simeq [t'] }
+          & (\text{\it Associativity-Cat1}_1)
+        \end{array}
+        & \begin{array}[c]{l}
+            \begin{array}{rl}
+              \dfrac{
+                t \simeq t_1 \wedge [t_2 \cdots t_n ]
+              }{
+                t \simeq [t_1, t_2 \cdots t_n ]
+              }  &  (\text{\it AssociativityH-Cat1}_\infty)
+            \end{array}  \\
+            \\
+            \begin{array}{rl}
+              \dfrac{
+                t \simeq [t_1 \cdots t_n ] \wedge t_{n+1}
+              }{
+                t \simeq [t_1 \cdots t_n, t_{n+1} ]
+              }  &  (\text{\it AssociativityT-Cat1}_\infty)
+            \end{array}
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{ t \simeq t' }{ t \simeq \langle t' \rangle }
+          & (\text{\it Associativity-Dup}_1)
+        \end{array}
+        & \begin{array}[c]{l}
+            \begin{array}{rl}
+              \dfrac{
+                t \simeq t_1 \vee \langle t_2 \cdots t_n \rangle
+              }{
+                t \simeq \langle t_1, t_2 \cdots t_n \rangle
+              }  &  (\text{\it AssociativityH-Dup}_\infty)
+            \end{array}  \\
+            \\
+            \begin{array}{rl}
+              \dfrac{
+                t \simeq \langle t_1 \cdots t_n \rangle \vee t_{n+1}
+              }{
+                t \simeq \langle t_1 \cdots t_n, t_{n+1} \rangle
+              }  &  (\text{\it AssociativityT-Dup}_\infty)
+            \end{array}
+          \end{array}
+      \end{array}  \\
+    \end{array}
+  \end{displaymath}
+  
+  \begin{displaymath}
+    \begin{array}{c}
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{ t \simeq \{\,\} \wedge t' }{
+            t \simeq t'
+          }  &  (\text{\it RevealH-Cas})
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{ t \simeq t' \wedge \{\,\} }{
+              t \simeq t'
+            }  &  (\text{\it RevealT-Cas})
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{ t \simeq \{\,\} \vee t' }{
+            t \simeq t'
+          }  &  (\text{\it RevealH-Par})
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{ t \simeq t' \vee \{\,\} }{
+              t \simeq t'
+            }  &  (\text{\it RevealT-Par})
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{ t \simeq t' }{
+            t \simeq \{\,\} \wedge t'
+          }  &  (\text{\it PhonyH-Cas})
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{ t \simeq t' }{
+              t \simeq t' \wedge \{\,\}
+            }  &  (\text{\it PhonyT-Cas})
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{ t \simeq t' }{
+            t \simeq \{\,\} \vee t'
+          }  &  (\text{\it PhonyH-Par})
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{ t \simeq t' }{
+              t \simeq t' \vee \{\,\}
+            }  &  (\text{\it PhonyT-Par})
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rll}
+        \begin{array}{rl}
+          \dfrac{
+            t \simeq t'
+          }{
+            t \simeq {t'}^?
+          }  &  (\text{\it Optional})
+        \end{array}
+
+        & \begin{array}{rl}
+            \dfrac{
+              t \simeq t'
+            }{
+              t \simeq {t'}^\leftarrow
+            }  &  (\text{\it AltL-L})
+          \end{array}
+        
+        & \begin{array}{rl}
+            \dfrac{
+              t \simeq t'
+            }{
+              t \simeq {t'}^\rightarrow
+            }  &  (\text{\it AltR-L})
+          \end{array}
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+
+And we extend the definition of judgement to use equivalent set of each
+term.
+
+
+\begin{Definition}[Binding pentagram]
+  We extend the definition of bindings range over $\Gamma$ we have defined
+  above, and we call the extended ones range over $\Delta$  as binding
+  pentagram.
+  \begin{displaymath}
+    \Delta \;\stackrel{\mathrm{def}}{:=}\;
+     \bigl\{(t, t_{\text{\it equ}}, \mathcal{R},
+      \mathcal{S}_{\mathpzc{fin}}, \Delta') \bigr\} \cup \Delta'
+      \begin{array}[t]{l}
+        \text{\it s.t.}\ \Delta \!\vdash\! t \triangleright \!\mathcal{R} \\
+        \text{\it where}\ \begin{array}[t]{l}
+         t \simeq t_{\text{\it equ}}  \\
+        \mathcal{S}_{\mathpzc{fin}}\in \{\text{\it gnd},
+         \text{\it def}, \wedge, \vee, \text{\it nil}, \text{\it sol},
+          \infty, \text{\it L}, \text{\it R}\}
+        \end{array}
+      \end{array}
+  \end{displaymath}
+\end{Definition}
+
+
+\begin{Definition}
+  We regard extended bindings $\Delta$ as the mapping of
+  $\mathbb{T} \mapsto \bigl\{(t, t_{\text{\it equ}}, \mathcal{R},
+  \mathcal{S}_{\mathpzc{fin}}, \Delta') \bigr\}$, as follow.
+  \begin{displaymath}
+    \Delta(t') \;\stackrel{\mathrm{def}}{:=} \,\left\{\begin{array}{l}
+      \bigl\{(t, t_{\text{\it equ}}, \mathcal{R},
+       \mathcal{S}_{\mathpzc{fin}}, \Delta') \bigr\} \quad \text{\it if}\
+        t' = t  \\
+      \Delta'(t') \quad \text{\it if}\ t' \neq t,\ \Delta' \neq \phi  \\
+       \phi \quad \text{\it if}\ t' \neq t,\ \Delta' = \phi
+    \end{array}\right.
+  \end{displaymath}
+\end{Definition}
+
+
+\pagebreak
+\begin{Definition}[Typing rules on polymorphic equivalent terms]
+  We extend the typing rules on pure canonical terms defined above, to
+  enlarge the domain of typematching, e.g. we use $t'$ s.t. $t \cong t'$ on
+  typematching, as follow.
+  \begin{displaymath}
+    \begin{array}{c}
+
+      \begin{array}{rl}
+        \dfrac{
+          t \simeq t_0
+           \quad (t_0, \mathcal{R}_0) \in \Gamma_\text{\it gnd}
+        }{
+          \bigl\{(t, t_0, \mathcal{R}_0, \text{\it gnd}, \phi ) \bigr\}
+           \vdash t \triangleright \mathcal{R}_0
+        }  &  \!\!\text{\it (T-Atom0-xtend)}
+      \end{array}  \\
+      \\
+
+      \begin{array}{rl}
+        \dfrac{
+          t \simeq t_1
+           \quad (t_1, \mathcal{R}_1) \in \Gamma_\text{\it def}
+        }{
+          \bigl\{(t, t_1, \mathcal{R}_1, \text{\it def}, \phi ) \bigr\}
+           \vdash t \triangleright \mathcal{R}_1
+        }  &  \!\!\text{\it (T-Atom1-xtend)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          \begin{array}{c}
+            \Delta_1 \vdash t_1 \triangleright \mathcal{R}_1
+             \quad \Delta_2 \vdash t_2 \triangleright \mathcal{R}_2
+              \quad \mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2)
+               = \phi  \\
+            t \simeq t_1 \wedge t_2\
+             \text{\it s.t.}\ t,\, t_1 \wedge t_2 \not\in \mathpzc{Dom}(
+              \Delta_1 \cup \Delta_2)
+          \end{array}
+        }{
+          \Bigl\{\bigl(t, t_1 \wedge t_2,
+           \mathcal{R}_1 \wedge \mathcal{R}_2, \wedge,
+            (\Delta_1 \cup \Delta_2) \bigr) \Bigr\}
+             \cup (\Delta_1 \cup \Delta_2) \vdash
+              t \triangleright \mathcal{R}_1 \wedge \mathcal{R}_2
+        }  &  \text{\it (T-Cas-xtend)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          \begin{array}{c}
+            \Delta_1 \vdash t_1 \triangleright \mathcal{R}_1
+             \quad \Delta_2 \vdash t_2 \triangleright \mathcal{R}_2
+              \quad \mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2)
+               = \phi  \\
+            t \simeq t_1 \vee t_2\
+             \text{\it s.t.}\ t,\, t_1 \vee t_2 \not\in \mathpzc{Dom}(
+              \Delta_1 \cup \Delta_2)
+          \end{array}
+        }{
+          \Bigl\{\bigl(t, t_1 \vee t_2, \mathcal{R}_1 \vee \mathcal{R}_2,
+           \vee, (\Delta_1 \cup \Delta_2) \bigr) \Bigr\} \cup
+            (\Delta_1 \cup \Delta_2) \vdash
+             t \triangleright \mathcal{R}_1 \vee \mathcal{R}_2
+        }  &  \text{\it (T-Par-xtend)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            t \simeq \{\}
+             \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
+          }{
+            \Bigl\{\bigl(t, \{\}, \mathcal{R}_1^*, \text{\it nil}, \phi
+             \bigr) \Bigr\} \vdash t \triangleright {\mathcal{R}_1}^*
+          }  &  (\text{\it nil}\,)  \\
+          \\
+          
+          \dfrac{
+            \Delta' \vdash t' \triangleright \mathcal{R}_1 \quad
+             t \simeq t'\ \text{\it s.t.}\ t \not\in \mathpzc{Dom}(\Delta')
+          }{
+            \bigl\{(t, t', {\mathcal{R}_1}^*, \text{\it sol}, \Delta' )
+             \bigr\} \cup \Delta'
+              \vdash t \triangleright {\mathcal{R}_1}^*
+          }  &  (\text{\it sol}\,)  \\
+          \\
+          
+          \dfrac{
+            \begin{array}{c}
+              \Delta_h \vdash t_h \triangleright \mathcal{R}_1
+               \quad \Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*
+                \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
+                = \phi  \\
+              t \simeq t_h \wedge t_t\ \text{\it s.t.}\
+               t_t' \neq \{\},\
+                \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
+                 \Delta_h \cup \Delta_t) = \phi
+            \end{array}
+          }{
+            \begin{array}{r}
+              \Bigl\{\bigl(t, t_h \wedge t_t', {\mathcal{R}_1}^*, \infty,
+               (\Delta_h \cup \Delta_t') \bigr) \Bigr\} \cup
+                (\Delta_h \cup \Delta_t') \vdash
+                 t \triangleright {\mathcal{R}_1}^*  \\
+              \text{\it where}\ 
+               \Delta_t(t_t) = (t_t, t_t', {\mathcal{R}_1}^*,
+                \mathcal{S}_{\mathpzc{fin}_t}, \Delta_t')\ \text{\it s.t.}\
+                 \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it sol}, \infty\}
+            \end{array}
+          }  &  (\infty)
+        \end{array} \right\}  &  \text{\it (T-Cat0-xtend)}
+      \end{array}  \\
+      
+    \end{array}
+  \end{displaymath}
+  
+  \begin{displaymath}
+    \begin{array}{c}
+
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \quad \Delta' \vdash t' \triangleright \mathcal{R}_1 \quad
+             t \simeq t'\ \text{\it s.t.}\ t \not\in \mathpzc{Dom}(\Delta')
+          }{
+            \bigl\{(t, t', {\mathcal{R}_1}^+, \text{\it sol}, \Delta')
+             \bigr\} \cup \Delta' \vdash
+              t \triangleright {\mathcal{R}_1}^+
+          }  &  (\text{\it sol}\,)  \\
+          \\
+          \dfrac{
+            \begin{array}{c}
+              \Delta_h \vdash t_h \triangleright \mathcal{R}_1
+               \quad \Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^+
+                \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
+                 = \phi  \\
+              t \simeq t_h \wedge t_t\ \text{\it s.t.}\
+               \{t,\, t'_t,\, t_h \wedge t_t' \} \cap \mathpzc{Dom}(
+                \Delta_h \cup \Delta_t) = \phi
+            \end{array}
+          }{
+            \begin{array}{r}
+              \Bigl\{\bigl(t, t_h \wedge t_t', {\mathcal{R}_1}^+, \infty,
+               (\Delta_h \cup \Delta_t') \bigr) \Bigr\} \cup
+                (\Delta_h \cup \Delta_t') \vdash
+                 t \triangleright {\mathcal{R}_1}^+  \\
+              \text{\it where}\
+               \Delta_t(t_t) = (t_t, t_t', {\mathcal{R}_1}^+,
+                \mathcal{S}_{\mathpzc{fin}_t}, \Delta_t')\ \text{\it s.t.}\
+                 \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it sol}, \infty\}
+            \end{array}
+          }  &  (\infty)
+        \end{array} \right\}  &  \text{\it (T-Cat1-xtend)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \Delta' \vdash t' \triangleright \mathcal{R}_1 \quad
+             t \simeq t'\ \text{\it s.t.}\ t \not\in \mathpzc{Dom}(\Delta')
+          }{
+            \bigl\{(t, t', {\mathcal{R}_1}^\downarrow, \text{\it sol},
+             \Delta') \bigr\} \cup \Delta' \vdash
+              t \triangleright {\mathcal{R}_1}^\downarrow
+          }  &  (\text{\it sol}\,)  \\
+          \\
+          
+          \dfrac{
+            \begin{array}{c}
+              \Delta_h \vdash t_h \triangleright \mathcal{R}_1
+               \quad \Delta_t \vdash t_t \triangleright
+                {\mathcal{R}_1}^\downarrow
+                 \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
+                  = \phi  \\
+              t \simeq t_h \vee t_t\ \text{\it s.t.}\
+               \{t,\, t'_t,\, t_h \vee t_t'\} \cap \mathpzc{Dom}(
+                \Delta_h \cup \Delta_t) = \phi
+            \end{array}
+          }{
+            \begin{array}{r}
+              \Bigl\{\bigl(t, t_h \vee t_t', {\mathcal{R}_1}^\downarrow,
+               \infty, (\Delta_h \cup \Delta_t') \bigr) \Bigr\} \cup
+                (\Delta_h \cup \Delta_t') \vdash
+                 t \triangleright {\mathcal{R}_1}^\downarrow  \\
+              \text{\it where}\
+               \Delta_t(t_t) = (t_t, t_t', {\mathcal{R}_1}^\downarrow,
+                \mathcal{S}_{\mathpzc{fin}_t}, \Delta_t')\ \text{\it s.t.}\
+                 \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it sol}, \infty\}
+            \end{array}
+          }  &  (\infty)
+        \end{array} \right\}  &  \text{\it (T-Dup-xtend)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            t \simeq \circ
+             \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
+          }{
+            \Bigl\{\bigl(t, \circ, {\mathcal{R}_1}^?, \text{\it nil}, \phi
+            \bigr) \Bigr\} \vdash
+            t \triangleright {\mathcal{R}_1}^?
+          }  &  (\text{\it nil}\,)  \\
+          \\
+          
+          \dfrac{
+            \Delta' \vdash t' \triangleright \mathcal{R}_1 \quad
+             t \simeq t'\ \text{\it s.t.}\
+              t \not\in \mathpzc{Dom}(\Delta')
+          }{
+            \bigl\{(t, t', {\mathcal{R}_1}^?, \text{\it sol},
+             \Delta') \bigr\} \cup \Delta' \vdash
+              t \triangleright {\mathcal{R}_1}^?
+          }  &  (\text{\it sol}\,)
+        \end{array} \right\}  &  \text{\it (T-Opt-xtend)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \Delta' \vdash t' \triangleright \mathcal{R}_1 \quad
+             \mathcal{R}_2 \,\text{\it is}\, \text{\it Any}. \quad
+              t \simeq t'\ \text{\it s.t.}\
+               t \not\in \mathpzc{Dom}(\Delta')
+          }{
+            \bigl\{(t, t', \mathcal{R}_1|\mathcal{R}_2,
+             \text{\it L}, \Delta') \bigr\} \cup \Delta' \vdash
+              t \triangleright \mathcal{R}_1|\mathcal{R}_2
+          }  &  (\text{\it L})  \\
+          \\
+          
+          \dfrac{
+            \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}. \quad
+             \Delta'' \vdash t' \triangleright \mathcal{R}_2 \quad
+              t \simeq  t'\ \text{\it s.t.}\
+               t \not\in \mathpzc{Dom}(\Delta'')
+          }{
+            \bigl\{(t, t', \mathcal{R}_1|\mathcal{R}_2,
+             \text{\it R}, \Delta'') \bigr\} \cup \Delta'' \vdash
+              t \triangleright \mathcal{R}_1|\mathcal{R}_2
+          }  &  (\text{\it R})
+        \end{array} \right\}  &  \text{\it (T-Alt-xtend)}
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+
+
+\begin{Lemma}{soundness on extended matching}
+  \label{soundness_on_extended_matching}
+  \[ \text{\it if}\ \Gamma \vdash t : \mathcal{R},\
+      \text{\it then}\ \Delta \vdash t \triangleright \mathcal{R}\
+       \text{\it s.t.}\ \mathpzc{Dom}(\Delta) = \mathpzc{Dom}(\Gamma).
+  \]
+  \begin{Proof}
+    Proof is induction on structure of term $t$ s.t.
+    $\Gamma \vdash t : \mathcal{R}$.
+
+    Case (T-Atom0-canon): Proof for this case is trivial, which is directly
+    from both def. of (T-Atom0-canon) and (T-Atom0-xtend) as follow.
+    Here we can assume that $t$ satisfies $(t, \mathcal{R}_0) \in
+    \Gamma_\text{\it gnd}$ from def. of (T-Atom0-canon) , then we can
+    derive the equation of
+    $\bigl\{(t, t, \mathcal{R}_0, \text{\it gnd}, \phi) \bigr\} \vdash
+    t \triangleright \mathcal{R_0}$ from (T-Atom0-xtend) for
+    $t \cong t$ s.t. $(t, \mathcal{R}_0) \in \Gamma_{gnd}$ from (Identity),
+    which satisfies the condition of
+    $\mathpzc{Dom}\Bigl(\bigl\{(t, \mathcal{R}_0 ) \bigr\} \Bigr) =
+    \{t\} = \bigl(\{t\} \cup \phi \bigr) =
+    \mathpzc{Dom}\Bigl(\bigl\{(t, t, \mathcal{R}_0, \text{\it gnd}, \phi)
+    \bigr\} \Bigr)$ as desired.
+    
+    Case (T-Atom1-canon): Proof is same scheme as the case of
+    (T-Atom0-canon).
+    
+    Case (T-Cas-canon): From induction hypothesis, we suppose that
+    $\Delta_1 \vdash t_1 \triangleright \mathcal{R}_1$,
+    $\Delta_2 \vdash t_2 \triangleright \mathcal{R}_2$ with
+    $\mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$ and
+    $\mathpzc{Dom}(\Delta_2) = \mathpzc{Dom}(\Gamma_2)$ respectively,
+    which implies the fact of
+    $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2) = \phi$ for   
+    $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2) = \phi$.
+    Similarly we still find the fact that $t_1 \wedge t_2$ isn't belonging
+    to $\bigl(\mathpzc{Dom}(\Delta_1) \cup \mathpzc{Dom}(\Delta_1) \bigr) =
+    \bigl(\mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}(\Gamma_1) \bigr)$ from
+    property \ref{termsize_constraint_on_Gamma} accounting on that
+    $\mathpzc{size}(t_1 \wedge t_2)$ is greater than both
+    $\mathpzc{size}(t_1)$ and $\mathpzc{size}(t_2)$. Therefore we obtain
+    the deduction of $\Bigl\{\bigl(t_1 \wedge t_2, t_1 \wedge t_2,
+    \mathcal{R}_1 \wedge \mathcal{R}_2, (\Delta_1 \cup \Delta_2) \bigr)
+    \Bigr\} \cup (\Delta_1 \cup \Delta_2) \vdash t_1 \wedge t_2
+    \triangleright \mathcal{R}_1 \wedge \mathcal{R}_2$ from (T-Cas-xtend),
+    with the condition of
+    $\mathpzc{Dom}\biggl(\Bigl\{\bigl(t_1 \wedge t_2, t_1 \wedge t_2,
+    \mathcal{R}_1 \wedge \mathcal{R}_2, (\Delta_1 \cup \Delta_2) \bigr)
+    \Bigr\} \cup (\Delta_1 \cup \Delta_2) \biggr) =
+    \bigl(\{t_1 \wedge t_2\} \cup \mathpzc{Dom}(\Delta_1 \cup \Delta_2)
+    \bigr) =
+    \Bigl(\{t_1 \wedge t_2\} \cup \bigl(\mathpzc{Dom}(\Delta_1) \cup
+    \mathpzc{Dom}(\Delta_2) \bigr) \Bigr) =
+    \Bigl(\{t_1 \wedge t_2\} \cup \bigl(\mathpzc{Dom}(\Gamma_1) \cup
+    \mathpzc{Dom}(\Gamma_2) \bigr) \Bigr) =
+    \bigl(\{t_1 \wedge t_2\} \cup \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2)
+    \bigr) = \mathpzc{Dom}(\Gamma)$ as desired.
+    
+    Case (T-Par-canon): Proof is same scheme as the case of
+    (T-Cat-canon),
+    
+    Case (T-Cat0-canon-nil): It's trivial, proof for this case is directly
+    from def, of (T-Cat0-canon-nil) and (T-Cat0-xtend-nil),
+    
+    Case (T-Cat0-canon-$\infty$): From induction hypothesis we can assume
+    that $\Delta_j \vdash t_j : \mathcal{R}_j$ s.t.
+    $\mathpzc{Dom}(\Delta_j) = \mathpzc{Dom}(\Gamma_j)$ for each
+    $1 \le j \le n$. Now we examines soundness for each cases,
+    $j = 1$ and $j \ge 2$.
+    $(j = 1)$: For first case, we can derive $\{t_1\} \cong t_1$ with
+    $(\text{\it Associativity-Cat0}_1)$ and (Symmetry), where we mention that
+    $\{t_1\} \not\in \mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$ for
+    $\Gamma_1 \vdash t_1 : \mathcal{R}_1$ with
+    property \ref{termsize_constraint_on_Gamma}. Then we derive    
+    $\Bigl\{\bigl(\{t_1\}, t_1, {\mathcal{R}_1}^*, \text{\it sol}, \Delta_1
+    \bigr) \Bigr\} \cup \Delta_1 \vdash \{t_1\}
+    \triangleright {\mathcal{R}_1}^*$ from (T-Cat0-xtend-sol),
+    with desired properties of
+    $\mathpzc{Dom}\biggl(\Bigl\{\bigl(\{t_1\}, t_1, {\mathcal{R}_1}^*,
+    \text{\it sol}, \Delta_1 \bigr) \Bigr\} \cup \Delta_1 \biggr) =
+    \bigl(\{t_1\} \cup \mathpzc{Dom}(\Delta_1) \bigr) =
+    \bigl(\{t_1\} \cup \mathpzc{Dom}(\Gamma_1) \bigr) =
+    \mathpzc{Dom}(\Gamma)$, where we let
+    $\Gamma = \Bigl\{\bigl(\{t_1\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
+    \Gamma_1$.
+    $(j \ge 2)$: Here we think of the case of $j = 2$ that
+    $\Bigl\{\bigl(\{t_1, t_2\}, {\mathcal{R}_1}^*\bigr) \Bigr\} \cup
+    (\Gamma_1 \cup \Gamma_2) \vdash \{t_1, t_2\} : {\mathcal{R}_1}^*$,
+    where we are also given several assumptions mentioned above as
+    $\Delta_1 \vdash t_1 \triangleright \mathcal{R}_1$,
+    $\Delta_2 \vdash t_2 \triangleright \mathcal{R}_2$, s.t.
+    $\mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$ and
+    $\mathpzc{Dom}(\Delta_2) = \mathpzc{Dom}(\Gamma_2)$ satisfying
+    $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2) = \phi$ for
+    $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2) = \phi$
+    respectively.
+    And we can derive the term $\{t_2\}$ equivalent to $t_2$ e.g.
+    $\{t_2\} \cong t_2$ from $(\text{\it Associativity-Cat0}_1)$, with
+    the condition of
+    $\{t_2\} \not\in \mathpzc{Dom}(\Delta_2) = \mathpzc{Dom}(\Gamma_2)$
+    for $\mathpzc{size}\bigl(\{t_2\} \bigr) > \mathpzc{size}(t_2)$ with
+    property \ref{termsize_constraint_on_Gamma}. Then we derive
+    $\Delta_t \vdash \{t_2\} \triangleright {\mathcal{R}_1}^*$ from
+    (T-Cat0-xtend-sol), where we let
+    $\Delta_t = \Bigl\{\bigl(\{t_2\}, t_2, {\mathcal{R}_1}^*,
+    \text{\it sol},\Delta_2 \bigr) \Bigr\} \cup \Delta_2$ which sustains
+    the condition of
+    $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_t) = \phi$ for both
+    facts of $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2) = \phi$
+    and $\{t_2\} \not\in \mathpzc{Dom}(\Gamma_1) = \mathpzc{Dom}(\Delta_1)$.
+    Note that we assume $\{t_2\} \in \mathpzc{Dom}(\Gamma_1)$ whose binding
+    $\Gamma_1$ comming from $\Gamma_1 \vdash t_1 : \mathcal{R}_1$ also
+    satisfies the condition of $\mathpzc{Dom}(\Gamma_1) =
+    \mathpzc{sub}(t_1)$, e.g. $\{t_2\} \in \mathpzc{sub}(t_1)$ implies that
+    $t_2 \in \mathpzc{Dom}(\Gamma_1)$ for $t_2 \in
+    \mathpzc{sub}\bigl(\{t_2\} \bigr) \subseteq \mathpzc{sub}(t_1) =
+    \mathpzc{Dom}(\Gamma_1)$ from
+    corollary \ref{self_similarity_on_subterms}, which contradicts
+    $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2) = \phi$.
+    Consequently, we can derive the equivalency
+    $\{t_1, t_2\} \cong t_1 \wedge t_2$, which derivation's detail is
+    explained in Claim \ref{claim_for_soundness_on_extended_matching}, s.t.
+    both $\{t_1, t_2\}$ and $t_1 \wedge t_2$ aren't belonging to
+    $\mathpzc{Dom}(\Delta_1 \cup \Delta_t) =
+    \bigl(\mathpzc{Dom}(\Delta_1) \cup \mathpzc{Dom}(\Delta_t) \bigr) =
+    \Bigl(\mathpzc{Dom}(\Delta_1) \cup \bigl(\{t_2\} \cup
+    \mathpzc{Dom}({\Delta_2}) \bigr) \Bigr) =
+    \Bigl(\mathpzc{Dom}(\Gamma_1) \cup \bigl(\{t_2\} \cup
+    \mathpzc{Dom}({\Gamma_2}) \bigr) \Bigr)$ for their size constraints.
+    Then we eventually derive our goal of this case as
+    $\Bigl\{\big(\{t_1, t_2\}, t_1 \wedge t_2', {\mathcal{R}_1}^*,
+    \infty, (\Delta_1 \cup \Delta_t') \bigr) \Bigr\} \cup
+    (\Delta_1 \cup \Delta_t') \vdash \{t_1, t_2\} \triangleright
+    {\mathcal{R}_1}^*$ where we let
+    $\Delta_t' = \Delta_t \setminus \Delta_t \bigl(\{t_2\} \bigr) =
+    \Delta_2$ and $t_2' = t_2$, from (T-Cat0-xtend-$\infty$).
+    That also satisfies the condition of
+    $\mathpzc{Dom}\biggl(\Bigl\{\big(\{t_1, t_2\}, t_1 \wedge t_2,
+    {\mathcal{R}_1}^*, \infty, (\Delta_1 \cup \Delta_2) \bigr) \Bigr\} \cup
+    (\Delta_1 \cup \Delta_2) \biggr) =
+    \bigl(\{t_1, t_2\} \cup \mathpzc{Dom}(\Delta_1 \cup \Delta_2) \bigr) =
+    \bigl(\{t_1, t_2\} \cup \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2)\bigr) =
+    \mathpzc{Dom}(\Gamma)$ as desired, where we let
+    $\Gamma = \Bigl\{\bigl(\{t_1, t_2\}, {\mathcal{R}_1}^* \bigr) \Bigr\}
+    \cup (\Gamma_1 \cup \Gamma_2)$.
+    Next we think of the case of $j > 2$. Here we suppose the situation of
+    $\Bigl\{\bigl(\{t_1 \cdots t_n\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
+    \bigcup_{j=1}^n\Gamma_j \vdash \{t_1 \cdots t_n\}: {\mathcal{R}_1}^*$,
+    which implies the facts that
+    $\Gamma_2 \vdash t_2 : \mathcal{R}_1 \cdots
+    \Gamma_n \vdash t_n: \mathcal{R}_1$ satisfying the conditions of
+    $\mathpzc{Dom}(\Gamma_j) \cup \mathpzc{Dom}(\Gamma_k) = \phi$ if
+    $j \neq k$. Accounting on the fact of
+    $\{t_2 \cdots t_n\} \not\in \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)$
+    since term size of $\{t_2 \cdots t_n\}$ is greater than any of
+    $t_2 \cdots t_n$ s.t. $\Gamma_1 \vdash t_1: \mathcal{R}_1 \cdots
+    \Gamma_1 \vdash t_1: \mathcal{R}_1$ respectively, we can derive
+    $\{t_2 \cdots t_n\} \cup \bigcup_{j=2}^n\Gamma_j \vdash
+    \{t_2 \cdots t_n\}: {\mathcal{R}_1}^*$ from (T-Cat0-canon).
+    Here we let n be the number of subterms of $\{t_1 \cdots t_n\}$, the
+    cases of $n \in \{1, 2\}$ are shown as the cases of $j \le 2$ above.
+    For the case of $j > 2$, we suppose the derivation
+    $\Bigl\{\bigl(\{t_2 \cdots t_n\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
+    \bigcup_{j=2}^n\Gamma_j \vdash \{t_2 \cdots t_n\}: {\mathcal{R}_1}^*$,
+    which gives us the fact of
+    $\Delta_t \vdash \{t_2 \cdots t_n\} \triangleright {\mathcal{R}_1}^*$
+    for some $\Delta_t$ satisfying the condition of
+    $\mathpzc{Dom}(\Delta_t) = \mathpzc{Dom}(\Gamma_t)$, where we let
+    $\Gamma_t = \Bigl\{\bigl(\{t_2 \cdots t_n\}, {\mathcal{R}_1}^* \bigr)
+    \Bigr\} \cup \bigcup_{j=2}^n\Gamma_j$ by induction hypothesis. Now
+    we mention again that the prerequisite of
+    $\Bigl\{\bigl(\{t_1 \cdots t_n\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
+    \bigcup_{j=1}^n\Gamma_j  \vdash \{t_1 \cdots t_n\}: {\mathcal{R}_1}^*$
+    includes the fact of $\Gamma_1 \vdash t_1 : \mathcal{R}_1$, 
+    which also brings us $\Delta_1 \vdash t_1 : {\mathcal{R}_1}^*$
+    with the condition of
+    $\mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$ by
+    induction hypothesis. Thus we can still find the property of
+    $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_t) = \phi$, since
+    $\mathpzc{Dom}(\Gamma_1) \cap
+    \bigl(\{t_2 \cdots t_n\} \cup \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)
+    \bigr) = \phi$ for the term size restriction on
+    $\mathpzc{Dom}(\Gamma_1)$, e.g.
+    $\{t_2 \cdots t_n\} \not\in \mathpzc{Dom}(\Gamma_1)$.
+    From similar reason $t_1 \wedge t_t' \not\in \mathpzc{Dom}(\Gamma_1)
+    \cup \bigl(\{t_2 \cdots t_n\} \cup \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)
+    \bigr)$ for any $t_t' \in \mathbb{T}$ is also, since
+    $t_1 \wedge t_t' \not\in \mathpzc{Dom}(\Gamma_1)$ is by term size
+    constraint, and each $t_1 \not\in \mathpzc{Dom}(\Gamma_j)$ implises
+    $t_1 \wedge t_t' \not\in \bigl(\{t_2 \cdots t_n\} \cup
+    \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \bigr)$, e.g. assumption of
+    $t_1 \wedge t_t' \in \mathpzc{Dom}(\Gamma_j)$ for some $j$ imposes on
+    $t_1 \in \mathpzc{Dom}(\Gamma_j) = \mathpzc{sub}(t_j)$ s.t.
+    $\Gamma_j \vdash t_j : \mathcal{R}_1$ because of
+    $t_1 \in \mathpzc{sub}(t_1 \wedge t_t')$ s.t.
+    $t_1 \wedge t_t' \in \mathpzc{Dom}(\Gamma_j)$ from corollary
+    \ref{self_similarity_on_subterms}, it contradicts the fact of
+    $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_j) = \phi$.
+    According to the facts we have revealed above, we can derive our
+    conclusion as $\Bigl\{\bigl(\{t_1 \cdots t_n\}, t_1 \wedge t_t',
+    {\mathcal{R}_1}^*, \infty, (\Delta_1 \cup \Delta_t') \bigr) \Bigr\} \cup
+    (\Delta_1 \cup \Delta_t') \vdash
+    \{t_1 \cdots t_n\} \triangleright {\mathcal{R}_1}^*$ where
+    $\Delta_t' = \Delta_t \setminus \Delta_t\bigl(\{t_2 \cdots t_n\} \bigr)$
+    and $\Delta_t\bigl(\{t_2 \cdots t_n\} \bigr) =
+    \bigl(\{t_2 \cdots t_n\}, t_t', {\mathcal{R}_1}^*,
+    \mathcal{S}_{\mathpzc{fin}}, \Delta_t' \bigr)$ s.t.
+    $\mathcal{S}_{\mathpzc{fin}} \in \{\text{\it sol}, \infty\}$ from
+    (T-Cat0-xtend-$\infty$), with the property of
+    $\mathpzc{Dom}\biggl(\Bigl\{\bigl(\{t_1 \cdots t_n\}, t_1 \wedge t_t',
+    {\mathcal{R}_1}^*, \infty, (\Delta_1 \cup \Delta_t') \bigr) \Bigr\} \cup
+    (\Delta_1 \cup \Delta_t') \biggr) =
+    \mathpzc{Dom}\bigl(\{t_1 \cdots t_n\} \cup (\Delta_1 \cup \Delta_t')
+    \bigr) =
+    \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \mathpzc{Dom}(\Delta_1 \cup
+    \Delta_t') =
+    \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \bigl(\mathpzc{Dom}(\Delta_1)
+    \cup \mathpzc{Dom}(\Delta_t') \bigr) =
+    \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \biggl(\mathpzc{Dom}(\Delta_1)
+    \cup \mathpzc{Dom}\Bigl(\Delta_t \setminus \Delta_t\bigl(\{t_2 \cdots
+    t_n\} \bigr) \Bigr) \biggr) =
+    \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \bigl(\mathpzc{Dom}(\Gamma_1)
+    \cup \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \bigr) =
+    \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \bigcup_{j=1}^n\mathpzc{Dom}(
+    \Gamma_j) = \mathpzc{Dom}(\Gamma)$ as desired.
+    
+    Case (T-Cat1-canon): Proof is same scheme to the case of
+    (T-Cat-canon-$\infty$).
+    
+    Case (T-Dup-canon): Proof is same scheme to the case of (T-Cat1-canon).
+
+    Case (T-Opt-canon): Proof is same as the case of (T-Cat-canon-nil).
+
+    Case (T-Alt-canon-L): In this case, we suppose
+    $\bigl\{({t_1}^\leftarrow, \mathcal{R}_1 | \mathcal{R}_1) \bigr\} \cup
+    \Gamma_1 \vdash {t_1}^\leftarrow: \mathcal{R}_1 | \mathcal{R}_1$, then
+    by induction hypothesis we also find that
+    $\Delta_1 \vdash t_1 \triangleright \mathcal{R}_1$ satisfying the
+    condition of $\mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$ s.t.
+    ${t_1}^\leftarrow \not\in \mathpzc{Dom}(\Delta_1)$ because of
+    ${t_1}^\leftarrow \not\in \mathpzc{Dom}(\Gamma_1)$ from
+    def. of (T-Alt-canon-L). Hence we can derive
+    $\bigl\{({t_1}^\leftarrow, {t_1}^\leftarrow,
+    \mathcal{R}_1 | \mathcal{R}_1, \text{\it L}, \Delta_1) \bigr\} \cup
+    \Delta_1 \vdash {t_1}^\leftarrow \triangleright
+    \mathcal{R}_1 | \mathcal{R}_1$ from (T-Alt-xtend-L) with desired
+    property of
+    $\mathpzc{Dom}\Bigl(\bigl\{({t_1}^\leftarrow, {t_1}^\leftarrow,
+    \mathcal{R}_1 | \mathcal{R}_1, \text{\it L}, \Delta_1) \bigr\} \cup
+    \Delta_1 \Bigr) =
+    \{{t_1}^\leftarrow\} \cup \mathpzc{Dom}(\Delta_1) =
+    \{{t_1}^\leftarrow\} \cup \mathpzc{Dom}(\Gamma_1) =
+    \mathpzc{Dom}(\Gamma)$.
+
+    Case (T-Alt-canon-R): Proof is same as the case of (T-Alt-canon-L).
+    $\Box$
+  \end{Proof}      
+\end{Lemma}
+
+
+\pagebreak
+\begin{Definition}
+  \begin{displaymath}
+    \begin{array}{l}
+    \mathcal{M}\bigl(t, t_{\text{\it equ}}, \mathcal{R},
+    \mathcal{S}_{\mathpzc{fin}}, \Delta' \bigr) := \left\{\begin{array}{l}
+      t_{\text{\it equ}} \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}}
+       \in \bigl\{\text{\it gnd}, \text{\it def}, \text{\it nil}, \circ\}\\
+      \mathcal{M}\bigl(\Delta'(t_1)\bigr) \wedge
+       \mathcal{M}\bigl(\Delta'(t_2)\bigr) \quad \text{\it if}\
+        \mathcal{S}_{\mathpzc{fin}} \in \{\wedge\}\ \text{\it and}\
+         t = \exists t_1 \wedge \exists t_2.  \\
+      \mathcal{M}\bigl(\Delta'(t_1) \bigr) \vee
+       \mathcal{M}(\bigl(\Delta'(t_2) \bigr) \quad \text{\it if}\
+        \mathcal{S}_{\mathpzc{fin}} \in \{\vee\}\ \text{\it and}\
+         t = \exists t_1 \vee \exists t_2.  \\
+     \Bigl\{\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}}) \bigr) \Bigr\}
+      \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in
+       \{\text{\it sol} \}\ \text{\it and}\
+        \mathcal{R} = {\mathcal{R}_1}^*\ \text{\it for some}\
+         \mathcal{R}_1  \\ [5pt]
+     \Bigl\{\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_h}) \bigr),
+      \mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_t}) \bigr) \Bigr\}
+       \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in \{\infty\},\
+        \mathcal{R} = {\mathcal{R}_1}^*  \\
+      \quad \text{\it s.t.}\ \Delta'(t_{\text{\it equ}_t}) =
+       (t_{\text{\it equ}_t}, t'_{\text{\it equ}_t}, \mathcal{R}_1,
+        {\mathcal{S}'}_{\mathpzc{fin}}, \Delta''),\ t_{\text{\it equ}} =
+       t_{\text{\it equ}_h} \wedge t_{\text{\it equ}_t}  \\ [3pt]
+     \Bigl\{\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_h}) \bigr),
+       t_2 \cdots t_n \Bigr\}
+      \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in \{\infty\},\
+       \mathcal{R} = {\mathcal{R}_1}^*,\ \text{\it otherwize}  \\
+       \quad \text{\it where}\ \{t_2 \cdots t_n\} =
+        \mathcal{M}_{\{\}}\biggl(t_{\text{\it equ}_t}, \mathcal{R},
+         \Bigl(\Delta' \setminus \bigl(\Delta'(t_{\text{\it equ}_h}) \cup
+          \Delta'_h \bigr) \Bigr) \biggr)  \\
+      \quad \text{\it s.t.}\ t_{\text{\it equ}} = t_{\text{\it equ}_h}
+       \wedge t_{\text{\it equ}_t}\ \text{\it and}\
+        \Delta'(t_{\text{\it equ}_h}) = (t_{\text{\it equ}_h},
+         t'_{\text{\it equ}_h}, \mathcal{R}_1, {\mathcal{S}'}_{\mathpzc{fin}},
+          \Delta'_h)  \\ [5pt]
+     \Bigl[\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}}) \bigr) \Bigr]
+      \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in
+       \{\text{\it sol} \}\ \text{\it and}\
+        \mathcal{R} = {\mathcal{R}_1}^+\ \text{\it for some}\
+         \mathcal{R}_1  \\ [5pt]
+     \Bigl[\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_h}) \bigr),
+      \mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_t}) \bigr) \Bigr]
+       \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in \{\infty\},\
+        \mathcal{R} = {\mathcal{R}_1}^+  \\
+      \quad \text{\it s.t.}\ \Delta'(t_{\text{\it equ}_t}) =
+       (t_{\text{\it equ}_t}, t'_{\text{\it equ}_t}, \mathcal{R}_1,
+        {\mathcal{S}'}_{\mathpzc{fin}}, \Delta''),\ t_{\text{\it equ}} =
+       t_{\text{\it equ}_h} \wedge t_{\text{\it equ}_t}  \\ [3pt]
+     \Bigl[\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_h}) \bigr),
+       t_2 \cdots t_n \Bigr]
+      \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in \{\infty\},\
+       \mathcal{R} = {\mathcal{R}_1}^+,\ \text{\it otherwize}  \\
+       \quad \text{\it where}\ [t_2 \cdots t_n] =
+        \mathcal{M}_{[]}\biggl(t_{\text{\it equ}_t}, \mathcal{R},
+         \Bigl(\Delta' \setminus \bigl(\Delta'(t_{\text{\it equ}_h}) \cup
+          \Delta'_h \bigr) \Bigr) \biggr)  \\
+      \quad \text{\it s.t.}\ t_{\text{\it equ}} = t_{\text{\it equ}_h}
+       \wedge t_{\text{\it equ}_t}\ \text{\it and}\
+        \Delta'(t_{\text{\it equ}_h}) = (t_{\text{\it equ}_h},
+         t'_{\text{\it equ}_h}, \mathcal{R}_1, {\mathcal{S}'}_{\mathpzc{fin}},
+          \Delta'_h)  \\ [5pt]
+     \Bigl\langle\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}}) \bigr)
+      \Bigr\rangle \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in
+       \{\text{\it sol} \}\ \text{\it and}\
+        \mathcal{R} = {\mathcal{R}_1}^\downarrow\ \text{\it for some}\
+         \mathcal{R}_1  \\ [5pt]
+     \Bigl\langle\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_h}) \bigr),
+      \mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_t}) \bigr) \Bigr\rangle
+       \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in \{\infty\},\
+        \mathcal{R} = {\mathcal{R}_1}^\downarrow  \\
+      \quad \text{\it s.t.}\ \Delta'(t_{\text{\it equ}_t}) =
+       (t_{\text{\it equ}_t}, t'_{\text{\it equ}_t}, \mathcal{R}_1,
+        {\mathcal{S}'}_{\mathpzc{fin}}, \Delta''),\ t_{\text{\it equ}} =
+       t_{\text{\it equ}_h} \vee t_{\text{\it equ}_t}  \\ [3pt]
+     \Bigl\langle\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_h}) \bigr),
+       t_2 \cdots t_n \Bigr\rangle
+      \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in \{\infty\},\
+       \mathcal{R} = {\mathcal{R}_1}^\downarrow,\ \text{\it otherwize}  \\
+       \quad \text{\it where}\ \langle t_2 \cdots t_n\rangle =
+        \mathcal{M}_{\langle\rangle}\biggl(t_{\text{\it equ}_t}, \mathcal{R},
+         \Bigl(\Delta' \setminus \bigl(\Delta'(t_{\text{\it equ}_h}) \cup
+          \Delta'_h \bigr) \Bigr) \biggr)  \\
+      \quad \text{\it s.t.}\ t_{\text{\it equ}} = t_{\text{\it equ}_h}
+       \vee t_{\text{\it equ}_t}\ \text{\it and}\
+        \Delta'(t_{\text{\it equ}_h}) = (t_{\text{\it equ}_h},
+         t'_{\text{\it equ}_h}, \mathcal{R}_1, {\mathcal{S}'}_{\mathpzc{fin}},
+          \Delta'_h)  \\ [5pt]
+     {\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}}) \bigr)}^? \quad
+      \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in \{\text{\it sol} \}\
+       \text{\it and}\ \mathcal{R} = {\mathcal{R}_1}^?\
+        \text{\it for some}\ \mathcal{R}_1  \\
+     {\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}}) \bigr)}^\leftarrow
+      \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in
+       \{\text{\it L}\}  \\
+     {\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}}) \bigr)}^\rightarrow
+      \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in
+       \{\text{\it R}\}  \\
+     t \quad \text{\it otherwize}
+    \end{array}\right.
+    
+   \end{array}
+  \end{displaymath}
+
+  \begin{displaymath}
+    \begin{array}{l}
+    \mathcal{M}_{\{\}}\bigl(t, \mathcal{R},\Delta') :=
+     \left\{\begin{array}{l}
+       \Bigl\{\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr\}
+        \quad \text{\it if}\ t \in \mathpzc{Dom}(\Delta')  \\ [5pt]
+       \Bigl\{\mathcal{M}\bigl(\Delta'(t_h) \bigr), t_2 \cdots t_m \Bigr\}\
+        \text{\it else if}\ t = t_h \wedge t_t\ \text{\it s.t.}\
+         \Delta'(t_h) = (t_h, t_{h_{\text{\it equ}}}, \mathcal{R}_1,
+          \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h)  \\
+       \quad \text{\it where}\ \mathcal{R} = {\mathcal{R}_1}^*,\,
+        \{t_2 \cdots t_m\} =
+         \mathcal{M}_{\{\}}\Bigl(t_t, \mathcal{R}, \bigl(\Delta' \setminus
+          \Delta'(t_h) \cup \Delta'_h \bigr) \Bigr)  \\
+       \Bigl\{\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr\}
+        \quad \text{\it otherwise}
+     \end{array}\right.  \\
+     \\
+     
+     \mathcal{M}_{[]}\bigl(t, \mathcal{R},\Delta') :=
+     \left\{\begin{array}{l}
+       \Bigl[\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr]
+        \quad \text{\it if}\ t \in \mathpzc{Dom}(\Delta')  \\ [5pt]
+       \Bigl[\mathcal{M}\bigl(\Delta'(t_h) \bigr), t_2 \cdots t_m \Bigr]\
+        \text{\it else if}\ t = t_h \wedge t_t\ \text{\it s.t.}\
+         \Delta'(t_h) = (t_h, t_{h_{\text{\it equ}}}, \mathcal{R}_1,
+          \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h)  \\
+       \quad \text{\it where}\ \mathcal{R} = {\mathcal{R}_1}^+,\,
+        [t_2 \cdots t_m] =
+         \mathcal{M}_{[]}\Bigl(t_t, \mathcal{R}, \bigl(\Delta' \setminus
+          \Delta'(t_h) \cup \Delta'_h \bigr) \Bigr)  \\
+       \Bigl[\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr]
+        \quad \text{\it otherwise}
+     \end{array}\right.  \\
+     \\
+     \mathcal{M}_{\langle\rangle}\bigl(t, \mathcal{R},\Delta') :=
+     \left\{\begin{array}{l}
+       \Bigl\langle\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr\rangle
+        \quad \text{\it if}\ t \in \mathpzc{Dom}(\Delta')  \\ [5pt]
+       \Bigl\langle\mathcal{M}\bigl(\Delta'(t_h) \bigr), t_2 \cdots t_m
+        \Bigr\rangle\ \text{\it else if}\ t = t_h \vee t_t\ \text{\it s.t.}\
+         \Delta'(t_h) = (t_h, t_{h_{\text{\it equ}}}, \mathcal{R}_1,
+          \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h)  \\
+       \quad \text{\it where}\ \mathcal{R} = {\mathcal{R}_1}^\downarrow,\,
+        \langle t_2 \cdots t_m\rangle =
+         \mathcal{M}_{\langle\rangle}\Bigl(t_t, \mathcal{R}, \bigl(
+          \Delta' \setminus \Delta'(t_h) \cup \Delta'_h \bigr) \Bigr)  \\
+       \Bigl\langle\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr\rangle
+        \quad \text{\it otherwise}
+     \end{array}\right.
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+
+
+\begin{Definition}
+  \[ \mathpzc{Gnd}_{\Delta}(\Delta) \;\stackrel{\mathrm{def}}{:=}
+      \bigl\{t_{\text{\it equ}}\ |\ (t, t_{\text{\it equ}}, \mathcal{R},
+       \mathcal{S}_{\mathpzc{fin}}, \Delta') \in \Delta\ \text{\it s.t.}\
+        \mathcal{S}_{\mathpzc{fin}} \in \{\text{\it gnd}, \text{\it def},
+         \text{\it nil} \} \bigr\}
+  \]
+\end{Definition}
+
+
+\begin{Lemma}
+  \label{consistency_on_grand_terms}
+  \[ \Delta \vdash t \triangleright \mathcal{R},\ \text{\it then}\
+      \mathpzc{gnd}\Bigl(\mathcal{M}\bigl(\Delta(t) \bigr) \Bigr) =
+       \mathpzc{Gnd}_\Delta(\Delta).
+  \]
+  \begin{Proof}
+    Proof is simple induction on derivation for
+    $\Delta \vdash t \triangleright \mathcal{R}$.
+    $\Box$
+  \end{Proof}
+\end{Lemma}
+
+
+\begin{Lemma}
+  \label{consistency_on_domain_independency}
+  \[ \begin{array}{r}
+       \mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2) = \phi\
+        \text{\it where}\ \Delta_1 \vdash t_1 \triangleright \mathcal{R}_1\
+         \text{\it and}\ \Delta_2 \vdash t_2 \triangleright \mathcal{R}_2,\
+          \text{\it then}  \\
+       \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \Bigr) \cap
+        \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \Bigr) = \phi
+     \end{array}
+  \]
+  \begin{Proof}
+    From def. of $\mathpzc{sub}$ over $\mathbb{T}$, any term in
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \Bigr)$
+    consists of the grand terms belonging to
+    $\mathpzc{gnd}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \Bigr)$, which
+    holds on any terms in 
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_2(t_2) \bigr) \Bigr)$ e.g.
+    all of grand terms occuring in
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_2(t_2) \bigr) \Bigr)$ come
+    from $\mathpzc{gnd}\Bigl(\mathcal{M}\bigl(\Delta_2(t_2) \bigr) \Bigr)$.
+    We mention the facts that
+    $\mathpzc{gnd}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \Bigr) =
+    {\mathpzc{Gnd}_\Delta}(\Delta_1) \subseteq \mathpzc{Dom}(\Delta_1)$ and
+    $\mathpzc{gnd}\Bigl(\mathcal{M}\bigl(\Delta_1(t_2) \bigr) \Bigr) =
+    {\mathpzc{Gnd}_\Delta}(\Delta_2) \subseteq \mathpzc{Dom}(\Delta_2)$ from
+    \ref{consistency_on_grand_terms} and def of $\mathpzc{Dom}$, then we
+    find that
+    $\mathpzc{gnd}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \Bigr) \cap
+    \mathpzc{gnd}\Bigl(\mathcal{M}\bigl(\Delta_2(t_2) \bigr) \Bigr) = \phi$
+    because of $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2) =
+    \phi$. Hence we can conclude that
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \Bigr) \cap
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_2(t_2) \bigr) \Bigr) = \phi$.
+    $\Box$
+  \end{Proof}
+\end{Lemma}
+
+
+\begin{Lemma}{completeness on extended matching.}
+  \label{completeness_on_extended_matching}
+  \[ \text{\it if}\ \Delta \vdash t \triangleright \mathcal{R},\
+      \text{\it then}\ \Gamma \vdash \mathcal{M}\bigl( \Delta(t) \bigr):
+       \mathcal{R}\ \text{\it for some}\ \Gamma
+  \]
+  \begin{Proof}
+    Proof is mutual induction with Claim
+    \ref{claim1_for_completeness}, \ref{claim2_for_completeness} and
+    \ref{claim3_for_completeness} on structure of derivation of
+    $\Gamma \vdash t \triangleright \mathcal{R}$.
+    
+    Case (T-Atom0-xtend): From def. of (T-Atom0-xtend), we suppose
+    $\bigl\{(t, t_0, \mathcal{R}_0, \text{\it gnd}, \phi) \bigr\} \vdash
+    t \triangleright \mathcal{R}_0$ s.t. $t \simeq t_0$ with
+    $(t_0, \mathcal{R}_0) \in \Gamma_\text{\it gnd}$. Then
+    we can derive $\bigl\{(t_0, \mathcal{R}_0) \bigr\} \vdash
+    \mathcal{M}\bigl(\Delta(t) \bigr): \mathcal{R}_0$
+    from (T-Atom0-canon), since
+    $\mathcal{M}\bigl(\Delta(t) \bigr) = \mathcal{M}(t, t_0, \mathcal{R}_0,
+    \text{\it gnd}, \phi) = t_0$ from def of $\mathcal{M}$.
+    
+    Case (T-Atom1-xtend): Proof is same as the case of (T-Atom0-xtend).
+    
+    Case (T-Cas-xtend): In this case, we suppose the conclusion of
+    $\Delta \vdash t \triangleright \mathcal{R}_1 \wedge \mathcal{R}_2$,
+    where we let
+    $\Delta = \Bigl\{\bigl(t, t_1 \wedge t_2,
+    \mathcal{R}_1 \wedge \mathcal{R}_2, \wedge, (\Delta_1 \cup \Delta_2)
+    \bigr) \Bigr\} \cup (\Delta_1 \cup \Delta_2)$ s.t.
+    $\Delta_1 \vdash t_1 \triangleright \mathcal{R}_1$ and
+    $\Delta_2 \vdash t_2 \triangleright \mathcal{R}_2$ with the condition
+    that $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2) = \phi$ from
+    def. of (T-Cas-xtend). By induction hypotheses, we suppose that
+    $\Gamma_1 \vdash \mathcal{M}\bigl(\Delta_1(t_1) \bigr) : \mathcal{R}_1$
+    and
+    $\Gamma_2 \vdash \mathcal{M}\bigl(\Delta_2(t_2) \bigr) : \mathcal{R}_2$
+    s.t.
+    $\Delta_1(t_1) = (t_1, t_{\text{\it equ}_1}, \mathcal{R}_1,
+    \mathcal{S}_{\mathpzc{fin}_1}, \Delta_1')$ and
+    $\Delta_2(t_2) = (t_2, t_{\text{\it equ}_2}, \mathcal{R}_2,
+    \mathcal{S}_{\mathpzc{fin}_2}, \Delta_2')$ respectively.
+    According to the facts that
+    $\mathpzc{Dom}(\Delta_1 \cup \Delta_2) =
+    \mathpzc{Dom}(\Delta_1) \cup \mathpzc{Dom}(\Delta_2)$ s.t.
+    $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2) = \phi$, we find
+    $t_1 \in \mathpzc{Dom}(\Delta_1)$ for
+    $\Delta_1 \vdash t_1 \triangleright \mathcal{R}_1$, and
+    $t_1 \not\in \mathpzc{Dom}(\Delta_2)$, Similarly we also find
+    $t_2 \in \mathpzc{Dom}(\Delta_2)$ and
+    $t_2 \not\in \mathpzc{Dom}(\Delta_1)$. Then
+    $\mathcal{M}\bigl(\Delta(t) \bigr) =
+    \mathcal{M}\bigl(t, t_1 \wedge t_2, \mathcal{R}_1 \wedge \mathcal{R}_2,
+    \wedge, (\Delta_1 \cup \Delta_2) \bigr) =
+    \mathcal{M}\bigl((\Delta_1 \cup \Delta_2)(t_1) \bigr) \wedge
+    \mathcal{M}\bigl((\Delta_1 \cup \Delta_2)(t_2) \bigr) =
+    \mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge \mathcal{M}\bigl(
+    \Delta_2(t_2) \bigr)$ allows us to conclude
+    $\biggl\{\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge
+    \mathcal{M}\bigl(\Delta_2(t_2) \bigr), \mathcal{R}_1 \wedge
+    \mathcal{R}_2 \Bigr) \biggr\} \cup (\Gamma_1 \cup \Gamma_2) \vdash
+    \mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge \mathcal{M}\bigl(
+    \Delta_2(t_2) \bigr) : \mathcal{R}_1 \wedge \mathcal{R}_2$ from
+    (T-Cas-canon), with the conditions of
+    $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2) = \phi$ and
+    $\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge \mathcal{M}\bigl(
+    \Delta_2(t_2) \bigr) \not\in \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2)$ as
+    desired, using Lemma \ref{consistency_on_domain_independency},
+    \ref{subterms_includes_its_domain_over_canonical_terms} and
+    Lemma \ref{termsize_constraint_on_environment} respectively.
+    We mention that we find
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \Bigr) \cap
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_2(t_2) \bigr) \Bigr) = \phi$
+    from the facts as
+    $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2) = \phi$ s.t.
+    $\Delta_1 \vdash t_1 \triangleright \mathcal{R}_1$ and
+    $\Delta_2 \vdash t_2 \triangleright \mathcal{R}_2$ with
+    Lemma \ref{consistency_on_domain_independency}, then we still do
+    $\mathpzc{Dom}(\Gamma_1) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
+    \Delta_1(t_1) \bigr) \Bigr)$ and
+    $\mathpzc{Dom}(\Gamma_2) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
+    \Delta_2(t_2) \bigr) \Bigr)$ as
+    $\Gamma_1 \vdash \mathcal{M}\bigl(\Delta_1(t_1) \bigr) :
+    \mathcal{R}_1$ and
+    $\Gamma_2 \vdash \mathcal{M}\bigl(\Delta_2(t_2) \bigr) :
+    \mathcal{R}_2$ from
+    Lemma \ref{subterms_includes_its_domain_over_canonical_terms}
+    respectively, thus
+    $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2) = \phi$.
+    Consequently, we consider the reason of
+    $\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge
+    \mathcal{M}\bigl(\Delta_2(t_2) \bigr) \not\in 
+    \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2)$ as follow, we find that
+    $\mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge
+    \mathcal{M}\bigl(\Delta_2(t_2) \bigr) \Bigr) >
+    \mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \Bigr) \ge
+    \mathpzc{size}(t'_1)$ for any $t'_1 \in \mathpzc{Dom}(\Gamma_1)$
+    from Lemma \ref{termsize_constraint_on_environment}, which implies that
+    $\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge
+    \mathcal{M}\bigl(\Delta_2(t_2) \bigr) \not\in \mathpzc{Dom}(\Gamma_1)$,
+    $\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge
+    \mathcal{M}\bigl(\Delta_2(t_2) \bigr) \not\in \mathpzc{Dom}(\Gamma_2)$
+    is similar, thus
+    $\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge
+    \mathcal{M}\bigl(\Delta_2(t_2) \bigr) \not\in
+    \Bigl(\mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}(\Gamma_2) \Bigr) =
+    \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2)$. Note that we express the
+    reason of 
+    $\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge
+    \mathcal{M}\bigl(\Delta_2(t_2) \bigr) \not\in \mathpzc{Dom}(\Gamma_1)$
+    above, which we find by making use the constraint on size of terms
+    belonging to the environment e.g.
+    $\mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge
+    \mathcal{M}\bigl(\Delta_2(t_2) \bigr) \Bigr) >
+    \mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \Bigr) \ge
+    \mathpzc{size}(t'_1)$ for any $t'_1 \in \mathpzc{Dom}(\Gamma_1)$, as
+    ``term size constraint'' in below.
+    
+    Case (T-Par-xtend): Proof is same as the case of (T-Cas-xtend).
+    
+    Case (T-Cat0-xtend-nil): Similar to the case of (T-Atom0-xtend) as
+    follow. We suppose
+    $\Bigl\{\bigl(t, \{\}, {\mathcal{R}_1}^*, \text{\it nil}, \phi \bigr)
+    \Bigr\} \vdash t \triangleright {\mathcal{R}_1}^*$ s.t.
+    $t \simeq \{\}$. Thus we can derive
+    $\Bigl\{\bigl(\{\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \vdash
+    \mathcal{M}\bigl(\Delta(t) \bigr): {\mathcal{R}_0}^*$ from
+    (T-Cat0-canon-nil), since
+    $\mathcal{M}\bigl(\Delta(t) \bigr) =
+    \mathcal{M}\bigl(t, \{\}, {\mathcal{R}_0}^*, \text{\it nil}, \phi
+    \bigr) = \{\}$ from def of $\mathcal{M}$.
+    
+    Case (T-Cat0-xtend-sol): In this case, we suppose the deduction of
+    $\Delta \vdash t \triangleright {\mathcal{R}_1}^*$ from
+    (T-Cat0-xtend-sol) where
+    $\Delta = \bigl\{(t, t', {\mathcal{R}_1}^*, \text{\it sol}, \Delta')
+    \bigr\} \cup \Delta'$ we let, which also implies the existence of
+    derivation of $\Delta' \vdash t' \triangleright \mathcal{R}_1$ s.t.
+    $t \simeq t'$ and $t \not\in \mathpzc{Dom}(\Delta')$. According to
+    the fact that
+    $\Gamma' \vdash \mathcal{M}\bigl(\Delta'(t') \bigr) : \mathcal{R}_1$
+    for some $\Gamma'$, which we obtain by applying induction hypotheses
+    on $\Delta' \vdash t' \triangleright \mathcal{R}_1$, we have
+    $\Biggl\{\biggl(\Bigl\{\mathcal{M}\bigl(\Delta'(t') \bigr) \Bigr\},
+    {\mathcal{R}_1}^* \biggr) \Biggr\} \cup \Gamma' \vdash \Bigl\{
+    \mathcal{M}\bigl(\Delta'(t') \bigr) \Bigr\} : {\mathcal{R}_1}^*$ from
+    (T-Cat0-canon-$\infty$), since
+    $\mathcal{M}\bigl(\Delta(t) \bigr) =
+    \mathcal{M}(t, t', {\mathcal{R}_1}^*, \text{\it sol}, \Delta') =
+    \Bigl\{\mathcal{M}\bigl(\Delta'(t') \bigr) \Bigr\}$ s.t
+    $\Bigl\{\mathcal{M}\bigl(\Delta'(t') \bigr) \Bigr\} \not\in
+    \mathpzc{Dom}(\Gamma')$ by term size constraint. e.g.
+    $\mathpzc{size}\biggl(\Bigl\{\mathcal{M}\bigl(\Delta'(t') \bigr)
+    \Bigr\} \biggr) >
+    \mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta'(t') \bigr) \Bigr) \ge
+    \mathpzc{size}(t'')$ for any $t'' \in \mathpzc{Dom}(\Gamma')$ from
+    Lemma \ref{termsize_constraint_on_environment} for
+    $\Gamma' \vdash \mathcal{M}\bigl(\Delta'(t') \bigr) : \mathcal{R}_1$,
+    which implies $\Bigl\{\mathcal{M}\bigl(\Delta'(t') \bigr) \Bigr\} \in
+    \mathpzc{Dom}(\Gamma')$ as desired.
+    
+    Case (T-Cat0-xtend-$\infty$): In this case, we suppose the last applied
+    on deduction of $\Delta \vdash t \triangleright {\mathcal{R}_1}^*$ is
+    (T-Cat0-xtend-$\infty$), where we let
+    $\Delta = \Bigl\{\bigl(t, t_h \wedge t'_t, {\mathcal{R}_1}^*, \infty,
+    (\Delta_h \cup \Delta'_t) \bigr) \Bigr\} \cup (\Delta_h \cup \Delta'_t)$
+    s.t. $\Delta_h = \bigl\{(t_h, t'_h, \mathcal{R}_1,
+    \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h)\bigr\} \cup \Delta'_h$ and
+    $\Delta_t = \bigl\{(t_t, t'_t, {\mathcal{R}_1}^*,
+    \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t) \bigr\} \cup \Delta'_t$
+    comming from
+    $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ and
+    $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ as respective.
+    Additionally, there are 2 cases to be considered, focusing on
+    the derivation of $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$
+    as follow.
+    Subcase (T-Cat0-xtend-sol): In this case, we suppose that
+    the last applied rule on the derivation of
+    $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ is
+    (T-Cat0-xtend-sol), where
+    $\Delta_t = \bigl\{(t_t, t'_t, {\mathcal{R}_1}^*, \text{\it sol},
+    \Delta'_t) \bigr\} \cup \Delta'_t$ and
+    $\Delta'_t = (t'_t, t''_t, \mathcal{R}_1,
+    \mathcal{S}_{\mathpzc{fin}_{t'}}, \Delta''_t)$ s.t.
+    $\Delta'_t \vdash t'_t \triangleright \mathcal{R}_1$ we let.
+    By applying induction hypotheses on
+    $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$, we find
+    $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) : \mathcal{R}_1$
+    for some $\Gamma_h$. Similarly, we can also obtain that
+    $\Gamma'_t \vdash \mathcal{M}\bigl(\Delta'_t(t'_t) \bigr) :
+    \mathcal{R}_1$ for some $\Gamma'_t$ from induction hypotheses for
+    $\Delta'_t \vdash t'_t \triangleright \mathcal{R}_1$.
+    Accounting on the fact that
+    $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$ as
+    $\Delta_t = \bigl\{(t_t, t'_t, {\mathcal{R}_1}^*, \text{\it sol},
+    \Delta'_t) \bigr\} \cup \Delta'_t$, we find
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta'_t) = \phi$, because
+    of $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ from
+    the def. of (T-Cat0-xtend-$\infty$). Then we can say
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr) \cap
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta'_t(t'_t) \bigr) \Bigr) =
+    \phi$ from Lemma \ref{consistency_on_domain_independency} for
+    $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ and
+    $\Delta'_t \vdash t'_t \triangleright \mathcal{R}_1$ above. By now,
+    recalling the facts we revealed above as
+    $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) : \mathcal{R}_1$
+    and $\Gamma'_t \vdash \mathcal{M}\bigl(\Delta'_t(t'_t) \bigr) :
+    \mathcal{R}_1$ for some $\Gamma_h$ and $\Gamma'_t$ respectively, we
+    still find that
+    $\mathpzc{Dom}(\Gamma_h) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
+    \Delta_h(t_h) \bigr) \Bigr)$ and
+    $\mathpzc{Dom}(\Gamma'_t) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
+    \Delta'_t(t'_t) \bigr) \Bigr)$ from
+    Lemma \ref{subterms_includes_its_domain_over_canonical_terms}. Therefore
+    we conclude
+    $\mathpzc{Dom}(\Gamma_h) \cap \mathpzc{Dom}(\Gamma'_t) = \phi$ since
+    $\mathpzc{Dom}(\Gamma_h) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
+    \Delta_h(t_h) \bigr) \Bigr)$ and
+    $\mathpzc{Dom}(\Gamma'_t) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
+    \Delta'_t(t'_t) \bigr) \Bigr)$ s.t.
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr) \cap
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta'_t(t'_t) \bigr) \Bigr) =
+    \phi$ as above.
+    Hence we obtain the conclusion as
+    $\biggl\{\Bigl(\bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr),
+    \mathcal{M}\bigl(\Delta'_t(t'_t) \bigr) \bigr\}, {\mathcal{R}_1}^*
+    \Bigr) \biggr\} \cup (\Gamma_h \cup \Gamma'_t) \vdash
+    \Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr), \mathcal{M}\bigl(
+    \Delta'_t(t'_t) \bigr) \Bigr\} : {\mathcal{R}_1}^*$ from
+    (T-Cat0-canon-$\infty$), where we mention that
+    $\mathcal{M}\bigl(\Delta(t) \bigr) =
+    \mathcal{M}\bigl(t, t_h \wedge t'_t, {\mathcal{R}_1}^*, \infty,
+    (\Delta_h \cup \Delta'_t) \bigr) =
+    \Bigl\{\mathcal{M}\bigl((\Delta_h \cup \Delta'_t)(t_h) \bigr),
+    \mathcal{M}\bigl((\Delta_h \cup \Delta'_t)(t'_t) \bigr) \Bigr\} =
+    \Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr),
+    \mathcal{M}\bigl(\Delta'_t(t'_t) \bigr) \Bigr\}$ since
+    $(\Delta_h \cup \Delta'_t)(t'_t) = \Delta'_t(t'_t) =
+    (t'_t, t''_t, \mathcal{R}_1, \mathcal{S}_{\mathpzc{fin}_{t'}},
+    \Delta''_t)$ from def. of $\mathcal{M}$, with
+    $\Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr), \mathcal{M}\bigl(
+    \Delta'_t(t'_t) \bigr) \Bigr\} \not\in \mathpzc{Dom}(\Gamma_h)$ and
+    $\Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr), \mathcal{M}\bigl(
+    \Delta'_t(t'_t) \bigr) \Bigr\} \not\in \mathpzc{Dom}(\Gamma'_t)$ s.t.
+    $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) : \mathcal{R}_1$
+    and $\Gamma'_t \vdash \mathcal{M}\bigl(\Delta'_t(t'_t) \bigr) :
+    \mathcal{R}_1$ respectively by term size constraint. e.g.
+    $\mathpzc{size}\biggl(\Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr),
+    \mathcal{M}\bigl(\Delta'_t(t'_t) \bigr) \Bigr\} \biggr) >
+    \mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr) \ge
+    \mathpzc{size}(t''_h)$ for any $t''_h \in \mathpzc{Dom}(\Gamma_h)$ from
+    Lemma \ref{termsize_constraint_on_environment}, which implies that
+    $\Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr), \mathcal{M}\bigl(
+    \Delta'_t(t'_t) \bigr) \Bigr\} \not\in \mathpzc{Dom}(\Gamma_h)$, then
+    $\Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr), \mathcal{M}\bigl(
+    \Delta'_t(t'_t) \bigr) \Bigr\} \not\in \mathpzc{Dom}(\Gamma'_t)$ is
+    similar. Therefore
+    $\bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr), \mathcal{M}\bigl(
+    \Delta'_t(t'_t) \bigr) \bigr\} \not\in
+    \bigl(\mathpzc{Dom}(\Gamma_h) \cup \mathpzc{Dom}(\Gamma'_t) \bigr)$ as
+    desired.
+    Subcase (T-Cat0-xtend-$\infty$): Otherwise, e.g. in the case of that
+    the last applied rule on
+    $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ isn't
+    (T-Cat0-xtend-sol), we can predicate that the last one on
+    $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ is just
+    (T-Cat0-xtend-$\infty$), since the constraint of $t'_t \neq \{\}$ s.t.
+    $\Delta'_t = (t'_t, t''_t, {\mathcal{R}_1}^*,
+    \mathcal{S}_{\mathpzc{fin}_{t'}}, \Delta''_t)$ eliminates
+    the case of (T-Cat0-xtend-nil) as the last applied rule on it. Then
+    we suppose
+    $\Delta_t = \bigl\{(t_t, t'_t, {\mathcal{R}_1}^*, \infty, \Delta'_t)
+    \bigr\} \cup \Delta'_t$ s.t.
+    $t'_t = t_{t_h} \wedge t'_{t_t}$ and
+    $\Delta'_t = \Delta_{t_h} \cup \Delta'_{t_t}$, where we let
+    $\Delta_{t_h} = \bigl\{(t_{t_h}, t'_{t_h}, \mathcal{R}_1,
+    \mathcal{S}_{\mathpzc{fin}_{t_h}}, \Delta'_{t_h} ) \bigr\} \cup
+    \Delta'_{t_h}$ for some
+    $t'_{t_h}, \mathcal{S}_{\mathpzc{fin}_{t_h}}, \Delta'_{t_h}$, and
+    $\Delta_{t_t} = \bigl\{(t_{t_t}, t'_{t_t}, {\mathcal{R}_1}^*,
+    \mathcal{S}_{\mathpzc{fin}_{t_t}}, \Delta'_{t_t} ) \bigr\}
+    \cup \Delta'_{t_t}$ for some
+    $t'_{t_t}, \mathcal{S}_{\mathpzc{fin}_{t_t}}, \Delta'_{t_t}$
+    according to
+    $\Delta_{t_h} \vdash t_{t_h} \triangleright \mathcal{R}_1$ and
+    $\Delta_{t_t} \vdash t_{t_t} \triangleright {\mathcal{R}_1}^*$,
+    both of these are subderivation of
+    $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ by
+    (T-Cat0-xtend-$\infty$), respectively. Based on above assumptions with
+    the fact $t'_t \not\in \mathpzc{Dom}(\Delta_h \cup \Delta'_t)$
+    since $\mathpzc{Dom}(\Delta_h \cup \Delta'_t) = \bigl(
+    \mathpzc{Dom}(\Delta_h) \cup \mathpzc{Dom}(\Delta'_t) \bigr) \subseteq
+    \bigl(\mathpzc{Dom}(\Delta_h) \cup \mathpzc{Dom}(\Delta_t) \bigr) =
+    \mathpzc{Dom}(\Delta_h \cup \Delta_t)$ s.t.
+    $t'_t \not\in \mathpzc{Dom}(\Delta_h \cup \Delta_t)$ from def. of
+    (T-Cat0-xtend-$\infty$), we get
+    $\mathcal{M}\bigl(\Delta(t) \bigr) =
+    \mathcal{M}(t, t_h \wedge t'_t, {\mathcal{R}_1}^*, \infty,
+    \Delta_h \cup \Delta'_t ) =
+    \Bigl\{\mathcal{M}\bigl((\Delta_h \cup \Delta'_t)(t_h) \bigr),
+    t_2, \cdots t_n \Bigr\} =
+    \Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr), t_2, \cdots t_n \Bigr\}$
+    where $\{t_2, \cdots t_n\} =
+    \mathcal{M}_{\{\}}\biggl(t'_t, {\mathcal{R}_1}^*,\Bigl(
+    (\Delta_h \cup \Delta'_t) \setminus \bigl((\Delta_h \cup \Delta'_t)(t_h)
+    \cup \Delta'_h \bigr) \Bigr) \biggr) =
+    \mathcal{M}_{\{\}}\biggl(t'_t, {\mathcal{R}_1}^*,\Bigl(
+    (\Delta_h \cup \Delta'_t) \setminus \bigl(\Delta_h(t_h) \cup \Delta'_h
+    \bigr) \Bigr) \biggr) =
+    \mathcal{M}_{\{\}}\Bigl(t'_t, {\mathcal{R}_1}^*,\bigl(
+    (\Delta_h \cup \Delta'_t) \setminus \Delta_h \bigr) \Bigr) =
+    \mathcal{M}_{\{\}}(t'_t, {\mathcal{R}_1}^*, \Delta'_t )$ s.t.
+    $(\Delta_h \cup \Delta'_t)(t_h) = \Delta_h(t_h) = 
+    (t_h, t'_h, \mathcal{R}_1, \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h)$
+    for $t_h \not\in \mathpzc{Dom}(\Delta'_t)$.
+    Here we mention that
+    $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ implies
+    $t_h \in \mathpzc{Dom}(\Delta_h)$, thus
+    we can say $t_h \not\in \mathpzc{Dom}(\Delta'_t)$ as
+    $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$ s.t.
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$. From
+    def. of (T-Cat0-xtend-$\infty$) applied on
+    $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$, we know that
+    $t'_t = t_{t_h} \wedge t'_{t_t} \not\in
+    \bigl(\mathpzc{Dom}(\Delta_{t_h}) \cup \mathpzc{Dom}(\Delta'_{t_t})
+    \bigr) = \mathpzc{Dom}(\Delta'_t)$ since
+    $\bigl(\mathpzc{Dom}(\Delta_{t_h}) \cup \mathpzc{Dom}(\Delta'_{t_t})
+    \bigr) \subseteq \bigl(\mathpzc{Dom}(\Delta_{t_h}) \cup \mathpzc{Dom}(
+    \Delta_{t_t}) \bigr) = \mathpzc{Dom}(\Delta_{t_h} \cup \Delta_{t_t})$
+    s.t. $t'_t = t_{t_h} \wedge t'_{t_t} \not\in \mathpzc{Dom}(
+    \Delta_{t_h} \cup \Delta_{t_t})$, then we look for
+    $\{t_2, \cdots t_n\} =
+    \mathcal{M}_{\{\}}(t'_t, {\mathcal{R}_1}^*, \Delta'_t ) =
+    \Bigl\{\mathcal{M}\bigl(\Delta'_t(t_{t_h}) \bigr), t'_2, \cdots t'_m
+    \Bigr\}$ where
+    $\{t'_2, \cdots t'_m\} = \mathcal{M}_{\{\}}\biggl(
+    t'_{t_t}, {\mathcal{R}_1}^*, \Bigr(\Delta'_t \setminus \bigl(
+    \Delta'_t(t_{t_h}) \cup \Delta'_{t_h} \bigr) \Bigr) \biggr)$ s.t.
+    $\Delta'_t(t_{t_h}) = (\Delta_{t_h} \cup \Delta'_{t_t})(t_{t_h}) =
+    \Delta_{t_h}(t_{t_h}) =  (t_{t_h}, t'_{t_h}, \mathcal{R}_1,
+    \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_{t_h} )$ since
+    $t_{t_h} \not\in \mathpzc{Dom}(\Delta'_{t_t})$ for the same reason
+    of $t_h \not\in \mathpzc{Dom}(\Delta'_t)$ above. Then
+    we can apply Claim \ref{claim1_for_completeness} on
+    $\{t'_2, \cdots t'_m\} = \mathcal{M}_{\{\}}\biggl(
+    t'_{t_t}, {\mathcal{R}_1}^*, \Bigr(\Delta'_t \setminus \bigl(
+    \Delta'_t(t_{t_h}) \cup \Delta'_{t_h} \bigr) \Bigr) \biggr)$,
+    we obtain the facts that
+    $\Gamma'_2 \vdash t'_2: \mathcal{R}_1, \cdots
+    \Gamma'_m \vdash t'_m: \mathcal{R}_1$ for some
+    $\Gamma'_2, \cdots \Gamma'_m$ s.t.
+    $\mathpzc{Dom}(\Gamma'_j) \cap \mathpzc{Dom}(\Gamma'_k) = \phi$
+    if $j \neq k$, and
+    $\bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \subseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_t} (t_{t_t}) \bigr)
+    \Bigr)$. According to the facts that
+    $\mathpzc{Dom}(\Delta_{t_h}) \cap \mathpzc{Dom}(\Delta_{t_t}) = \phi$
+    s.t. $\Delta_{t_h} \vdash t_{t_h} \triangleright \mathcal{R}_1$,
+    $\Delta_{t_t} \vdash t_{t_t} \triangleright {\mathcal{R}_1}^*$, we get
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr)
+    \Bigr) \cap \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_t}(t_{t_t})
+    \bigr) \Bigr) = \phi$ with
+    $\mathpzc{Dom}(\Gamma_{t_h}) \subseteq \mathpzc{sub}\Bigl(
+    \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr) \Bigr)$ s.t.
+    $\Gamma_{t_h} \vdash \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr) :
+    \mathcal{R}_1$ from
+    Lemma \ref{consistency_on_domain_independency} and induction hypotheses
+    applied on
+    $\Delta_{t_h} \vdash t_{t_h} \triangleright \mathcal{R}_1$
+    respectively. Then we still find that
+    $\mathpzc{Dom}(\Gamma_{t_h}) \cap \bigcup_{j=2}^m\mathpzc{Dom}(
+    \Gamma'_j) = \phi$ for
+    $\bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) \subseteq \mathpzc{sub}\Bigl(
+    \mathcal{M}\bigl(\Delta_{t_t}(t_{t_t}) \bigr) \Bigr)$.
+    On accounting the facts that
+    $\mathpzc{Dom}(\Delta_{t_h}) \subseteq \mathpzc{Dom}(\Delta_t)$ s.t.
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$,
+    we find that
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr) \cap
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr)
+    \Bigr) = \phi$ by similar to above with
+    Lemma \ref{consistency_on_domain_independency}. Since
+    $\mathpzc{Dom}(\Gamma_h) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
+    \Delta_h(t_h) \bigr) \Bigr)$ s.t.
+    $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) :
+    \mathcal{R}_1$ and
+    $\mathpzc{Dom}(\Gamma_{t_h}) \subseteq \mathpzc{sub}\Bigl(
+    \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr) \Bigr)$ s.t.
+    $\Gamma_{t_h} \vdash \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr) :
+    \mathcal{R}_1$ both are from
+    Lemma \ref{subterms_includes_its_domain_over_canonical_terms}, then
+    we obtain
+    $\mathpzc{Dom}(\Gamma_{t_h}) \cap \bigl(\mathpzc{Dom}(\Gamma_h) \cup
+    \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \bigr) = \phi$ for
+    $\mathpzc{Dom}(\Gamma_{t_h}) \cap \bigcup_{j=2}^m \mathpzc{Dom}(
+    \Gamma'_j) = \phi$. Similar to above, accrding to the facts that
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ with
+    $\Delta_h \vdash t_h : \mathcal{R}_1$ and
+    $\Delta_t \vdash t_t : {\mathcal{R}_1}^*$, we see that
+    $\mathpzc{Dom}(\Gamma_h) \cap \mathpzc{Dom}(\Gamma_t) = \phi$ s.t
+    $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) :
+    \mathcal{R}_1$ and
+    $\Gamma_t \vdash \mathcal{M}\bigl(\Delta_t(t_t) \bigr)
+    :{\mathcal{R}_1}^*$ since
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr) \cap
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr) =
+    \phi$ s.t.
+    $\mathpzc{Dom}(\Gamma_h) \subseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr)$ and
+    $\mathpzc{Dom}(\Gamma_t) \subseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr)$ from
+    Lemma \ref{consistency_on_domain_independency} and
+    \ref{subterms_includes_its_domain_over_canonical_terms}. We next
+    focus on $\mathcal{M}\bigl(\Delta_t(t_t) \bigr)$ to show
+    $\bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \subseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr)$.
+    From def of $\mathcal{M}$, we know that
+    $\mathcal{M}\bigl(\Delta_t(t_t) \bigr) =
+    \mathcal{M}(t_t, t'_t, {\mathcal{R}_1}^*, \infty, \Delta'_t) =
+    \mathcal{M}(t_t, t_{t_h} \wedge t'_{t_t}, {\mathcal{R}_1}^*, \infty,
+    \Delta'_t) =
+    \Bigl\{\mathcal{M}\bigl(\Delta'_t(t_{t_h}) \bigr), t''_2, \cdots
+    t''_l \Bigr\} =
+    \Bigl\{\mathcal{M}\bigl((\Delta_{t_h} \cup \Delta'_{t_t})(t_{t_h})
+    \bigr), t''_2, \cdots t''_l \Bigr\} =
+    \Bigl\{\mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr), t''_2, \cdots
+    t''_l \Bigr\}$ where
+    $\{t''_2, \cdots t''_l \} =
+    \mathcal{M}_{\{\}}\biggl(t'_{t_t}, {\mathcal{R}_1}^*, \Bigl(\Delta'_t
+    \setminus \bigl(\Delta'_t(t_{t_h}) \cup \Delta'_{t_h} \bigr) \Bigr)
+    \biggr) = \{t'_2, \cdots t'_m \}$ as above. Thus
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr) =
+    \mathpzc{sub}\bigl(\mathcal{M}(t_t, t'_t, {\mathcal{R}_1}^*, \infty,
+    \Delta'_t) \bigr) =
+    \mathpzc{sub}\biggl(\Bigl\{\mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr),
+    t'_2, \cdots t'_m \Bigr\} \biggr) \supseteq
+    \bigcup_{j=2}^m \mathpzc{sub}(t'_j) \supseteq
+    \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j)$ e.g.
+    $\bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \subseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr)$ s.t.
+    $\Gamma'_j \vdash t'_j : \mathcal{R}_1$ for each $2 \le j \le m$.
+    Therefore
+    $\mathpzc{Dom}(\Gamma_h) \cap \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j)
+    = \phi$ from
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr) \cap
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr) =
+    \phi$ with
+    $\mathpzc{Dom}(\Gamma_h) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
+    \Delta_h(t_h) \bigr) \Bigr)$ we revealed above, which even implies that
+    $\mathpzc{Dom}(\Gamma_h) \cap \bigl(\mathpzc{Dom}(\Gamma_{t_h}) \cup
+    \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \bigr) = \phi$ since
+    $\mathpzc{Dom}(\Gamma_h) \cap \mathpzc{Dom}(\Gamma_{t_h}) = \phi$ as
+    above. Consequently we have revealed that
+    $\mathpzc{Dom}(\Gamma'_j) \cap \mathpzc{Dom}(\Gamma'_k) = \phi$ s.t.
+    $j \neq k$,
+    $\mathpzc{Dom}(\Gamma_{t_h}) \cap \bigcup_{j=2}^m \mathpzc{Dom}(
+    \Gamma'_j) = \phi$ and
+    $\mathpzc{Dom}(\Gamma_h) \cap \bigl(\mathpzc{Dom}(\Gamma_{t_h}) \cup
+    \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \bigr) = \phi$, which
+    allow us to conclude as
+    $\biggl\{\Bigl(\mathcal{M}\bigl(\Delta(t) \bigr), {\mathcal{R}_1}^*
+    \Bigr) \biggr\} \cup \bigl(\Gamma_h \cup \Gamma_{t_h} \cup
+    \bigcup_{j=2}^m \Gamma'_j \bigr) \vdash
+    \mathcal{M}\bigl(\Delta(t) \bigr) : {\mathcal{R}_1}^*$ where
+    $\mathcal{M}\bigl(\Delta(t) \bigr) = \Bigl\{
+    \mathcal{M}\bigl(\Delta_h(t_h) \bigr),
+    \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr), t'_2, \cdots t'_m
+    \Bigr\}$ s.t.
+    $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) :
+    \mathcal{R}_1$, for some $\Gamma_h$,
+    $\Gamma_{t_h} \vdash \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr) :
+    \mathcal{R}_1$, for some $\Gamma_{t_h}$, and
+    $\Gamma'_j \vdash t'_j : \mathcal{R}_1$ for each $2 \le j \le m$
+    respectively. We mention that
+    $\mathcal{M}\bigl(\Delta(t) \bigr) = \Bigl\{
+    \mathcal{M}\bigl(\Delta_h(t_h) \bigr),
+    \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr), t'_2, \cdots t'_m
+    \Bigr\} \not\in \mathpzc{Dom}\bigl(\Gamma_h \cup \Gamma_{t_h} \cup
+    \bigcup_{j=2}^m \Gamma'_j \bigr)$ by size constraint, e.g.
+    $\mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta(t) \bigr) \Bigr) >
+    \mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr)$,
+    $\mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr)
+    \Bigr)$, $\mathpzc{size}(t'_2),\ \cdots \mathpzc{size}(t'_m)$ which
+    implies that
+    $\mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta(t) \bigr) \Bigr) >
+    \mathpzc{size}(t'')$ s.t.
+    $t'' \in \mathpzc{Dom}\bigl(\Gamma_h \cup \Gamma_{t_h}
+    \cup \bigcup_{j=2}^m \Gamma'_j \bigr)$ from
+    Lemma \ref{termsize_constraint_on_environment} as
+    $\mathpzc{size}(t''_h) \le \mathpzc{size}\Bigl(\mathcal{M}\bigl(
+    \Delta_h(t_h) \bigr) \Bigr)$ s.t. $t''_h \in \mathpzc{Dom}(\Gamma_h)$
+    for
+    $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) : \mathcal{R}_1$,
+    and other cases of
+    $t''_{t_h} \in \mathpzc{Dom}(\Gamma_{t_h})$,
+    $t''_j \in \mathpzc{Dom}(\Gamma'_j)$ for each $2 \le j \le m$ are
+    similar, thus we find that
+    $\mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta(t) \bigr) \Bigr) > t''$
+    for any $t'' \in  \mathpzc{Dom}\bigl(\Gamma_h \cup \Gamma_{t_h} \cup
+    \bigcup_{j=2}^m \Gamma'_j \bigr)$.
+    
+    Case (T-Cat1-xtend-sol):
+    Proof is similar to the case of (T-Cat0-xtend-sol).
+    
+    Case (T-Cat1-xtend-$\infty$):
+    Proof is similar to the case of (T-Cat0-xtend-$\infty$), with Claim
+    \ref{claim2_for_completeness}.
+    
+    Case (T-Dup-xtend-sol):
+    Proof is same as the case of case (T-Cat1-xtend-sol).
+    
+    Case (T-Dup-xtend-$\infty$):
+    Proof is same as the case of (T-Cat1-xtend-$\infty$) with
+    \ref{claim3_for_completeness}.
+
+    Case (T-Opt-xtend-nil):
+    Proof is similar to the case of (T-Cat0-xtend-nil), from the def of
+    $\mathcal{M}$ as
+    $\mathcal{M}\bigl(\Delta(t) \bigr) =
+    \mathcal{M}(t, \circ, {\mathcal{R}_1}^?, \text{\it nil}, \phi) =
+    \circ$, with (T-Opt-canon-nil).
+
+    Case (T-Opt-xtend-sol):
+    We suppose that
+    $\Delta \vdash t \triangleright {\mathcal{R}_1}^?$ where we let
+    $\Delta = \bigl\{(t, t', {\mathcal{R}_1}^?, \text{\it sol}, \Delta')
+    \bigr\} \cup \Delta'$ s.t
+    $\Delta' \vdash t' \triangleright \mathcal{R}_1$ from def. of
+    (T-Opt-xtend-sol). Then from def. of $\mathcal{M}$, we obtain
+    $\mathcal{M}\bigl(\Delta(t) \bigr) =
+    \mathcal{M}(t, t', {\mathcal{R}_1}^?, \text{\it sol}, \Delta') =
+    {\mathcal{M}\bigl(\Delta'(t') \bigr)}^?$ s.t.
+    $\Gamma' \vdash \mathcal{M}\bigl(\Delta'(t') \bigr) : \mathcal{R}_1$
+    for some $\Gamma'$ by induction hypotheses appled on
+    $\Delta' \vdash t' \triangleright \mathcal{R}_1$, which also satisfies
+    the condition that
+    ${\mathcal{M}\bigl(\Delta'(t') \bigr)}^? \not\in \mathpzc{Dom}(
+    \Gamma')$ by term size constraint. e.g.
+    $\mathpzc{size}\Bigl({\mathcal{M}\bigl(\Delta'(t') \bigr)}^? \Bigr) >
+    \mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta'(t') \bigr) \Bigr) \ge
+    \mathpzc{size}(t'')$ for any
+    $t'' \in \mathpzc{Dom}\bigl(\Gamma' \bigr)$ as desired, from
+    Lemma \ref{termsize_constraint_on_environment} for
+    $\Gamma' \vdash \mathcal{M}\bigl(\Delta'(t') \bigr) : \mathcal{R}_1$.
+    Therefore we obtain
+    $\biggl\{\Bigl({\mathcal{M}\bigl(\Delta'(t') \bigr)}^?,
+    {\mathcal{R}_1}^? \Bigr) \biggr\} \cup \Gamma' \vdash
+    {\mathcal{M}\bigl(\Delta'(t') \bigr)}^? : {\mathcal{R}_1}^?$ from
+    (T-Opt-canon-sol).
+    
+    Case (T-Alt-xtend-L):
+    Proof is similar to the case of (T-Opt-xtend-sol), with
+    (T-Alt-canon-L).
+    
+    Case (T-Alt-xtend-R):
+    Proof is same as the case of (T-Alt-xtend-L), with (T-Alt-canon-R).
+    $\Box$
+  \end{Proof}
+\end{Lemma}
+
+
+\begin{Claim}
+  \[ \text{\it if}\ t' \in \mathpzc{Dom}(\Delta)\ \text{\it s.t.}\
+      t' \neq t\ \text{\it where}\ \Delta \vdash t \triangleright
+       \mathcal{R}, \!\! \begin{array}[t]{l}
+         \text{\it then}\ \Delta(t') = (t', t'_{\text{\it equ}},
+          \mathcal{R}_1, \mathcal{S}'_{\mathpzc{fin}}, \Delta')  \\
+         \text{\it for some}\ t'_{\text{\it equ}}, \mathcal{R}_1,
+          \mathcal{S}'_{\mathpzc{fin}}, \Delta'\ \text{\it s.t.}\
+           \mathpzc{size}(\mathcal{R}_1) < \mathpzc{size}(\mathcal{R}).
+       \end{array}
+    \]
+    \begin{Proof}
+      Proof is induction on structure of derivation for
+      $\Delta \vdash \mathcal{R}$.
+      
+      Case (T-Cas-xtend):
+      From def. of (T-Cas-xtend), we suppose that $t' = t_1$ s.t.
+      $\Delta_1 \vdash t_1 \triangleright \mathcal{R}_1$, it's obvious
+      as $\mathpzc{size}(\mathcal{R}_1) < \mathpzc{size}(\mathcal{R}_1
+      \wedge \mathcal{R}_2)$. Otherwize e.g.
+      $t' \in \mathpzc{Dom}(\Delta_1)$ with $t' \neq t_1$, we find that
+      $\Delta_1(t') = (t', t'_{\text{\it equ}}, \mathcal{R}_{10},
+      \mathcal{S}_{\mathpzc{fin}_{10}}, \Delta'_{10})$ for some
+      $\mathcal{R}_{10}$ satisfying
+      $\mathpzc{size}(\mathcal{R}_{10}) < \mathpzc{size}(\mathcal{R}_1)
+      < \mathpzc{size}(\mathcal{R}_1 \wedge \mathcal{R}_2)$ by induction
+      hypotheses. Counterpart fragments to be considerd on
+      $\Delta_2 \vdash t_2 \triangleright \mathcal{R}_2$ is similar.
+      
+      Case (T-Par-xtend):
+      Proof is same as the case of (T-Cas-xtend).
+      
+      Case (T-Cat0-xtend-sol), (T-Cat1-xtend-sol), (T-Dup-xtend-sol),
+      (T-Opt-xtend-sol), (T-Alt-xtend-L), (T-Alt-xtend-R):
+      Proof is similar to the case of (T-Cas-xtend) above.
+      
+      Case (T-Cat0-xtend-$\infty$):
+      From def. of (T-Cat0-xtend-$\infty$), we suppose
+      $t' \in \mathpzc{Dom}(\Delta_h \cup \Delta'_t)$ s.t.
+      $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ and
+      $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ with
+      $\Delta_t(t_t) = (t_t, t'_t, {\mathcal{R}_1}^*,
+      \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t)$.
+      The case of $t' \in \mathpzc{Dom}(\Delta_h)$ s.t.
+      $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ is trivial by
+      induction hypotheses with the fact that
+      $\mathpzc{size}(\mathcal{R}_1) < \mathpzc{size}({\mathcal{R}_1}^*)$.
+      In another case e.g. $t' \in \mathpzc{Dom}(\Delta'_t)$, we consider
+      still 2 cases depending on the last applied rule for the derivation
+      of $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$.
+      subcase (T-Cat0-xtend-sol): In this case, we suppose that the last
+      applied rule on
+      $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ is
+      (T-Cat0-xtend-sol), thus it's trivial as
+      $\Delta'_t \vdash t'_t \triangleright \mathcal{R}_1$ s.t.
+      $t' \in \mathpzc{Dom}(\Delta'_t)$ by induction hypotheses for
+      $\mathpzc{size}(\mathcal{R}_1) < \mathpzc{size}({\mathcal{R}_1}^*)$.
+      subcase (T-Cat0-xtend-$\infty$): In this case, we suppose that
+      the last applied rule on
+      $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ is
+      (T-Cat0-xtend-$\infty$), which also implies that $t' \neq t_t$, since
+      $t_t \not\in \mathpzc{Dom}(\Delta_{t_h} \cup \Delta_{t_t})$ s.t.
+      $\Delta'_t = (\Delta_{t_h} \cup \Delta'_{t_t}) \subseteq
+      (\Delta_{t_h} \cup \Delta_{t_t})$ where we let
+      $\Delta_t(t_t) = \bigl(t_t, t'_t, {\mathcal{R}_1}^*, \infty, 
+      (\Delta_{t_h} \cup \Delta'_{t_t}) \bigr)$ s.t.
+      $\Delta'_t \subseteq \Delta_t$ comming from
+      $\Delta_{t_h} \vdash t_{t_h} \triangleright \mathcal{R}_1$ and
+      $\Delta_{t_t} \vdash t_{t_t} \triangleright {\mathcal{R}_1}^*$
+      for some $t_{t_h}$ and $t_{t_t}$ respectively, which contraditcts
+      our assumption of $t' \in \mathpzc{Dom}(\Delta'_t)$ s.t.
+      $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$.
+      Threrefore we find that
+      $\Delta_t(t') = (t', t'_{\text{\it equ}}, \mathcal{R}_{11},
+      \mathcal{S}'_{\mathpzc{fin}_{11}}, \Delta'_{11})$ for some
+      $\mathcal{R}_{11}$ satisfying
+      $\mathpzc{size}(\mathcal{R}_{11}) < \mathpzc{size}({\mathcal{R}_1}^*)$
+      as desired by induction hypotheses.
+      $\Box$
+    \end{Proof}
+\end{Claim}
+
+
+\begin{Claim}
+  \label{claim1_for_completeness}
+  \[ \begin{array}{l}
+      \{t_2, \cdots t_n\} = \mathcal{M}_{\{\}}\biggl(t'_{\text{\it equ}_t},
+       {\mathcal{R}_1}^*, \Bigl(\Delta' \setminus \bigl(\Delta'(
+        t_{\text{\it equ}_h}) \cup \Delta'_h \bigr) \Bigr) \biggr)  \\
+         \quad \text{\it where}\ \begin{array}[t]{l}
+           \Delta \vdash t \triangleright {\mathcal{R}_1}^*\ \text{\it s.t}\
+            \Delta(t) = (t, t_{\text{\it equ}_h} \wedge
+             t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*, \infty, \Delta' ),\
+              \Delta' = \Delta_h \cup \Delta'_t  \\
+           \Delta_h \vdash t_{\text{\it equ}_h} \triangleright
+            \mathcal{R}_1\ \text{\it s.t.}\ 
+             \Delta_h(t_{\text{\it equ}_h}) = (t_{\text{\it equ}_h},
+              t'_{\text{\it equ}_h}, \mathcal{R}_1,
+               \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h )\
+                \text{\it for some}\ t'_{\text{\it equ}_h},
+                 \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h.  \\ 
+           \Delta_t \vdash t_{\text{\it equ}_t} \triangleright
+            {\mathcal{R}_1}^*\ \text{\it s.t.}\
+             \Delta_t(t_{\text{\it equ}_t}) =(t_{\text{\it equ}_t},
+              t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*,
+               \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t)\
+                \text{\it for some}\ t'_{\text{\it equ}_t},
+                 \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t.               
+         \end{array}  \\
+      \mbox{satsifies the following conditions}\\
+       \quad \Gamma_2 \vdash t_2: \mathcal{R}_1, \cdots
+        \Gamma_n \vdash t_n: \mathcal{R}_1\ \text{\it for some}\
+         \Gamma_2, \cdots \Gamma_n\ \text{\it with}\
+          \mathpzc{Dom}(\Gamma_j) \cap \mathpzc{Dom}(\Gamma_k) = \phi\
+           \text{\it if}\ j \neq k.  \\
+       \quad \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \subseteq
+        \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_{\text{\it equ}_t})
+         \bigr) \Bigr)
+     \end{array}
+  \]
+  \begin{Proof}
+    Proof is structual induction on derivation of
+    $\Delta \vdash t \triangleright {\mathcal{R}_1}^*$.
+    
+    The fact of $\Delta(t) = (t, t_{\text{\it equ}_h} \wedge
+    t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*, \infty, \Delta' )$ implies
+    that the last applied rule on
+    $\Delta \vdash t \triangleright {\mathcal{R}_1}^*$ is
+    (T-Cat0-canon-$\infty$). Still we can predicate that
+    $t'_{\text{\it equ}_t} \neq \{\}$ from def. of (T-Cat0-canon-$\infty$).
+    Accrding to the fact of
+    $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$
+    s.t. $\Delta_t(t_{\text{\it equ}_t}) =(t_t, t'_{\text{\it equ}_t},
+    {\mathcal{R}_1}^*, \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t)$ with
+    $t'_{\text{\it equ}_t} \neq \{\}$ we have revealed above, it's enough
+    to consider only 2 cases for the deduction of
+    $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$
+    e.g. the last applied rule for the deduction of
+    $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$.
+
+    Case (T-Cat0-xtend-sol): We suppose that the last applied rule on
+    $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$
+    is (T-Cat0-xtend-sol). In this case, we can predicate that
+    $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$
+    s.t. $\Delta_t = \bigl\{(t_{\text{\it equ}_t}, t'_{\text{\it equ}_t},
+    {\mathcal{R}_1}^*, \text{\it sol}, \Delta'_t) \bigr\} \cup \Delta'_t$,
+    with $\Delta'_t \vdash t'_{\text{\it equ}_t} \triangleright
+    \mathcal{R}_1$ s.t. $\Delta'_t = \bigl\{(t'_{\text{\it equ}_t},
+    t''_{\text{\it equ}_t}, \mathcal{R}_1, \mathcal{S}'_{\mathpzc{fin}_t},
+    \Delta''_t) \bigr\} \cup \Delta''_t,\
+    t'_{\text{\it equ}_t} \simeq t''_{\text{\it equ}_t}$ from def. of
+    (T-Cat0-xtend-sol). Then
+    $\{t_2 \cdots t_n\} = \mathcal{M}_{\{\}}\biggl(t'_{\text{\it equ}_t},
+    {\mathcal{R}_1}^*, \Bigl(\Delta' \setminus \bigl(\Delta'(
+    t_{\text{\it equ}_h}) \cup \Delta'_h \bigr) \Bigr) \biggr) =
+    \mathcal{M}_{\{\}}(t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*, \Delta'_t)
+    = \Bigl\{\mathcal{M}\bigl(\Delta'_t(t'_{\text{\it equ}_t}) \bigr)
+    \Bigr\}$ because of
+    $t'_{\text{\it equ}_t} \in \mathpzc{Dom}(\Delta'_t)$, accounting on the
+    fact of $\Bigl(\Delta' \setminus \bigl(\Delta'(t_{\text{\it equ}_h})
+    \cup \Delta'_h \bigr) \Bigr) = (\Delta' \setminus \Delta_h) =
+    \Delta'_t$ for $\Delta' = (\Delta_h \cup \Delta'_t)$, since
+    $\Delta'(t_{\text{\it equ}_h}) = (\Delta_h \cup \Delta'_t)(
+    t_{\text{\it equ}_h}) = \Delta_h(t_{\text{\it equ}_h}) =
+    (t_{\text{\it equ}_h}, t'_{\text{\it equ}_h}, \mathcal{R}_1,
+    \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h )$. Here we mention that
+    $\Delta_h \vdash t_{\text{\it equ}_h} \triangleright \mathcal{R}_1$,
+    which implies $t_{\text{\it equ}_h} \in \mathpzc{Dom}(\Delta_h)$, and
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta'_t) = \phi$ as
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ with
+    $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$ from def,
+    of (T-Cat0-canon-$\infty$). By applying induction hypotheses on
+    $\Delta'_t \vdash t'_{\text{\it equ}_t} \triangleright \mathcal{R}_1$,
+    we obtain $\Gamma'_t \vdash \mathcal{M}\bigl(\Delta'_t(
+    t'_{\text{\it equ}_t}) \bigr) : \mathcal{R}_1$ for some
+    $\Gamma'_t$ s.t. $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(
+    t_{\text{\it equ}_t}) \bigr) \Bigr) = \mathpzc{sub}\bigl(\mathcal{M}(
+    t_{\text{\it equ}_t}, t'_{\text{\it equ}_t},  {\mathcal{R}_1}^*,
+    \text{\it sol}, \Delta'_t ) \bigr) = \mathpzc{sub}\biggl(\Bigl\{
+    \mathcal{M}\bigl(\Delta'_t(t'_{\text{\it equ}_t}) \bigr) \Bigr\}
+    \biggr) \supseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta'_t(t'_{\text{\it equ}_t})
+    \bigr) \Bigr) \supseteq \mathpzc{Dom}(\Gamma'_t)$ as desired, from
+    Lemma \ref{subterms_includes_its_domain_over_canonical_terms}.
+    
+    Case (T-Cat0-xtend-$\infty$): In this case, we suppose that the last
+    rule applied on the derivation of
+    $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$
+    s.t $\Delta_t = \bigl\{(t_{\text{\it equ}_t},
+    t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}},
+    {\mathcal{R}_1}^*, \infty, \Delta'_t) \bigr\} \cup \Delta'_t$ with
+    $\Delta'_t = (\Delta_{t_h} \cup \Delta'_{t_t})$ is
+    (T-Cat0-canon-$\infty$), where we let
+    $\Delta_{t_h} \vdash t_{\text{\it equ}_{t_h}} \triangleright
+    \mathcal{R}_1$ s.t.
+    $\Delta_{t_h} = \bigl\{(t_{\text{\it equ}_{t_h}},
+    t'_{\text{\it equ}_{t_h}}, \mathcal{R}_1,
+    \mathcal{S}_{\mathpzc{fin}_{t_h}}, \Delta'_{t_h}) \bigl\} \cup
+    \Delta'_{t_h}$ and
+    $\Delta_{t_t} \vdash t_{\text{\it equ}_{t_t}}
+    \triangleright {\mathcal{R}_1}^*$ s.t
+    $\Delta_{t_t} = \bigl\{(t_{\text{\it equ}_{t_t}},
+    t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
+    \mathcal{S}_{\mathpzc{fin}_{t_t}}, \Delta'_{t_t}) \bigr\} \cup
+    \Delta'_{t_t}$. Then we can apply induction hypotheses on
+    $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$,
+    we obtain $\{t'_2, \cdots t'_m\} =
+    \mathcal{M}_{\{\}}\biggl(t'_{\text{\it equ}_{t_t}}
+    {\mathcal{R}_1}^*, \Bigl(\Delta'' \setminus \bigl(\Delta''(
+    t_{\text{\it equ}_{t_h}}) \cup \Delta'_{t_h} \bigr) \Bigr) \biggr)$
+    s.t. $\Delta'' = \Delta_{t_h} \cup \Delta'_{t_t}$, which satisfies
+    $\Gamma'_2 \vdash t'_2: \mathcal{R}_1, \cdots
+    \Gamma'_m \vdash t'_m: \mathcal{R}_1$ for some
+    $\Gamma'_2, \cdots \Gamma'_m$ with
+    $\mathpzc{Dom}(\Gamma'_j) \cap \mathpzc{Dom}(\Gamma'_k) = \phi$ if
+    $j \neq k$, and
+    $\bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) \subseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_t}(
+    t_{\text{\it equ}_{t_t}}) \bigr) \Bigr)$.
+    On accounting the facts of
+    $\mathpzc{Dom}(\Delta'_{t_t}) \subseteq \mathpzc{Dom}(\Delta_{t_t})$
+    s.t.
+    $\mathpzc{Dom}(\Delta_{t_h}) \cap \mathpzc{Dom}(\Delta_{t_t}) = \phi$
+    and $t_{\text{\it equ}_{t_h}} \in \mathpzc{Dom}(\Delta_{t_h})$ for
+    $\Delta_{t_h} \vdash t_{\text{\it equ}_{t_h}} \triangleright
+    \mathcal{R}_1$, that implies
+    $t_{\text{\it equ}_{t_h}} \not\in \mathpzc{Dom}(\Delta'_{t_t})$,
+    we still reveal r.h.s. of $\{t'_2, \cdots t'_m\}$ as
+    $\mathcal{M}_{\{\}}\biggl(t'_{\text{\it equ}_{t_t}}
+    {\mathcal{R}_1}^*, \Bigl(\Delta'' \setminus \bigl(
+    (\Delta_{t_h} \cup \Delta'_{t_t})(t_{\text{\it equ}_{t_h}}) \cup
+    \Delta'_{t_h} \bigr) \Bigr) \biggr) =
+    \mathcal{M}_{\{\}}\biggl(t'_{\text{\it equ}_{t_t}}
+    {\mathcal{R}_1}^*, \Bigl(\Delta'' \setminus \bigl(
+    \Delta_{t_h}(t_{\text{\it equ}_{t_h}}) \cup \Delta'_{t_h} \bigr) \Bigr)
+    \biggr) =
+    \mathcal{M}_{\{\}}\Bigl(t'_{\text{\it equ}_{t_t}}
+    {\mathcal{R}_1}^*, \bigl((\Delta_{t_h} \cup \Delta'_{t_t}) \setminus
+    \Delta_{t_h} \bigr) \Bigr) =
+    \mathcal{M}_{\{\}}(t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
+    \Delta'_{t_t})$.By now, we can consider the term
+    $\{t_2, \cdots t_n\}$ for the original judgement
+    $\Delta \vdash t \triangleright {\mathcal{R}_1}^*$ as follow,
+    $\{t_2, \cdots t_n\} = \mathcal{M}_{\{\}}\biggl(
+    t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*, \Bigl(\Delta' \setminus
+    \bigl(\Delta'(t_{\text{\it equ}_h}) \cup \Delta'_h \bigr) \Bigr)
+    \biggr) =
+    \mathcal{M}_{\{\}}\biggl(
+    t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*, \Bigl(\Delta' \setminus
+    \bigl((\Delta_h \cup \Delta'_t)(t_{\text{\it equ}_h}) \cup \Delta'_h
+    \bigr) \Bigr) \biggr) =
+    \mathcal{M}_{\{\}}\biggl(
+    t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*, \Bigl(\Delta' \setminus
+    \bigl(\Delta_h(t_{\text{\it equ}_h}) \cup \Delta'_h
+    \bigr) \Bigr) \biggr) =
+    \mathcal{M}_{\{\}}\Bigl(t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*,
+    \bigl((\Delta_h \cup \Delta'_t) \setminus \Delta_h \bigr) \Bigr) =
+    \mathcal{M}_{\{\}}(t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*,
+    \Delta'_t) =
+    \mathcal{M}_{\{\}}\bigl(t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*,
+    (\Delta_{t_h} \cup \Delta'_{t_t}) \bigr) =
+    \mathcal{M}_{\{\}}\bigl(
+    t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}},
+    {\mathcal{R}_1}^*, (\Delta_{t_h} \cup \Delta'_{t_t}) \bigr)$ since
+    $t_{\text{\it equ}_h} \not\in \mathpzc{Dom}(\Delta'_t)$ comming from
+    the facts of
+    $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$ s.t.
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$, and
+    $t_{\text{\it equ}_h} \in \mathpzc{Dom}(\Delta_h)$ for
+    $\Delta_h \vdash t_{\text{\it equ}_h} : \mathcal{R}_1$. According to
+    similar reason as above, we find
+    $t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}} \not\in
+    \mathpzc{Dom}(\Delta_{t_h} \cup \Delta'_{t_t})$, since
+    $\mathpzc{Dom}(\Delta_{t_h} \cup \Delta'_{t_t}) =
+    \bigl(\mathpzc{Dom}(\Delta_{t_h}) \cup \mathpzc{Dom}(\Delta'_{t_t})
+    \bigr)$ s.t.
+    $\mathpzc{Dom}(\Delta'_{t_t}) \subseteq \mathpzc{Dom}(\Delta_{t_t})$,
+    which implies 
+    $\mathpzc{Dom}(\Delta_{t_h} \cup \Delta'_{t_t}) \subseteq
+    \bigl(\mathpzc{Dom}(\Delta_{t_h}) \cup \mathpzc{Dom}(\Delta_{t_t})
+    \bigr) = \mathpzc{Dom}(\Delta_{t_h} \cup \Delta_{t_t})$ s.t.
+    $t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}} \not\in
+    \mathpzc{Dom}(\Delta_{t_h} \cup \Delta_{t_t})$ from def. of
+    (T-Cat0-canon-$\infty$). Since
+    $t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}} \not\in
+    \mathpzc{Dom}(\Delta_{t_h} \cup \Delta'_{t_t})$ as above,
+    $\mathcal{M}_{\{\}}\bigl(
+    t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}},
+    {\mathcal{R}_1}^*, (\Delta_{t_h} \cup \Delta'_{t_t}) \bigr) =
+    \Bigl\{\mathcal{M}\bigl(\Delta'_t(t_{\text{\it equ}_{t_h}}) \bigr),
+    t''_2, \cdots t''_l \Bigr\}$, where $\{t''_2, \cdots t''_l\} =
+    \mathcal{M}_{\{\}}\Bigl(t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
+    (\Delta_{t_h} \cup \Delta'_{t_t}) \setminus
+    \bigl((\Delta_{t_h} \cup \Delta'_{t_t})(t_{\text{\it equ}_{t_h}}) \cup
+    \Delta'_{t_h} \bigr) \Bigr) =
+    \mathcal{M}_{\{\}}\Bigl(t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
+    (\Delta_{t_h} \cup \Delta'_{t_t}) \setminus
+    \bigl(\Delta_{t_h}(t_{\text{\it equ}_{t_h}}) \cup \Delta'_{t_h} \bigr)
+    \Bigr) =
+    \mathcal{M}_{\{\}}\bigl(t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
+    (\Delta_{t_h} \cup \Delta'_{t_t}) \setminus \Delta_{t_h} \bigr) =
+    \mathcal{M}_{\{\}}(t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
+    \Delta'_{t_t} ) = \{t'_2, \cdots t'_m \}$ s.t. $m = l$, we revealed
+    from induction hypotheses as above. Therefore, from the fact we found
+    above that
+    $\{t''_2, \cdots t''_l\} = \{t'_2, \cdots t'_m\} =
+    \mathcal{M}_{\{\}}(t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
+    \Delta'_{t_t} )$ s.t.
+    $\Gamma'_2 \vdash t'_2: \mathcal{R}_1, \cdots
+    \Gamma'_m \vdash t'_m: \mathcal{R}_1$ with
+    $\mathpzc{Dom}(\Gamma'_j) \cap \mathpzc{Dom}(\Gamma'_k) = \phi$ if
+    $j \neq k$, and
+    $\bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) \subseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_t}(
+    t_{\text{\it equ}_{t_t}}) \bigr) \Bigr)$ where $m = l$, we conclude that
+    $\{t_2, \cdots t_n\} = \Bigl\{\mathcal{M}\bigl(\Delta'_t(
+    t_{\text{\it equ}_{t_h}}) \bigr), t''_2, \cdots t''_l \Bigr\} =
+    \Bigl\{\mathcal{M}\bigl(\Delta'_t(t_{\text{\it equ}_{t_h}}) \bigr),
+    t'_2, \cdots t'_m \Bigr\} =
+    \Bigl\{\mathcal{M}\bigl((\Delta_{t_h} \cup \Delta'_{t_t})(
+    t_{\text{\it equ}_{t_h}}) \bigr), t'_2, \cdots t'_m \Bigr\} =
+    \Bigl\{\mathcal{M}\bigl(\Delta_{t_h}(t_{\text{\it equ}_{t_h}}) \bigr),
+    t'_2, \cdots t'_m \Bigr\}$ satisfies
+    $\Gamma_{t_h} \vdash \mathcal{M}\bigl(\Delta_{t_h}(
+    t_{\text{\it equ}_{t_h}}) \bigr): \mathcal{R}_1,
+    \Gamma'_2 \vdash t'_2: \mathcal{R}_1, \cdots
+    \Gamma'_m \vdash t'_m: \mathcal{R}_1$ for some $\Gamma_{t_h}$ by
+    applying induction hypotheses on
+    $\Delta_{t_h} \vdash t_{\text{\it equ}_{t_h}} \triangleright
+    \mathcal{R}_1$, with
+    $\mathpzc{Dom}(\Gamma_{t_h}) \cap \mathpzc{Dom}(\Gamma'_j) = \phi$
+    where $2 \le j \le m$, and
+    $\bigl(\mathpzc{Dom}(\Gamma_{t_h}) \cup
+    \bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) \bigr) \subseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_{\text{\it equ}_t})
+    \bigr) \Bigr)$ as desired. Since,
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_{\text{\it equ}_t})
+    \bigr) \Bigr) =
+    \mathpzc{sub}\bigl(\mathcal{M}(t_{\text{\it equ}_t},
+    t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}},
+    {\mathcal{R}_1}^*, \infty, \Delta'_t ) \bigr) =
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(t_{\text{\it equ}_t},
+    t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}},
+    {\mathcal{R}_1}^*, \infty, (\Delta_{t_h} \cup \Delta'_{t_t}) \bigr)
+    \Bigr) =
+    \mathpzc{sub}\biggl(\Bigl\{\mathcal{M}\bigl(
+    (\Delta_{t_h} \cup \Delta'_{t_t})(t_{\text{\it equ}_{t_h}}) \bigr),
+    t''_2, \cdots t''_l \Bigr\} \biggl) =
+    \mathpzc{sub}\biggl(\Bigl\{\mathcal{M}\bigl(
+    (\Delta_{t_h} \cup \Delta'_{t_t})(t_{\text{\it equ}_{t_h}}) \bigr),
+    t'_2, \cdots t'_m \Bigr\} \biggl) =
+    \mathpzc{sub}\biggl(\Bigl\{\mathcal{M}\bigl(
+    \Delta_{t_h}(t_{\text{\it equ}_{t_h}}) \bigr), t'_2, \cdots t'_m
+    \Bigr\} \biggl) \supseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_h}(t_{\text{\it equ}_{t_h}})
+    \bigr) \Bigr) \cup \bigcup_{j=2}^m\mathpzc{sub}(t'_j) \supseteq
+    \mathpzc{Dom}(\Gamma_{t_h}) \cup \bigcup_{j=2}^m\mathpzc{Dom}(
+    \Gamma'_j)$
+    $\Box$
+  \end{Proof}
+\end{Claim}
+
+
+\begin{Claim}
+  \label{claim2_for_completeness}
+  \[ \begin{array}{l}
+      [t_2, \cdots t_n] = \mathcal{M}_{[]}\biggl(t'_{\text{\it equ}_t},
+       {\mathcal{R}_1}^+, \Bigl(\Delta' \setminus \bigl(\Delta'(
+        t_{\text{\it equ}_h}) \cup \Delta'_h \bigr) \Bigr) \biggr)  \\
+         \quad \text{\it where}\ \begin{array}[t]{l}
+           \Delta \vdash t \triangleright {\mathcal{R}_1}^+\ \text{\it s.t}\
+            \Delta(t) = (t, t_{\text{\it equ}_h} \wedge
+             t'_{\text{\it equ}_t}, {\mathcal{R}_1}^+, \infty, \Delta' ),\
+              \Delta' = \Delta_h \cup \Delta'_t  \\
+           \Delta_h \vdash t_{\text{\it equ}_h} \triangleright
+            \mathcal{R}_1\ \text{\it s.t.}\ 
+             \Delta_h(t_{\text{\it equ}_h}) = (t_{\text{\it equ}_h},
+              t'_{\text{\it equ}_h}, \mathcal{R}_1,
+               \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h )\
+                \text{\it for some}\ t'_{\text{\it equ}_h},
+                 \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h.  \\ 
+           \Delta_t \vdash t_{\text{\it equ}_t} \triangleright
+            {\mathcal{R}_1}^+\ \text{\it s.t.}\
+             \Delta_t(t_{\text{\it equ}_t}) =(t_{\text{\it equ}_t},
+              t'_{\text{\it equ}_t}, {\mathcal{R}_1}^+,
+               \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t)\
+                \text{\it for some}\ t'_{\text{\it equ}_t},
+                 \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t.               
+         \end{array}  \\
+      \mbox{satsifies the following conditions}\\
+       \quad \Gamma_1 \vdash t_2: \mathcal{R}_1, \cdots
+        \Gamma_n \vdash t_n: \mathcal{R}_1\ \text{\it for some}\
+         \Gamma_2, \cdots \Gamma_n\ \text{\it with}\
+          \mathpzc{Dom}(\Gamma_j) \cap \mathpzc{Dom}(\Gamma_k) = \phi\
+           \text{\it if}\ j \neq k.  \\
+       \quad \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \subseteq
+        \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_{\text{\it equ}_t})
+         \bigr) \Bigr)
+     \end{array}
+  \]
+  \begin{Proof}
+    Proof is similar to the case of. \ref{claim1_for_completeness}.
+    $\Box$
+  \end{Proof}
+\end{Claim}
+
+
+\begin{Claim}
+  \label{claim3_for_completeness}
+  \[ \begin{array}{l}
+      \langle t_2, \cdots t_n\rangle = \mathcal{M}_{\langle\rangle}\biggl(
+       t'_{\text{\it equ}_t}, {\mathcal{R}_1}^\downarrow, \Bigl(
+        \Delta' \setminus \bigl(\Delta'(t_{\text{\it equ}_h}) \cup
+         \Delta'_h \bigr) \Bigr) \biggr)  \\
+          \quad \text{\it where}\ \begin{array}[t]{l}
+           \Delta \vdash t \triangleright {\mathcal{R}_1}^\downarrow\
+            \text{\it s.t}\ \Delta(t) = (t, t_{\text{\it equ}_h} \vee
+             t'_{\text{\it equ}_t}, {\mathcal{R}_1}^\downarrow, \infty,
+              \Delta' ),\ \Delta' = \Delta_h \cup \Delta'_t  \\
+           \Delta_h \vdash t_{\text{\it equ}_h} \triangleright
+            \mathcal{R}_1\ \text{\it s.t.}\ 
+             \Delta_h(t_{\text{\it equ}_h}) = (t_{\text{\it equ}_h},
+              t'_{\text{\it equ}_h}, \mathcal{R}_1,
+               \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h )\
+                \text{\it for some}\ t'_{\text{\it equ}_h},
+                 \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h.  \\ 
+           \Delta_t \vdash t_{\text{\it equ}_t} \triangleright
+            {\mathcal{R}_1}^\downarrow\ \text{\it s.t.}\
+             \Delta_t(t_{\text{\it equ}_t}) =(t_{\text{\it equ}_t},
+              t'_{\text{\it equ}_t}, {\mathcal{R}_1}^\downarrow,
+               \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t)\
+                \text{\it for some}\ t'_{\text{\it equ}_t},
+                 \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t.               
+         \end{array}  \\
+      \mbox{satsifies the following conditions}\\
+       \quad \Gamma_1 \vdash t_2: \mathcal{R}_1, \cdots
+        \Gamma_n \vdash t_n: \mathcal{R}_1\ \text{\it for some}\
+         \Gamma_2, \cdots \Gamma_n\ \text{\it with}\
+          \mathpzc{Dom}(\Gamma_j) \cap \mathpzc{Dom}(\Gamma_k) = \phi\
+           \text{\it if}\ j \neq k.  \\
+       \quad \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \subseteq
+        \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_{\text{\it equ}_t})
+         \bigr) \Bigr)
+     \end{array}
+  \]
+  \begin{Proof}
+    Proof is similar to the case of. \ref{claim2_for_completeness}.
+    $\Box$
+  \end{Proof}
+\end{Claim}
+
+
+Citations can be handled in one of three ways.  The most
+straightforward (albeit labor-intensive) would be to hardwire your
+citations into your \LaTeX\ source, as you would if you were using an
+ordinary word processor.  Thus, your code might look something like
+this:
+
+
+\begin{quote}
+\begin{verbatim}
+However, this record of the solar nebula may have been
+partly erased by the complex history of the meteorite
+parent bodies, which includes collision-induced shock,
+thermal metamorphism, and aqueous alteration
+({\it 1, 2, 5--7\/}).
+\end{verbatim}
+\end{quote}
+
+
+\noindent Compiled, the last two lines of the code above, of course, would give notecalls in {\it Science\/} style:
+
+\begin{quote}
+\ldots thermal metamorphism, and aqueous alteration ({\it 1, 2, 5--7\/}).
+\end{quote}
+
+Under the same logic, the author could set up his or her reference list as a simple enumeration,
+
+\begin{quote}
+\begin{verbatim}
+{\bf References and Notes}
+
+\begin{enumerate}
+\item G. Gamow, {\it The Constitution of Atomic Nuclei
+and Radioactivity\/} (Oxford Univ. Press, New York, 1931).
+\item W. Heisenberg and W. Pauli, {\it Zeitschr.\ f.\ 
+Physik\/} {\bf 56}, 1 (1929).
+\end{enumerate}
+\end{verbatim}
+\end{quote}
+
+\noindent yielding
+
+\begin{quote}
+{\bf References and Notes}
+
+\begin{enumerate}
+\item G. Gamow, {\it The Constitution of Atomic Nuclei and
+Radioactivity\/} (Oxford Univ. Press, New York, 1931).
+\item W. Heisenberg and W. Pauli, {\it Zeitschr.\ f.\ Physik} {\bf 56},
+1 (1929).
+\end{enumerate}
+\end{quote}
+
+That's not a solution that's likely to appeal to everyone, however ---
+especially not to users of B{\small{IB}}\TeX\ \cite{inclme}.  If you
+are a B{\small{IB}}\TeX\ user, we suggest that you use the
+\texttt{Science.bst} bibliography style file and the
+\texttt{scicite.sty} package, both of which we are downloadable from our author help site
+(http://www.sciencemag.org/about/authors/prep/TeX\_help/).  You can also
+generate your reference lists by using the list environment
+\texttt{\{thebibliography\}} at the end of your source document; here
+again, you may find the \texttt{scicite.sty} file useful.
+
+Whether you use B{\small{IB}}\TeX\ or \texttt{\{thebibliography\}}, be
+very careful about how you set up your in-text reference calls and
+notecalls.  In particular, observe the following requirements:
+
+\begin{enumerate}
+\item Please follow the style for references outlined at our author
+  help site and embodied in recent issues of {\it Science}.  Each
+  citation number should refer to a single reference; please do not
+  concatenate several references under a single number.
+\item Please cite your references and notes in text {\it only\/} using
+  the standard \LaTeX\ \verb+\cite+ command, not another command
+  driven by outside macros.
+\item Please separate multiple citations within a single \verb+\cite+
+  command using commas only; there should be {\it no space\/}
+  between reference keynames.  That is, if you are citing two
+  papers whose bibliography keys are \texttt{keyname1} and
+  \texttt{keyname2}, the in-text cite should read
+  \verb+\cite{keyname1,keyname2}+, {\it not\/}
+  \verb+\cite{keyname1, keyname2}+.
+\end{enumerate}
+
+\noindent Failure to follow these guidelines could lead
+to the omission of the references in an accepted paper when the source
+file is translated to Word via HTML.
+
+\section*{Handling Math, Tables, and Figures}
+
+Following are a few things to keep in mind in coding equations,
+tables, and figures for submission to {\it Science}.
+
+\paragraph*{In-line math.}  The utility that we use for converting
+from \LaTeX\ to HTML handles in-line math relatively well.  It is best
+to avoid using built-up fractions in in-line equations, and going for
+the more boring ``slash'' presentation whenever possible --- that is,
+for \verb+$a/b$+ (which comes out as $a/b$) rather than
+\verb+$\frac{a}{b}$+ (which compiles as $\frac{a}{b}$).  Likewise,
+HTML isn't tooled to handle certain overaccented special characters
+in-line; for $\hat{\alpha}$ (coded \verb+$\hat{\alpha}$+), for
+example, the HTML translation code will return [\^{}$(\alpha)$].
+Don't drive yourself crazy --- but if it's possible to avoid such
+constructs, please do so.  Please do not code arrays or matrices as
+in-line math; display them instead.  And please keep your coding as
+\TeX-y as possible --- avoid using specialized math macro packages
+like \texttt{amstex.sty}.
+
+\paragraph*{Displayed math.} Our HTML converter sets up \TeX\
+displayed equations using nested HTML tables.  That works well for an
+HTML presentation, but Word chokes when it comes across a nested
+table in an HTML file.  We surmount that problem by simply cutting the
+displayed equations out of the HTML before it's imported into Word,
+and then replacing them in the Word document using either images or
+equations generated by a Word equation editor.  Strictly speaking,
+this procedure doesn't bear on how you should prepare your manuscript
+--- although, for reasons best consigned to a note \cite{nattex}, we'd
+prefer that you use native \TeX\ commands within displayed-math
+environments, rather than \LaTeX\ sub-environments.
+
+\paragraph*{Tables.}  The HTML converter that we use seems to handle
+reasonably well simple tables generated using the \LaTeX\
+\texttt{\{tabular\}} environment.  For very complicated tables, you
+may want to consider generating them in a word processing program and
+including them as a separate file.
+
+\paragraph*{Figures.}  Figure callouts within the text should not be
+in the form of \LaTeX\ references, but should simply be typed in ---
+that is, \verb+(Fig. 1)+ rather than \verb+\ref{fig1}+.  For the
+figures themselves, treatment can differ depending on whether the
+manuscript is an initial submission or a final revision for acceptance
+and publication.  For an initial submission and review copy, you can
+use the \LaTeX\ \verb+{figure}+ environment and the
+\verb+\includegraphics+ command to include your PostScript figures at
+the end of the compiled PostScript file.  For the final revision,
+however, the \verb+{figure}+ environment should {\it not\/} be used;
+instead, the figure captions themselves should be typed in as regular
+text at the end of the source file (an example is included here), and
+the figures should be uploaded separately according to the Art
+Department's instructions.
+
+
+\section*{What to Send In}
+
+What you should send to {\it Science\/} will depend on the stage your manuscript is in:
+
+\begin{itemize}
+\item {\bf Important:} If you're sending in the initial submission of
+  your manuscript (that is, the copy for evaluation and peer review),
+  please send in {\it only\/} a PostScript or PDF version of the
+  compiled file (including figures).  Please do not send in the \TeX\ 
+  source, \texttt{.sty}, \texttt{.bbl}, or other associated files with
+  your initial submission.  (For more information, please see the
+  instructions at our Web submission site,
+  http://www.submit2science.org/ .)
+\item When the time comes for you to send in your revised final
+  manuscript (i.e., after peer review), we require that you include
+  all source files and generated files in your upload.  Thus, if the
+  name of your main source document is \texttt{ltxfile.tex}, you
+  need to include:
+\begin{itemize}
+\item \texttt{ltxfile.tex}.
+\item \texttt{ltxfile.aux}, the auxilliary file generated by the
+  compilation.
+\item A PostScript file (compiled using \texttt{dvips} or some other
+  driver) of the \texttt{.dvi} file generated from
+  \texttt{ltxfile.tex}, or a PDF file distilled from that
+  PostScript.  You do not need to include the actual \texttt{.dvi}
+  file in your upload.
+\item From B{\small{IB}}\TeX\ users, your bibliography (\texttt{.bib})
+  file, {\it and\/} the generated file \texttt{ltxfile.bbl} created
+  when you run B{\small{IB}}\TeX.
+\item Any additional \texttt{.sty} and \texttt{.bst} files called by
+  the source code (though, for reasons noted earlier, we {\it
+    strongly\/} discourage the use of such files beyond those
+  mentioned in this document).
+\end{itemize}
+\end{itemize}
+
+% Your references go at the end of the main text, and before the
+% figures.  For this document we've used BibTeX, the .bib file
+% scibib.bib, and the .bst file Science.bst.  The package scicite.sty
+% was included to format the reference numbers according to *Science*
+% style.
+
+
+\bibliography{scibib}
+
+\bibliographystyle{Science}
+
+
+
+% Following is a new environment, {scilastnote}, that's defined in the
+% preamble and that allows authors to add a reference at the end of the
+% list that's not signaled in the text; such references are used in
+% *Science* for acknowledgments of funding, help, etc.
+
+\begin{scilastnote}
+\item We've included in the template file \texttt{scifile.tex} a new
+environment, \texttt{\{scilastnote\}}, that generates a numbered final
+citation without a corresponding signal in the text.  This environment
+can be used to generate a final numbered reference containing
+acknowledgments, sources of funding, and the like, per {\it Science\/}
+style.
+\end{scilastnote}
+
+
+
+
+% For your review copy (i.e., the file you initially send in for
+% evaluation), you can use the {figure} environment and the
+% \includegraphics command to stream your figures into the text, placing
+% all figures at the end.  For the final, revised manuscript for
+% acceptance and production, however, PostScript or other graphics
+% should not be streamed into your compliled file.  Instead, set
+% captions as simple paragraphs (with a \noindent tag), setting them
+% off from the rest of the text with a \clearpage as shown  below, and
+% submit figures as separate files according to the Art Department's
+% instructions.
+
+
+\clearpage
+
+\noindent {\bf Fig. 1.} Please do not use figure environments to set
+up your figures in the final (post-peer-review) draft, do not include graphics in your
+source code, and do not cite figures in the text using \LaTeX\
+\verb+\ref+ commands.  Instead, simply refer to the figure numbers in
+the text per {\it Science\/} style, and include the list of captions at
+the end of the document, coded as ordinary paragraphs as shown in the
+\texttt{scifile.tex} template file.  Your actual figure files should
+be submitted separately.
+
+
+
+\end{document}

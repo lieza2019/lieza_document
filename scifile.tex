@@ -1048,10 +1048,15 @@ term.
                \quad \Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*
                 \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
                 = \phi  \\
-              t \simeq t_h \wedge t_t\ \text{\it s.t.}\
-               t_t' \neq \{\},\
-                \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
-                 \Delta_h \cup \Delta_t) = \phi
+               t \simeq t_h \wedge t_t\ \text{\it s.t.}\ t_t' \neq \{\}  \\
+               \left\{\begin{array}{l}
+               \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
+               \Delta_h \cup \Delta_t) = \phi\quad \text{\it if}\
+               \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it nil},\,
+               \text{\it sol} \}  \\
+               \{t,\, t_h \wedge t'_t,\, t'_t \} \cap \mathpzc{Dom}(
+               \Delta_h \cup \Delta_t) = \phi\quad \text{\it otherwise}
+               \end{array}\right.
             \end{array}
           }{
             \begin{array}{r}
@@ -1358,16 +1363,17 @@ term.
     which implies the facts that
     $\Gamma_2 \vdash t_2 : \mathcal{R}_1 \cdots
     \Gamma_n \vdash t_n: \mathcal{R}_1$ satisfying the conditions of
-    $\mathpzc{Dom}(\Gamma_j) \cup \mathpzc{Dom}(\Gamma_k) = \phi$ if
+    $\mathpzc{Dom}(\Gamma_j) \cap \mathpzc{Dom}(\Gamma_k) = \phi$ if
     $j \neq k$. Accounting on the fact of
     $\{t_2 \cdots t_n\} \not\in \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)$
     since term size of $\{t_2 \cdots t_n\}$ is greater than any of
     $t_2 \cdots t_n$ s.t. $\Gamma_1 \vdash t_1: \mathcal{R}_1 \cdots
     \Gamma_1 \vdash t_1: \mathcal{R}_1$ respectively, we can derive
-    $\{t_2 \cdots t_n\} \cup \bigcup_{j=2}^n\Gamma_j \vdash
-    \{t_2 \cdots t_n\}: {\mathcal{R}_1}^*$ from (T-Cat0-canon).
-    Here we let n be the number of subterms of $\{t_1 \cdots t_n\}$, the
-    cases of $n \in \{1, 2\}$ are shown as the cases of $j \le 2$ above.
+    $\Bigl\{\bigl(\{t_2 \cdots t_n\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
+    \bigcup_{j=2}^n\Gamma_j \vdash \{t_2 \cdots t_n\}: {\mathcal{R}_1}^*$
+    from (T-Cat0-canon). Here we let n be the number of subterms of
+    $\{t_1 \cdots t_n\}$, the cases of $n \in \{1, 2\}$ are shown as the
+    cases of $j \le 2$ above.
     For the case of $j > 2$, we suppose the derivation
     $\Bigl\{\bigl(\{t_2 \cdots t_n\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
     \bigcup_{j=2}^n\Gamma_j \vdash \{t_2 \cdots t_n\}: {\mathcal{R}_1}^*$,
@@ -1734,9 +1740,9 @@ term.
     $\Gamma_2 \vdash \mathcal{M}\bigl(\Delta_2(t_2) \bigr) : \mathcal{R}_2$
     for some $\Gamma_1$ and $\Gamma_2$ where
     $\Delta_1(t_1) = (t_1, t_{\text{\it equ}_1}, \mathcal{R}_1,
-    \mathcal{S}_{\mathpzc{fin}_1}, \Delta_1')$ and
+    \mathcal{S}_1, \Delta_1')$ and
     $\Delta_2(t_2) = (t_2, t_{\text{\it equ}_2}, \mathcal{R}_2,
-    \mathcal{S}_{\mathpzc{fin}_2}, \Delta_2')$ respectively.
+    \mathcal{S}_2, \Delta_2')$ respectively.
     According to the facts that
     $\mathpzc{Dom}(\Delta_1 \cup \Delta_2) =
     \mathpzc{Dom}(\Delta_1) \cup \mathpzc{Dom}(\Delta_2)$ s.t.
@@ -1844,11 +1850,10 @@ term.
     (T-Cat0-xtend-$\infty$), where we let
     $\Delta = \Bigl\{\bigl(t, t_h \wedge t'_t, {\mathcal{R}_1}^*, \infty,
     (\Delta_h \cup \Delta'_t) \bigr) \Bigr\} \cup (\Delta_h \cup \Delta'_t)$
-    s.t. $\Delta_h = \bigl\{(t_h, t'_h, \mathcal{R}_1,
-    \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h)\bigr\} \cup \Delta'_h$ and
-    $\Delta_t = \bigl\{(t_t, t'_t, {\mathcal{R}_1}^*,
-    \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t) \bigr\} \cup \Delta'_t$
-    comming from
+    s.t. $\Delta_h = \bigl\{(t_h, t'_h, \mathcal{R}_1, \mathcal{S}_h,
+    \Delta'_h)\bigr\} \cup \Delta'_h$ and
+    $\Delta_t = \bigl\{(t_t, t'_t, {\mathcal{R}_1}^*, \mathcal{S}_t,
+    \Delta'_t) \bigr\} \cup \Delta'_t$ comming from
     $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ and
     $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ as respective.
     Additionally, there are 2 cases to be considered, focusing on
@@ -1860,10 +1865,9 @@ term.
     (T-Cat0-xtend-sol), where
     $\Delta_t = \bigl\{(t_t, t'_t, {\mathcal{R}_1}^*, \text{\it sol},
     \Delta'_t) \bigr\} \cup \Delta'_t$ and
-    $\Delta'_t = (t'_t, t''_t, \mathcal{R}_1,
-    \mathcal{S}_{\mathpzc{fin}_{t'}}, \Delta''_t)$ s.t.
-    $\Delta'_t \vdash t'_t \triangleright \mathcal{R}_1$ we let.
-    By applying induction hypothesis on
+    $\Delta'_t = (t'_t, t''_t, \mathcal{R}_1, \mathcal{S}_{t'},
+    \Delta''_t)$ s.t. $\Delta'_t \vdash t'_t \triangleright \mathcal{R}_1$
+    we let. By applying induction hypothesis on
     $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$, we find
     $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) : \mathcal{R}_1$
     for some $\Gamma_h$. Similarly, we can also obtain
@@ -1935,31 +1939,27 @@ term.
     Subcase (T-Cat0-xtend-$\infty$): Otherwise, e.g. in the case of that
     the last applied rule on
     $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ isn't
-    (T-Cat0-xtend-sol), we can predicate that the last one on
+    (T-Cat0-xtend-sol), we can predicate that the last one applied on
     $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ is just
-    (T-Cat0-xtend-$\infty$), since the constraint of $t'_t \neq \{\}$ s.t.
+    (T-Cat0-xtend-$\infty$), since the constraint of $t'_t \neq \{\}$ on
     $\Delta'_t = (t'_t, t''_t, {\mathcal{R}_1}^*,
     \mathcal{S}_{\mathpzc{fin}_{t'}}, \Delta''_t)$ eliminates
-    the case of (T-Cat0-xtend-nil) as the last applied rule on it. Then
+    the case of (T-Cat0-xtend-nil) as the last applied rule. Accordingly
     we suppose
     $\Delta_t = \bigl\{(t_t, t'_t, {\mathcal{R}_1}^*, \infty, \Delta'_t)
     \bigr\} \cup \Delta'_t$ s.t.
     $t'_t = t_{t_h} \wedge t'_{t_t}$ and
     $\Delta'_t = \Delta_{t_h} \cup \Delta'_{t_t}$, where we let
     $\Delta_{t_h} = \bigl\{(t_{t_h}, t'_{t_h}, \mathcal{R}_1,
-    \mathcal{S}_{\mathpzc{fin}_{t_h}}, \Delta'_{t_h} ) \bigr\} \cup
-    \Delta'_{t_h}$ for some
-    $t'_{t_h}, \mathcal{S}_{\mathpzc{fin}_{t_h}}, \Delta'_{t_h}$, and
+    \mathcal{S}_{t_h}, \Delta'_{t_h} ) \bigr\} \cup \Delta'_{t_h}$, and
     $\Delta_{t_t} = \bigl\{(t_{t_t}, t'_{t_t}, {\mathcal{R}_1}^*,
     \mathcal{S}_{\mathpzc{fin}_{t_t}}, \Delta'_{t_t} ) \bigr\}
-    \cup \Delta'_{t_t}$ for some
-    $t'_{t_t}, \mathcal{S}_{\mathpzc{fin}_{t_t}}, \Delta'_{t_t}$
-    according to
+    \cup \Delta'_{t_t}$ s.t.
     $\Delta_{t_h} \vdash t_{t_h} \triangleright \mathcal{R}_1$ and
-    $\Delta_{t_t} \vdash t_{t_t} \triangleright {\mathcal{R}_1}^*$,
-    both of these are subderivation of
+    $\Delta_{t_t} \vdash t_{t_t} \triangleright {\mathcal{R}_1}^*$
+    respectively comming from subderivations of
     $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ by
-    (T-Cat0-xtend-$\infty$), respectively. Based on above assumptions with
+    (T-Cat0-xtend-$\infty$). Based on above assumptions with
     the fact $t'_t \not\in \mathpzc{Dom}(\Delta_h \cup \Delta'_t)$
     since $\mathpzc{Dom}(\Delta_h \cup \Delta'_t) = \bigl(
     \mathpzc{Dom}(\Delta_h) \cup \mathpzc{Dom}(\Delta'_t) \bigr) \subseteq

@@ -1048,14 +1048,14 @@ term.
                \quad \Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*
                 \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
                 = \phi  \\
-               t \simeq t_h \wedge t_t\ \text{\it s.t.}\ t_t' \neq \{\}  \\
+               t \simeq t_h \wedge t_t'\ \text{\it s.t.}\ t_t' \neq \{\}  \\
                \left\{\begin{array}{l}
-               \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
-               \Delta_h \cup \Delta_t) = \phi\quad \text{\it if}\
-               \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it nil},\,
-               \text{\it sol} \}  \\
-               \{t,\, t_h \wedge t'_t,\, t'_t \} \cap \mathpzc{Dom}(
-               \Delta_h \cup \Delta_t) = \phi\quad \text{\it otherwise}
+                 \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
+                  \Delta_h \cup \Delta_t) = \phi\quad \text{\it if}\
+                   \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it nil},\,
+                    \text{\it sol} \}  \\
+                 \{t,\, t_h \wedge t'_t,\, t'_t \} \cap \mathpzc{Dom}(
+                  \Delta_h \cup \Delta_t) = \phi\quad \text{\it otherwise}
                \end{array}\right.
             \end{array}
           }{
@@ -1096,9 +1096,14 @@ term.
                \quad \Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^+
                 \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
                  = \phi  \\
-              t \simeq t_h \wedge t_t\ \text{\it s.t.}\
-               \{t,\, t_h \wedge t_t' \} \cap \mathpzc{Dom}(
-                \Delta_h \cup \Delta_t) = \phi
+              t \simeq t_h \wedge t_t  \\
+              \left\{\begin{array}{l}
+                \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
+                 \Delta_h \cup \Delta_t) = \phi\quad \text{\it if}\
+                  \mathcal{S}_{\mathpzc{fin}_t} = \text{\it sol}  \\
+                \{t,\, t_h \wedge t'_t,\, t'_t \} \cap \mathpzc{Dom}(
+                 \Delta_h \cup \Delta_t) = \phi\quad \text{\it otherwise}
+              \end{array}\right.
             \end{array}
           }{
             \begin{array}{r}
@@ -1135,9 +1140,14 @@ term.
                 {\mathcal{R}_1}^\downarrow
                  \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
                   = \phi  \\
-              t \simeq t_h \vee t_t\ \text{\it s.t.}\
-               \{t,\, t_h \vee t_t'\} \cap \mathpzc{Dom}(
-                \Delta_h \cup \Delta_t) = \phi
+              t \simeq t_h \vee t_t  \\
+              \left\{\begin{array}{l}
+                \{t,\, t_h \vee t'_t \} \cap \mathpzc{Dom}(
+                 \Delta_h \cup \Delta_t) = \phi\quad \text{\it if}\
+                  \mathcal{S}_{\mathpzc{fin}_t} = \text{\it sol}  \\
+                \{t,\, t_h \vee t'_t,\, t'_t \} \cap \mathpzc{Dom}(
+                 \Delta_h \cup \Delta_t) = \phi\quad \text{\it otherwise}
+              \end{array}\right.
             \end{array}
           }{
             \begin{array}{r}
@@ -1391,19 +1401,22 @@ term.
     with the condition of
     $\mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$ by
     induction hypothesis. Thus we can still find the property of
-    $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_t) = \phi$, since
-    $\mathpzc{Dom}(\Gamma_1) \cap
+    $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_t) =
+    \mathpzc{Dom}(\Gamma_1) \cap
     \bigl(\{t_2 \cdots t_n\} \cup \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)
-    \bigr) = \phi$ for the term size restriction on
-    $\mathpzc{Dom}(\Gamma_1)$, e.g.
-    $\{t_2 \cdots t_n\} \not\in \mathpzc{Dom}(\Gamma_1)$.
-    From similar reason $t_1 \wedge t_t' \not\in \mathpzc{Dom}(\Gamma_1)
-    \cup \bigl(\{t_2 \cdots t_n\} \cup \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)
-    \bigr)$ for any $t_t' \in \mathbb{T}$ is also, since
+    \bigr) = \phi$ since we assume
+    $\{t_2 \cdots t_n\} \in \mathpzc{Dom}(\Gamma_1)$, it seems to be
+    $t_j \in \mathpzc{sub}\bigl(\{t_2 \cdots t_n\} \bigr) \subseteq
+    \mathpzc{Dom}(\Gamma_1)$ s.t. $2 \le j \le n$, which condtradicts
+    $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_j) = \phi$ where
+    $2 \le j \le n$.
+    From similar reason both $\{t_1, \cdots t_n\}$ and $t_1 \wedge t_t'$
+    aren't belonging to $\mathpzc{Dom}(\Gamma_1) \cup \bigl(\{t_2 \cdots t_n\} 
+    \cup \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \bigr)$, since
     $t_1 \wedge t_t' \not\in \mathpzc{Dom}(\Gamma_1)$ is by term size
     constraint, and each $t_1 \not\in \mathpzc{Dom}(\Gamma_j)$ implises
     $t_1 \wedge t_t' \not\in \bigl(\{t_2 \cdots t_n\} \cup
-    \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \bigr)$, e.g. assumption of
+    \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \bigr)$, e.g. assumimg of
     $t_1 \wedge t_t' \in \mathpzc{Dom}(\Gamma_j)$ for some $j$ imposes on
     $t_1 \in \mathpzc{Dom}(\Gamma_j) = \mathpzc{sub}(t_j)$ s.t.
     $\Gamma_j \vdash t_j : \mathcal{R}_1$ because of
@@ -1411,17 +1424,25 @@ term.
     $t_1 \wedge t_t' \in \mathpzc{Dom}(\Gamma_j)$ from corollary
     \ref{self_similarity_on_subterms}, it contradicts the fact of
     $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_j) = \phi$.
+    Accounting on the fact that the last applied rule on
+    $\Delta_t \vdash \{t_2 \cdots t_n\} \triangleright {\mathcal{R}_1}^*$
+    is (T-Cat0-xtend-$\infty$), we find
+    $t_t' \not\in \mathpzc{Dom}(\Delta_t)$ because of $t_t \neq t_t'$.
+    We even can let $t_t' = t_2 \wedge t_{t_t}'$ for some $t_{t_t}'$ s.t.
+    $\Delta_2 \vdash t_2 \triangleright \mathcal{R}_1$ comming from
+    $\Gamma_2 \vdash t_2 : \mathcal{R}_1$, on which we can say
+    $t_t' \not\in \mathpzc{Dom}(\Delta_1)$ by similar reasoning above.
+    Consequently we obtain
+    $t_t' \not\in \mathpzc{Dom}(\Delta_1 \cup \Delta_t)$.
     According to the facts we have revealed above, we can derive our
     conclusion as $\Bigl\{\bigl(\{t_1 \cdots t_n\}, t_1 \wedge t_t',
     {\mathcal{R}_1}^*, \infty, (\Delta_1 \cup \Delta_t') \bigr) \Bigr\} \cup
     (\Delta_1 \cup \Delta_t') \vdash
-    \{t_1 \cdots t_n\} \triangleright {\mathcal{R}_1}^*$ where
+    \{t_1 \cdots t_n\} \triangleright {\mathcal{R}_1}^*$ s.t.
     $\Delta_t' = \Delta_t \setminus \Delta_t\bigl(\{t_2 \cdots t_n\} \bigr)$
-    and $\Delta_t\bigl(\{t_2 \cdots t_n\} \bigr) =
-    \bigl(\{t_2 \cdots t_n\}, t_t', {\mathcal{R}_1}^*,
-    \mathcal{S}_{\mathpzc{fin}}, \Delta_t' \bigr)$ s.t.
-    $\mathcal{S}_{\mathpzc{fin}} \in \{\text{\it sol}, \infty\}$ from
-    (T-Cat0-xtend-$\infty$), with the property of
+    where $\Delta_t\bigl(\{t_2 \cdots t_n\} \bigr) =
+    \bigl(\{t_2 \cdots t_n\}, t_t', {\mathcal{R}_1}^*, \infty, \Delta_t'
+    \bigr)$ from (T-Cat0-xtend-$\infty$), with the property of
     $\mathpzc{Dom}\biggl(\Bigl\{\bigl(\{t_1 \cdots t_n\}, t_1 \wedge t_t',
     {\mathcal{R}_1}^*, \infty, (\Delta_1 \cup \Delta_t') \bigr) \Bigr\} \cup
     (\Delta_1 \cup \Delta_t') \biggr) =
@@ -1704,7 +1725,7 @@ term.
   \label{completeness_on_extended_matching}
   \[ \text{\it if}\ \Delta \vdash t \triangleright \mathcal{R},\
       \text{\it then}\ \Gamma \vdash \mathcal{M}\bigl( \Delta(t) \bigr):
-       \mathcal{R}\ \text{\it for some}\ \Gamma
+       \mathcal{R}\;\; \text{\it for some}\ \Gamma
   \]
   \begin{Proof}
     Proof is mutual induction with Claim
@@ -1973,7 +1994,7 @@ term.
     \Bigl\{\mathcal{M}\bigl((\Delta_h \cup \Delta'_t)(t_h) \bigr),
     t_2, \cdots t_n \Bigr\} =
     \Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr), t_2, \cdots t_n \Bigr\}$
-    where $\{t_2, \cdots t_n\} =
+    satisfying $\{t_2, \cdots t_n\} =
     \mathcal{M}_{\{\}}\biggl(t'_t, {\mathcal{R}_1}^*,\Bigl(
     (\Delta_h \cup \Delta'_t) \setminus \bigl((\Delta_h \cup \Delta'_t)(t_h)
     \cup \Delta'_h \bigr) \Bigr) \biggr) =
@@ -1982,11 +2003,10 @@ term.
     \bigr) \Bigr) \biggr) =
     \mathcal{M}_{\{\}}\Bigl(t'_t, {\mathcal{R}_1}^*,\bigl(
     (\Delta_h \cup \Delta'_t) \setminus \Delta_h \bigr) \Bigr) =
-    \mathcal{M}_{\{\}}(t'_t, {\mathcal{R}_1}^*, \Delta'_t )$ s.t.
+    \mathcal{M}_{\{\}}(t'_t, {\mathcal{R}_1}^*, \Delta'_t )$ where
     $(\Delta_h \cup \Delta'_t)(t_h) = \Delta_h(t_h) = 
     (t_h, t'_h, \mathcal{R}_1, \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h)$
-    for $t_h \not\in \mathpzc{Dom}(\Delta'_t)$.
-    Here we mention that
+    for $t_h \not\in \mathpzc{Dom}(\Delta'_t)$. Note that
     $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ implies
     $t_h \in \mathpzc{Dom}(\Delta_h)$, thus
     we can say $t_h \not\in \mathpzc{Dom}(\Delta'_t)$ as
@@ -1999,10 +2019,8 @@ term.
     \bigr) = \mathpzc{Dom}(\Delta'_t)$ since
     $\bigl(\mathpzc{Dom}(\Delta_{t_h}) \cup \mathpzc{Dom}(\Delta'_{t_t})
     \bigr) \subseteq \bigl(\mathpzc{Dom}(\Delta_{t_h}) \cup \mathpzc{Dom}(
-    \Delta_{t_t}) \bigr) = \mathpzc{Dom}(\Delta_{t_h} \cup \Delta_{t_t})$
-    s.t. $t'_t = t_{t_h} \wedge t'_{t_t} \not\in \mathpzc{Dom}(
-    \Delta_{t_h} \cup \Delta_{t_t})$, then we look for
-    $\{t_2, \cdots t_n\} =
+    \Delta_{t_t}) \bigr) = \mathpzc{Dom}(\Delta_{t_h} \cup \Delta_{t_t})$,
+    then we look for $\{t_2, \cdots t_n\} =
     \mathcal{M}_{\{\}}(t'_t, {\mathcal{R}_1}^*, \Delta'_t ) =
     \Bigl\{\mathcal{M}\bigl(\Delta'_t(t_{t_h}) \bigr), t'_2, \cdots t'_m
     \Bigr\}$ where
@@ -2013,7 +2031,7 @@ term.
     \Delta_{t_h}(t_{t_h}) =  (t_{t_h}, t'_{t_h}, \mathcal{R}_1,
     \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_{t_h} )$ since
     $t_{t_h} \not\in \mathpzc{Dom}(\Delta'_{t_t})$ for the same reason
-    of $t_h \not\in \mathpzc{Dom}(\Delta'_t)$ above. Then
+    of $t_h \not\in \mathpzc{Dom}(\Delta'_t)$ as above. Then
     we can apply Claim \ref{claim1_for_completeness} on
     $\{t'_2, \cdots t'_m\} = \mathcal{M}_{\{\}}\biggl(
     t'_{t_t}, {\mathcal{R}_1}^*, \Bigr(\Delta'_t \setminus \bigl(
@@ -2022,11 +2040,10 @@ term.
     $\Gamma'_2 \vdash t'_2: \mathcal{R}_1, \cdots
     \Gamma'_m \vdash t'_m: \mathcal{R}_1$ for some
     $\Gamma'_2, \cdots \Gamma'_m$ s.t.
-    $\mathpzc{Dom}(\Gamma'_j) \cap \mathpzc{Dom}(\Gamma'_k) = \phi$
-    if $j \neq k$, and
-    $\bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \subseteq
+    $\mathpzc{Dom}(\Gamma'_j) \cap \mathpzc{Dom}(\Gamma'_k) = \phi$ where
+    $j \neq k$, and $\bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \subseteq
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_t} (t_{t_t}) \bigr)
-    \Bigr)$. According to the facts that
+    \Bigr)$. According to the facts of
     $\mathpzc{Dom}(\Delta_{t_h}) \cap \mathpzc{Dom}(\Delta_{t_t}) = \phi$
     s.t. $\Delta_{t_h} \vdash t_{t_h} \triangleright \mathcal{R}_1$,
     $\Delta_{t_t} \vdash t_{t_t} \triangleright {\mathcal{R}_1}^*$, we get
@@ -2037,22 +2054,23 @@ term.
     \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr) \Bigr)$ s.t.
     $\Gamma_{t_h} \vdash \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr) :
     \mathcal{R}_1$ from
-    Lemma \ref{consistency_on_domain_independency} and induction hypothesis
-    applied on
+    Property \ref{consistency_on_domain_independency}, \ref{dom_of_Gamma}
+    and induction hypothesis applied on
     $\Delta_{t_h} \vdash t_{t_h} \triangleright \mathcal{R}_1$
-    respectively. Then we still find that
+    respectively. Thus we still find
     $\mathpzc{Dom}(\Gamma_{t_h}) \cap \bigcup_{j=2}^m\mathpzc{Dom}(
     \Gamma'_j) = \phi$ for
     $\bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) \subseteq \mathpzc{sub}\Bigl(
     \mathcal{M}\bigl(\Delta_{t_t}(t_{t_t}) \bigr) \Bigr)$.
-    On accounting the facts that
+    Accounting on the facts that
     $\mathpzc{Dom}(\Delta_{t_h}) \subseteq \mathpzc{Dom}(\Delta_t)$ s.t.
-    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$,
-    we find that
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$, which
+    implies $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_{t_h}) =
+    \phi$ we find that
     $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr) \cap
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr)
-    \Bigr) = \phi$ by similar to above with
-    Lemma \ref{consistency_on_domain_independency}. Since
+    \Bigr) = \phi$ similarly to above argument with
+    Property \ref{consistency_on_domain_independency}. Since
     $\mathpzc{Dom}(\Gamma_h) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
     \Delta_h(t_h) \bigr) \Bigr)$ s.t.
     $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) :
@@ -2061,13 +2079,12 @@ term.
     \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr) \Bigr)$ s.t.
     $\Gamma_{t_h} \vdash \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr) :
     \mathcal{R}_1$ both are from
-    Lemma \ref{subterms_includes_its_domain_over_canonical_terms}, then
-    we obtain
+    Lemma \ref{dom_of_Gamma}, then we obtain
     $\mathpzc{Dom}(\Gamma_{t_h}) \cap \bigl(\mathpzc{Dom}(\Gamma_h) \cup
     \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \bigr) = \phi$ for
     $\mathpzc{Dom}(\Gamma_{t_h}) \cap \bigcup_{j=2}^m \mathpzc{Dom}(
-    \Gamma'_j) = \phi$. Similar to above, accrding to the facts that
-    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ with
+    \Gamma'_j) = \phi$. Similar to above, according to the facts of
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ s.t.
     $\Delta_h \vdash t_h : \mathcal{R}_1$ and
     $\Delta_t \vdash t_t : {\mathcal{R}_1}^*$, we see that
     $\mathpzc{Dom}(\Gamma_h) \cap \mathpzc{Dom}(\Gamma_t) = \phi$ s.t
@@ -2082,9 +2099,9 @@ term.
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr)$ and
     $\mathpzc{Dom}(\Gamma_t) \subseteq
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr)$ from
-    Lemma \ref{consistency_on_domain_independency} and
-    \ref{subterms_includes_its_domain_over_canonical_terms}. We next
-    focus on $\mathcal{M}\bigl(\Delta_t(t_t) \bigr)$ to show
+    Property \ref{consistency_on_domain_independency} and
+    \ref{dom_of_Gamma} respectively.
+    Next we focus on $\mathcal{M}\bigl(\Delta_t(t_t) \bigr)$ to show
     $\bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \subseteq
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr)$.
     From def of $\mathcal{M}$, we know that
@@ -2101,14 +2118,14 @@ term.
     $\{t''_2, \cdots t''_l \} =
     \mathcal{M}_{\{\}}\biggl(t'_{t_t}, {\mathcal{R}_1}^*, \Bigl(\Delta'_t
     \setminus \bigl(\Delta'_t(t_{t_h}) \cup \Delta'_{t_h} \bigr) \Bigr)
-    \biggr) = \{t'_2, \cdots t'_m \}$ as above. Thus
+    \biggr) = \{t'_2, \cdots t'_m \}$ shown as above. Thus
     $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr) =
     \mathpzc{sub}\bigl(\mathcal{M}(t_t, t'_t, {\mathcal{R}_1}^*, \infty,
     \Delta'_t) \bigr) =
     \mathpzc{sub}\biggl(\Bigl\{\mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr),
     t'_2, \cdots t'_m \Bigr\} \biggr) \supseteq
     \bigcup_{j=2}^m \mathpzc{sub}(t'_j) \supseteq
-    \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j)$ e.g.
+    \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j)$ thus
     $\bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \subseteq
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr)$ s.t.
     $\Gamma'_j \vdash t'_j : \mathcal{R}_1$ for each $2 \le j \le m$.
@@ -2153,24 +2170,9 @@ term.
     $\mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta(t) \bigr) \Bigr) >
     \mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr)$,
     $\mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr)
-    \Bigr)$, $\mathpzc{size}(t'_2),\ \cdots \mathpzc{size}(t'_m)$ which
-    implies that
-    $\mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta(t) \bigr) \Bigr) >
-    \mathpzc{size}(t'')$ s.t.
-    $t'' \in \mathpzc{Dom}\bigl(\Gamma_h \cup \Gamma_{t_h}
-    \cup \bigcup_{j=2}^m \Gamma'_j \bigr)$ from
-    Lemma \ref{termsize_constraint_on_environment} as
-    $\mathpzc{size}(t''_h) \le \mathpzc{size}\Bigl(\mathcal{M}\bigl(
-    \Delta_h(t_h) \bigr) \Bigr)$ s.t. $t''_h \in \mathpzc{Dom}(\Gamma_h)$
-    for
-    $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) : \mathcal{R}_1$,
-    and other cases of
-    $t''_{t_h} \in \mathpzc{Dom}(\Gamma_{t_h})$,
-    $t''_j \in \mathpzc{Dom}(\Gamma'_j)$ for each $2 \le j \le m$ are
-    similar, thus we find that
-    $\mathpzc{size}\Bigl(\mathcal{M}\bigl(\Delta(t) \bigr) \Bigr) > t''$
-    for any $t'' \in  \mathpzc{Dom}\bigl(\Gamma_h \cup \Gamma_{t_h} \cup
-    \bigcup_{j=2}^m \Gamma'_j \bigr)$.
+    \Bigr)$, $\mathpzc{size}(t'_2),\ \cdots \mathpzc{size}(t'_m)$, which
+    implies $\mathcal{M}\bigl(\Delta(t) \bigr) \not\in \mathpzc{Dom}\bigl(
+    \Gamma_h \cup \Gamma_{t_h} \cup \bigcup_{j=2}^m \Gamma'_j \bigr)$.
     
     Case (T-Cat1-xtend-sol):
     Proof is similar to the case of (T-Cat0-xtend-sol).
@@ -2183,9 +2185,9 @@ term.
     Proof is same as the case of case (T-Cat1-xtend-sol).
     
     Case (T-Dup-xtend-$\infty$):
-    Proof is same as the case of (T-Cat1-xtend-$\infty$) with
+    Proof is same as the case of (T-Cat1-xtend-$\infty$) with Claim
     \ref{claim3_for_completeness}.
-
+    
     Case (T-Opt-xtend-nil):
     Proof is similar to the case of (T-Cat0-xtend-nil), from the def of
     $\mathcal{M}$ as

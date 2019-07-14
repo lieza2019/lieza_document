@@ -1096,7 +1096,7 @@ term.
                \quad \Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^+
                 \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
                  = \phi  \\
-              t \simeq t_h \wedge t_t  \\
+              t \simeq t_h \wedge t'_t  \\
               \left\{\begin{array}{l}
                 \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
                  \Delta_h \cup \Delta_t) = \phi\quad \text{\it if}\
@@ -1140,7 +1140,7 @@ term.
                 {\mathcal{R}_1}^\downarrow
                  \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
                   = \phi  \\
-              t \simeq t_h \vee t_t  \\
+              t \simeq t_h \vee t'_t  \\
               \left\{\begin{array}{l}
                 \{t,\, t_h \vee t'_t \} \cap \mathpzc{Dom}(
                  \Delta_h \cup \Delta_t) = \phi\quad \text{\it if}\
@@ -1225,8 +1225,9 @@ term.
 \begin{Lemma}{soundness on extended matching}
   \label{soundness_on_extended_matching}
   \[ \text{\it if}\ \Gamma \vdash t : \mathcal{R},\
-      \text{\it then}\ \Delta \vdash t \triangleright \mathcal{R}\
-       \text{\it s.t.}\ \mathpzc{Dom}(\Delta) = \mathpzc{Dom}(\Gamma).
+      \text{\it then}\ \Delta \vdash t \triangleright \mathcal{R}\;\;
+       \text{\it for some}\ \Delta\
+        \text{\it s.t.}\ \mathpzc{Dom}(\Delta) = \mathpzc{Dom}(\Gamma).
   \]
   \begin{Proof}
     Proof is induction on structure of term $t$ s.t.
@@ -1728,9 +1729,7 @@ term.
        \mathcal{R}\;\; \text{\it for some}\ \Gamma
   \]
   \begin{Proof}
-    Proof is mutual induction with Claim
-    \ref{claim1_for_completeness}, \ref{claim2_for_completeness} and
-    \ref{claim3_for_completeness} on structure of derivation of
+    Proof is induction on structure of derivation of
     $\Gamma \vdash t \triangleright \mathcal{R}$.
     
     Case (T-Atom0-xtend): From def. of (T-Atom0-xtend), we suppose
@@ -1963,10 +1962,9 @@ term.
     (T-Cat0-xtend-sol), we can predicate that the last one applied on
     $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ is just
     (T-Cat0-xtend-$\infty$), since the constraint of $t'_t \neq \{\}$ on
-    $\Delta'_t = (t'_t, t''_t, {\mathcal{R}_1}^*,
-    \mathcal{S}_{\mathpzc{fin}_{t'}}, \Delta''_t)$ eliminates
-    the case of (T-Cat0-xtend-nil) as the last applied rule. Accordingly
-    we suppose
+    $\Delta'_t = (t'_t, t''_t, {\mathcal{R}_1}^*, \mathcal{S}_{t'},
+    \Delta''_t)$ eliminates the case of (T-Cat0-xtend-nil) as the last
+    applied rule. Accordingly we suppose
     $\Delta_t = \bigl\{(t_t, t'_t, {\mathcal{R}_1}^*, \infty, \Delta'_t)
     \bigr\} \cup \Delta'_t$ s.t.
     $t'_t = t_{t_h} \wedge t'_{t_t}$ and
@@ -1974,8 +1972,7 @@ term.
     $\Delta_{t_h} = \bigl\{(t_{t_h}, t'_{t_h}, \mathcal{R}_1,
     \mathcal{S}_{t_h}, \Delta'_{t_h} ) \bigr\} \cup \Delta'_{t_h}$, and
     $\Delta_{t_t} = \bigl\{(t_{t_t}, t'_{t_t}, {\mathcal{R}_1}^*,
-    \mathcal{S}_{\mathpzc{fin}_{t_t}}, \Delta'_{t_t} ) \bigr\}
-    \cup \Delta'_{t_t}$ s.t.
+    \mathcal{S}_{t_t}, \Delta'_{t_t} ) \bigr\} \cup \Delta'_{t_t}$ s.t.
     $\Delta_{t_h} \vdash t_{t_h} \triangleright \mathcal{R}_1$ and
     $\Delta_{t_t} \vdash t_{t_t} \triangleright {\mathcal{R}_1}^*$
     respectively comming from subderivations of
@@ -2005,8 +2002,8 @@ term.
     (\Delta_h \cup \Delta'_t) \setminus \Delta_h \bigr) \Bigr) =
     \mathcal{M}_{\{\}}(t'_t, {\mathcal{R}_1}^*, \Delta'_t )$ where
     $(\Delta_h \cup \Delta'_t)(t_h) = \Delta_h(t_h) = 
-    (t_h, t'_h, \mathcal{R}_1, \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h)$
-    for $t_h \not\in \mathpzc{Dom}(\Delta'_t)$. Note that
+    (t_h, t'_h, \mathcal{R}_1, \mathcal{S}_h, \Delta'_h)$ for
+    $t_h \not\in \mathpzc{Dom}(\Delta'_t)$. Note that
     $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ implies
     $t_h \in \mathpzc{Dom}(\Delta_h)$, thus
     we can say $t_h \not\in \mathpzc{Dom}(\Delta'_t)$ as
@@ -2029,7 +2026,7 @@ term.
     \Delta'_t(t_{t_h}) \cup \Delta'_{t_h} \bigr) \Bigr) \biggr)$ s.t.
     $\Delta'_t(t_{t_h}) = (\Delta_{t_h} \cup \Delta'_{t_t})(t_{t_h}) =
     \Delta_{t_h}(t_{t_h}) =  (t_{t_h}, t'_{t_h}, \mathcal{R}_1,
-    \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_{t_h} )$ since
+    \mathcal{S}_{t_h}, \Delta'_{t_h} )$ since
     $t_{t_h} \not\in \mathpzc{Dom}(\Delta'_{t_t})$ for the same reason
     of $t_h \not\in \mathpzc{Dom}(\Delta'_t)$ as above. Then
     we can apply Claim \ref{claim1_for_completeness} on
@@ -2228,89 +2225,6 @@ term.
 
 
 \begin{Claim}
-  \[ \text{\it if}\ t' \in \mathpzc{Dom}(\Delta)\ \text{\it s.t.}\
-      t' \neq t\ \text{\it where}\ \Delta \vdash t \triangleright
-       \mathcal{R}, \!\! \begin{array}[t]{l}
-         \text{\it then}\ \Delta(t') = (t', t'_{\text{\it equ}},
-          \mathcal{R}_1, \mathcal{S}'_{\mathpzc{fin}}, \Delta')  \\
-         \text{\it for some}\ t'_{\text{\it equ}}, \mathcal{R}_1,
-          \mathcal{S}'_{\mathpzc{fin}}, \Delta'\ \text{\it s.t.}\
-           \mathpzc{size}(\mathcal{R}_1) < \mathpzc{size}(\mathcal{R}).
-       \end{array}
-    \]
-    \begin{Proof}
-      Proof is induction on structure of derivation for
-      $\Delta \vdash \mathcal{R}$.
-      
-      Case (T-Cas-xtend):
-      From def. of (T-Cas-xtend), we suppose that $t' = t_1$ s.t.
-      $\Delta_1 \vdash t_1 \triangleright \mathcal{R}_1$, it's obvious
-      as $\mathpzc{size}(\mathcal{R}_1) < \mathpzc{size}(\mathcal{R}_1
-      \wedge \mathcal{R}_2)$. Otherwize e.g.
-      $t' \in \mathpzc{Dom}(\Delta_1)$ with $t' \neq t_1$, we find that
-      $\Delta_1(t') = (t', t'_{\text{\it equ}}, \mathcal{R}_{10},
-      \mathcal{S}_{\mathpzc{fin}_{10}}, \Delta'_{10})$ for some
-      $\mathcal{R}_{10}$ satisfying
-      $\mathpzc{size}(\mathcal{R}_{10}) < \mathpzc{size}(\mathcal{R}_1)
-      < \mathpzc{size}(\mathcal{R}_1 \wedge \mathcal{R}_2)$ by induction
-      hypothesis. Counterpart fragments to be considerd on
-      $\Delta_2 \vdash t_2 \triangleright \mathcal{R}_2$ is similar.
-      
-      Case (T-Par-xtend):
-      Proof is same as the case of (T-Cas-xtend).
-      
-      Case (T-Cat0-xtend-sol), (T-Cat1-xtend-sol), (T-Dup-xtend-sol),
-      (T-Opt-xtend-sol), (T-Alt-xtend-L), (T-Alt-xtend-R):
-      Proof is similar to the case of (T-Cas-xtend) above.
-      
-      Case (T-Cat0-xtend-$\infty$):
-      From def. of (T-Cat0-xtend-$\infty$), we suppose
-      $t' \in \mathpzc{Dom}(\Delta_h \cup \Delta'_t)$ s.t.
-      $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ and
-      $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ with
-      $\Delta_t(t_t) = (t_t, t'_t, {\mathcal{R}_1}^*,
-      \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t)$.
-      The case of $t' \in \mathpzc{Dom}(\Delta_h)$ s.t.
-      $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ is trivial by
-      induction hypothesis with the fact that
-      $\mathpzc{size}(\mathcal{R}_1) < \mathpzc{size}({\mathcal{R}_1}^*)$.
-      In another case e.g. $t' \in \mathpzc{Dom}(\Delta'_t)$, we consider
-      still 2 cases depending on the last applied rule for the derivation
-      of $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$.
-      subcase (T-Cat0-xtend-sol): In this case, we suppose that the last
-      applied rule on
-      $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ is
-      (T-Cat0-xtend-sol), thus it's trivial as
-      $\Delta'_t \vdash t'_t \triangleright \mathcal{R}_1$ s.t.
-      $t' \in \mathpzc{Dom}(\Delta'_t)$ by induction hypothesis for
-      $\mathpzc{size}(\mathcal{R}_1) < \mathpzc{size}({\mathcal{R}_1}^*)$.
-      subcase (T-Cat0-xtend-$\infty$): In this case, we suppose that
-      the last applied rule on
-      $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ is
-      (T-Cat0-xtend-$\infty$), which also implies that $t' \neq t_t$, since
-      $t_t \not\in \mathpzc{Dom}(\Delta_{t_h} \cup \Delta_{t_t})$ s.t.
-      $\Delta'_t = (\Delta_{t_h} \cup \Delta'_{t_t}) \subseteq
-      (\Delta_{t_h} \cup \Delta_{t_t})$ where we let
-      $\Delta_t(t_t) = \bigl(t_t, t'_t, {\mathcal{R}_1}^*, \infty, 
-      (\Delta_{t_h} \cup \Delta'_{t_t}) \bigr)$ s.t.
-      $\Delta'_t \subseteq \Delta_t$ comming from
-      $\Delta_{t_h} \vdash t_{t_h} \triangleright \mathcal{R}_1$ and
-      $\Delta_{t_t} \vdash t_{t_t} \triangleright {\mathcal{R}_1}^*$
-      for some $t_{t_h}$ and $t_{t_t}$ respectively, which contraditcts
-      our assumption of $t' \in \mathpzc{Dom}(\Delta'_t)$ s.t.
-      $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$.
-      Threrefore we find that
-      $\Delta_t(t') = (t', t'_{\text{\it equ}}, \mathcal{R}_{11},
-      \mathcal{S}'_{\mathpzc{fin}_{11}}, \Delta'_{11})$ for some
-      $\mathcal{R}_{11}$ satisfying
-      $\mathpzc{size}(\mathcal{R}_{11}) < \mathpzc{size}({\mathcal{R}_1}^*)$
-      as desired by induction hypothesis.
-      $\Box$
-    \end{Proof}
-\end{Claim}
-
-
-\begin{Claim}
   \label{claim1_for_completeness}
   \[ \begin{array}{l}
       \{t_2, \cdots t_n\} = \mathcal{M}_{\{\}}\biggl(t'_{\text{\it equ}_t},
@@ -2327,80 +2241,79 @@ term.
               t'_{\text{\it equ}_h}, \mathcal{R}_1,
                \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h )\
                 \text{\it for some}\ t'_{\text{\it equ}_h},
-                 \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h.  \\ 
+                 \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h  \\ 
            \Delta_t \vdash t_{\text{\it equ}_t} \triangleright
             {\mathcal{R}_1}^*\ \text{\it s.t.}\
              \Delta_t(t_{\text{\it equ}_t}) =(t_{\text{\it equ}_t},
               t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*,
                \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t)\
-                \text{\it for some}\ t'_{\text{\it equ}_t},
-                 \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t.               
+                \text{\it for some}\ t_{\text{\it equ}_t},
+                 \mathcal{S}_{\mathpzc{fin}_t}
          \end{array}  \\
       \mbox{satsifies the following conditions}\\
        \quad \Gamma_2 \vdash t_2: \mathcal{R}_1, \cdots
         \Gamma_n \vdash t_n: \mathcal{R}_1\ \text{\it for some}\
-         \Gamma_2, \cdots \Gamma_n\ \text{\it with}\
+         \Gamma_2, \cdots \Gamma_n\ \text{\it s.t.}\
           \mathpzc{Dom}(\Gamma_j) \cap \mathpzc{Dom}(\Gamma_k) = \phi\
-           \text{\it if}\ j \neq k.  \\
-       \quad \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \subseteq
-        \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_{\text{\it equ}_t})
-         \bigr) \Bigr)
+           \text{\it if}\ j \neq k,  \\
+       \quad \text{\it and}\ \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)
+        \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_{
+         \text{\it equ}_t}) \bigr) \Bigr)
      \end{array}
   \]
   \begin{Proof}
     Proof is structual induction on derivation of
     $\Delta \vdash t \triangleright {\mathcal{R}_1}^*$.
     
-    The fact of $\Delta(t) = (t, t_{\text{\it equ}_h} \wedge
+    Our assumption of $\Delta(t) = (t, t_{\text{\it equ}_h} \wedge
     t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*, \infty, \Delta' )$ implies
     that the last applied rule on
     $\Delta \vdash t \triangleright {\mathcal{R}_1}^*$ is
-    (T-Cat0-canon-$\infty$). Still we can predicate that
+    (T-Cat0-canon-$\infty$), thus we know
     $t'_{\text{\it equ}_t} \neq \{\}$ from def. of (T-Cat0-canon-$\infty$).
     Accrding to the fact of
     $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$
-    s.t. $\Delta_t(t_{\text{\it equ}_t}) =(t_t, t'_{\text{\it equ}_t},
-    {\mathcal{R}_1}^*, \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t)$ with
-    $t'_{\text{\it equ}_t} \neq \{\}$ we have revealed above, it's enough
-    to consider only 2 cases for the deduction of
+    s.t. $\Delta_t(t_{\text{\it equ}_t}) =(t_{\text{\it equ}_t},
+    t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*, \mathcal{S}_t, \Delta'_t)$
+    with $t'_{\text{\it equ}_t} \neq \{\}$, it's enough to consider
+    only 2 cases for the deduction of
     $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$
-    e.g. the last applied rule for the deduction of
+    e.g. the last applied rule on
     $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$.
-
+    
     Case (T-Cat0-xtend-sol): We suppose that the last applied rule on
     $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$
-    is (T-Cat0-xtend-sol). In this case, we can predicate that
+    is (T-Cat0-xtend-sol). In this case, we let
     $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$
     s.t. $\Delta_t = \bigl\{(t_{\text{\it equ}_t}, t'_{\text{\it equ}_t},
     {\mathcal{R}_1}^*, \text{\it sol}, \Delta'_t) \bigr\} \cup \Delta'_t$,
-    with $\Delta'_t \vdash t'_{\text{\it equ}_t} \triangleright
+    where $\Delta'_t \vdash t'_{\text{\it equ}_t} \triangleright
     \mathcal{R}_1$ s.t. $\Delta'_t = \bigl\{(t'_{\text{\it equ}_t},
-    t''_{\text{\it equ}_t}, \mathcal{R}_1, \mathcal{S}'_{\mathpzc{fin}_t},
-    \Delta''_t) \bigr\} \cup \Delta''_t,\
-    t'_{\text{\it equ}_t} \simeq t''_{\text{\it equ}_t}$ from def. of
+    t''_{\text{\it equ}_t}, \mathcal{R}_1, \mathcal{S}'_t, \Delta''_t)
+    \bigr\} \cup \Delta''_t$ with
+    $t'_{\text{\it equ}_t} \simeq t''_{\text{\it equ}_t}$ from def. of
     (T-Cat0-xtend-sol). Then
     $\{t_2 \cdots t_n\} = \mathcal{M}_{\{\}}\biggl(t'_{\text{\it equ}_t},
     {\mathcal{R}_1}^*, \Bigl(\Delta' \setminus \bigl(\Delta'(
     t_{\text{\it equ}_h}) \cup \Delta'_h \bigr) \Bigr) \biggr) =
     \mathcal{M}_{\{\}}(t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*, \Delta'_t)
     = \Bigl\{\mathcal{M}\bigl(\Delta'_t(t'_{\text{\it equ}_t}) \bigr)
-    \Bigr\}$ because of
-    $t'_{\text{\it equ}_t} \in \mathpzc{Dom}(\Delta'_t)$, accounting on the
-    fact of $\Bigl(\Delta' \setminus \bigl(\Delta'(t_{\text{\it equ}_h})
+    \Bigr\}$, since
+    $\Bigl(\Delta' \setminus \bigl(\Delta'(t_{\text{\it equ}_h})
     \cup \Delta'_h \bigr) \Bigr) = (\Delta' \setminus \Delta_h) =
-    \Delta'_t$ for $\Delta' = (\Delta_h \cup \Delta'_t)$, since
+    \Delta'_t$ where $\Delta' = (\Delta_h \cup \Delta'_t)$ and
     $\Delta'(t_{\text{\it equ}_h}) = (\Delta_h \cup \Delta'_t)(
     t_{\text{\it equ}_h}) = \Delta_h(t_{\text{\it equ}_h}) =
     (t_{\text{\it equ}_h}, t'_{\text{\it equ}_h}, \mathcal{R}_1,
-    \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h )$. Here we mention that
+    \mathcal{S}_h, \Delta'_h )$. Here a fact of
     $\Delta_h \vdash t_{\text{\it equ}_h} \triangleright \mathcal{R}_1$,
-    which implies $t_{\text{\it equ}_h} \in \mathpzc{Dom}(\Delta_h)$, and
-    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta'_t) = \phi$ as
-    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ with
-    $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$ from def,
-    of (T-Cat0-canon-$\infty$). By applying induction hypothesis on
-    $\Delta'_t \vdash t'_{\text{\it equ}_t} \triangleright \mathcal{R}_1$,
-    we obtain $\Gamma'_t \vdash \mathcal{M}\bigl(\Delta'_t(
+    implies $t_{\text{\it equ}_h} \in \mathpzc{Dom}(\Delta_h)$, and
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta'_t) = \phi$ comes
+    from $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ with
+    $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$ from def.
+    of (T-Cat0-canon-$\infty$). Applying induction hypothesis on
+    $\Delta'_t \vdash t'_{\text{\it equ}_t} \triangleright \mathcal{R}_1$
+    brings us $\Gamma'_t \vdash \mathcal{M}\bigl(\Delta'_t(
     t'_{\text{\it equ}_t}) \bigr) : \mathcal{R}_1$ for some
     $\Gamma'_t$ s.t. $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(
     t_{\text{\it equ}_t}) \bigr) \Bigr) = \mathpzc{sub}\bigl(\mathcal{M}(
@@ -2410,66 +2323,65 @@ term.
     \biggr) \supseteq
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta'_t(t'_{\text{\it equ}_t})
     \bigr) \Bigr) \supseteq \mathpzc{Dom}(\Gamma'_t)$ as desired, from
-    Lemma \ref{subterms_includes_its_domain_over_canonical_terms}.
+    Property \ref{dom_of_Gamma}.
     
-    Case (T-Cat0-xtend-$\infty$): In this case, we suppose that the last
+    Case (T-Cat0-xtend-$\infty$): We suppose that the last
     rule applied on the derivation of
     $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$
-    s.t $\Delta_t = \bigl\{(t_{\text{\it equ}_t},
+    is (T-Cat0-canon-$\infty$), thus we let
+    $\Delta_t = \bigl\{(t_{\text{\it equ}_t},
     t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}},
     {\mathcal{R}_1}^*, \infty, \Delta'_t) \bigr\} \cup \Delta'_t$ with
-    $\Delta'_t = (\Delta_{t_h} \cup \Delta'_{t_t})$ is
-    (T-Cat0-canon-$\infty$), where we let
+    $\Delta'_t = (\Delta_{t_h} \cup \Delta'_{t_t})$, where we do
     $\Delta_{t_h} \vdash t_{\text{\it equ}_{t_h}} \triangleright
     \mathcal{R}_1$ s.t.
     $\Delta_{t_h} = \bigl\{(t_{\text{\it equ}_{t_h}},
     t'_{\text{\it equ}_{t_h}}, \mathcal{R}_1,
-    \mathcal{S}_{\mathpzc{fin}_{t_h}}, \Delta'_{t_h}) \bigl\} \cup
-    \Delta'_{t_h}$ and
+    \mathcal{S}_{t_h}, \Delta'_{t_h}) \bigl\} \cup \Delta'_{t_h}$ and
     $\Delta_{t_t} \vdash t_{\text{\it equ}_{t_t}}
     \triangleright {\mathcal{R}_1}^*$ s.t
     $\Delta_{t_t} = \bigl\{(t_{\text{\it equ}_{t_t}},
     t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
-    \mathcal{S}_{\mathpzc{fin}_{t_t}}, \Delta'_{t_t}) \bigr\} \cup
-    \Delta'_{t_t}$. Then we can apply induction hypothesis on
+    \mathcal{S}_{t_t}, \Delta'_{t_t}) \bigr\} \cup \Delta'_{t_t}$.
+    By applying induction hypothesis on
     $\Delta_t \vdash t_{\text{\it equ}_t} \triangleright {\mathcal{R}_1}^*$,
     we obtain $\{t'_2, \cdots t'_m\} =
     \mathcal{M}_{\{\}}\biggl(t'_{\text{\it equ}_{t_t}}
-    {\mathcal{R}_1}^*, \Bigl(\Delta'' \setminus \bigl(\Delta''(
+    {\mathcal{R}_1}^*, \Bigl(\Delta'_t \setminus \bigl(\Delta'_t(
     t_{\text{\it equ}_{t_h}}) \cup \Delta'_{t_h} \bigr) \Bigr) \biggr)$
-    s.t. $\Delta'' = \Delta_{t_h} \cup \Delta'_{t_t}$, which satisfies
+    s.t. $\Delta'_t = \Delta_{t_h} \cup \Delta'_{t_t}$, which satisfies
     $\Gamma'_2 \vdash t'_2: \mathcal{R}_1, \cdots
     \Gamma'_m \vdash t'_m: \mathcal{R}_1$ for some
     $\Gamma'_2, \cdots \Gamma'_m$ with
-    $\mathpzc{Dom}(\Gamma'_j) \cap \mathpzc{Dom}(\Gamma'_k) = \phi$ if
+    $\mathpzc{Dom}(\Gamma'_j) \cap \mathpzc{Dom}(\Gamma'_k) = \phi$ where
     $j \neq k$, and
     $\bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) \subseteq
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_t}(
     t_{\text{\it equ}_{t_t}}) \bigr) \Bigr)$.
-    On accounting the facts of
+    Accounting on the facts of
     $\mathpzc{Dom}(\Delta'_{t_t}) \subseteq \mathpzc{Dom}(\Delta_{t_t})$
     s.t.
     $\mathpzc{Dom}(\Delta_{t_h}) \cap \mathpzc{Dom}(\Delta_{t_t}) = \phi$
-    and $t_{\text{\it equ}_{t_h}} \in \mathpzc{Dom}(\Delta_{t_h})$ for
+    and $t_{\text{\it equ}_{t_h}} \in \mathpzc{Dom}(\Delta_{t_h})$ s.t.
     $\Delta_{t_h} \vdash t_{\text{\it equ}_{t_h}} \triangleright
-    \mathcal{R}_1$, that implies
-    $t_{\text{\it equ}_{t_h}} \not\in \mathpzc{Dom}(\Delta'_{t_t})$,
+    \mathcal{R}_1$, we find
+    $t_{\text{\it equ}_{t_h}} \not\in \mathpzc{Dom}(\Delta'_{t_t})$. Then
     we still reveal r.h.s. of $\{t'_2, \cdots t'_m\}$ as
     $\mathcal{M}_{\{\}}\biggl(t'_{\text{\it equ}_{t_t}}
-    {\mathcal{R}_1}^*, \Bigl(\Delta'' \setminus \bigl(
+    {\mathcal{R}_1}^*, \Bigl(\Delta'_t \setminus \bigl(
     (\Delta_{t_h} \cup \Delta'_{t_t})(t_{\text{\it equ}_{t_h}}) \cup
     \Delta'_{t_h} \bigr) \Bigr) \biggr) =
     \mathcal{M}_{\{\}}\biggl(t'_{\text{\it equ}_{t_t}}
-    {\mathcal{R}_1}^*, \Bigl(\Delta'' \setminus \bigl(
+    {\mathcal{R}_1}^*, \Bigl(\Delta'_t \setminus \bigl(
     \Delta_{t_h}(t_{\text{\it equ}_{t_h}}) \cup \Delta'_{t_h} \bigr) \Bigr)
     \biggr) =
     \mathcal{M}_{\{\}}\Bigl(t'_{\text{\it equ}_{t_t}}
     {\mathcal{R}_1}^*, \bigl((\Delta_{t_h} \cup \Delta'_{t_t}) \setminus
     \Delta_{t_h} \bigr) \Bigr) =
     \mathcal{M}_{\{\}}(t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
-    \Delta'_{t_t})$.By now, we can consider the term
+    \Delta'_{t_t})$.By now, we consider the term
     $\{t_2, \cdots t_n\}$ for the original judgement
-    $\Delta \vdash t \triangleright {\mathcal{R}_1}^*$ as follow,
+    $\Delta \vdash t \triangleright {\mathcal{R}_1}^*$ as follows,
     $\{t_2, \cdots t_n\} = \mathcal{M}_{\{\}}\biggl(
     t'_{\text{\it equ}_t}, {\mathcal{R}_1}^*, \Bigl(\Delta' \setminus
     \bigl(\Delta'(t_{\text{\it equ}_h}) \cup \Delta'_h \bigr) \Bigr)
@@ -2490,33 +2402,31 @@ term.
     (\Delta_{t_h} \cup \Delta'_{t_t}) \bigr) =
     \mathcal{M}_{\{\}}\bigl(
     t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}},
-    {\mathcal{R}_1}^*, (\Delta_{t_h} \cup \Delta'_{t_t}) \bigr)$ since
-    $t_{\text{\it equ}_h} \not\in \mathpzc{Dom}(\Delta'_t)$ comming from
-    the facts of
+    {\mathcal{R}_1}^*, (\Delta_{t_h} \cup \Delta'_{t_t}) \bigr)$ for
+    $t'_{\text{\it equ}_t} =
+    t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}}$ and
+    $t_{\text{\it equ}_h} \not\in \mathpzc{Dom}(\Delta'_t)$, which
+    comes from the facts of
     $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$ s.t.
-    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$, and
-    $t_{\text{\it equ}_h} \in \mathpzc{Dom}(\Delta_h)$ for
-    $\Delta_h \vdash t_{\text{\it equ}_h} : \mathcal{R}_1$. According to
-    similar reason as above, we find
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ with
+    $t_{\text{\it equ}_h} \in \mathpzc{Dom}(\Delta_h)$ s.t.
+    $\Delta_h \vdash t_{\text{\it equ}_h} : \mathcal{R}_1$. From def. of
+    (T-Cat0-xtend-$\infty$), we know
     $t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}} \not\in
     \mathpzc{Dom}(\Delta_{t_h} \cup \Delta'_{t_t})$, since
-    $\mathpzc{Dom}(\Delta_{t_h} \cup \Delta'_{t_t}) =
-    \bigl(\mathpzc{Dom}(\Delta_{t_h}) \cup \mathpzc{Dom}(\Delta'_{t_t})
-    \bigr)$ s.t.
-    $\mathpzc{Dom}(\Delta'_{t_t}) \subseteq \mathpzc{Dom}(\Delta_{t_t})$,
-    which implies 
-    $\mathpzc{Dom}(\Delta_{t_h} \cup \Delta'_{t_t}) \subseteq
-    \bigl(\mathpzc{Dom}(\Delta_{t_h}) \cup \mathpzc{Dom}(\Delta_{t_t})
-    \bigr) = \mathpzc{Dom}(\Delta_{t_h} \cup \Delta_{t_t})$ s.t.
-    $t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}} \not\in
+    $\mathpzc{Dom}(\Delta_{t_h} \cup \Delta'_{t_t}) = \bigl(
+    \mathpzc{Dom}(\Delta_{t_h}) \cup \mathpzc{Dom}(\Delta'_{t_t}) \bigr)
+    \subseteq  \bigl(\mathpzc{Dom}(\Delta_{t_h}) \cup \mathpzc{Dom}(
+    \Delta_{t_t}) \bigr) = \mathpzc{Dom}(\Delta_{t_h} \cup \Delta_{t_t})$
+    s.t. $t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}} \not\in
     \mathpzc{Dom}(\Delta_{t_h} \cup \Delta_{t_t})$ from def. of
-    (T-Cat0-canon-$\infty$). Since
+    (T-Cat0-canon-$\infty$). From
     $t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}} \not\in
     \mathpzc{Dom}(\Delta_{t_h} \cup \Delta'_{t_t})$ as above,
     $\mathcal{M}_{\{\}}\bigl(
     t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}},
     {\mathcal{R}_1}^*, (\Delta_{t_h} \cup \Delta'_{t_t}) \bigr) =
-    \Bigl\{\mathcal{M}\bigl(\Delta'_t(t_{\text{\it equ}_{t_h}}) \bigr),
+    \Bigl\{\mathcal{M}\bigl(\Delta_{t_h}(t_{\text{\it equ}_{t_h}}) \bigr),
     t''_2, \cdots t''_l \Bigr\}$, where $\{t''_2, \cdots t''_l\} =
     \mathcal{M}_{\{\}}\Bigl(t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
     (\Delta_{t_h} \cup \Delta'_{t_t}) \setminus
@@ -2529,9 +2439,8 @@ term.
     \mathcal{M}_{\{\}}\bigl(t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
     (\Delta_{t_h} \cup \Delta'_{t_t}) \setminus \Delta_{t_h} \bigr) =
     \mathcal{M}_{\{\}}(t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
-    \Delta'_{t_t} ) = \{t'_2, \cdots t'_m \}$ s.t. $m = l$, we revealed
-    from induction hypothesis as above. Therefore, from the fact we found
-    above that
+    \Delta'_{t_t} ) = \{t'_2, \cdots t'_m \}$ s.t. $m = l$. Therefore,
+    from the fact we revealed above as
     $\{t''_2, \cdots t''_l\} = \{t'_2, \cdots t'_m\} =
     \mathcal{M}_{\{\}}(t'_{\text{\it equ}_{t_t}}, {\mathcal{R}_1}^*,
     \Delta'_{t_t} )$ s.t.
@@ -2542,27 +2451,38 @@ term.
     $\bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) \subseteq
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_t}(
     t_{\text{\it equ}_{t_t}}) \bigr) \Bigr)$ where $m = l$, we conclude that
-    $\{t_2, \cdots t_n\} = \Bigl\{\mathcal{M}\bigl(\Delta'_t(
-    t_{\text{\it equ}_{t_h}}) \bigr), t''_2, \cdots t''_l \Bigr\} =
-    \Bigl\{\mathcal{M}\bigl(\Delta'_t(t_{\text{\it equ}_{t_h}}) \bigr),
-    t'_2, \cdots t'_m \Bigr\} =
-    \Bigl\{\mathcal{M}\bigl((\Delta_{t_h} \cup \Delta'_{t_t})(
-    t_{\text{\it equ}_{t_h}}) \bigr), t'_2, \cdots t'_m \Bigr\} =
+    $\{t_2, \cdots t_n\} = 
     \Bigl\{\mathcal{M}\bigl(\Delta_{t_h}(t_{\text{\it equ}_{t_h}}) \bigr),
     t'_2, \cdots t'_m \Bigr\}$ satisfies
     $\Gamma_{t_h} \vdash \mathcal{M}\bigl(\Delta_{t_h}(
-    t_{\text{\it equ}_{t_h}}) \bigr): \mathcal{R}_1,
-    \Gamma'_2 \vdash t'_2: \mathcal{R}_1, \cdots
-    \Gamma'_m \vdash t'_m: \mathcal{R}_1$ for some $\Gamma_{t_h}$ by
-    applying induction hypothesis on
-    $\Delta_{t_h} \vdash t_{\text{\it equ}_{t_h}} \triangleright
+    t_{\text{\it equ}_{t_h}}) \bigr): \mathcal{R}_1$ for some $\Gamma_{t_h}$,
+    $\Gamma'_2 \vdash t'_2: \mathcal{R}_1, \cdots
+    \Gamma'_m \vdash t'_m: \mathcal{R}_1$  by applying induction hypothesis
+    on $\Delta_{t_h} \vdash t_{\text{\it equ}_{t_h}} \triangleright
     \mathcal{R}_1$, with
     $\mathpzc{Dom}(\Gamma_{t_h}) \cap \mathpzc{Dom}(\Gamma'_j) = \phi$
-    where $2 \le j \le m$, and
-    $\bigl(\mathpzc{Dom}(\Gamma_{t_h}) \cup
+    where $2 \le j \le m$, for $\mathpzc{Dom}(\Gamma_{t_h}) \cap
+    \bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) = \phi$, since
+    $\bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) \subseteq \mathpzc{sub}\Bigl(
+    \mathcal{M}\bigl(\Delta_{t_t}(t_{\text{\it equ}_{t_t}}) \bigr) \Bigr)$
+    s.t. $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_h}(
+    t_{\text{\it equ}_{t_h}}) \bigr) \Bigr) \cap \mathpzc{sub}\Bigl(
+    \mathcal{M}\bigl(\Delta_{t_t}(t_{\text{\it equ}_{t_t}}) \bigr) \Bigr) =
+    \phi$ satsifying $\mathpzc{Dom}(\Gamma_{t_h}) \subseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_h}(
+    t_{\text{\it equ}_{t_h}}) \bigr) \Bigr)$ and
+    $\bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) \subseteq
+    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_t}(
+    t_{\text{\it equ}_{t_t}}) \bigr) \Bigr)$ respectively, from
+    Property \ref{consistency_on_domain_independency} and \ref{dom_of_Gamma}
+    applied on the facts of $\Delta_{t_h} \vdash t_{\text{\it equ}_{t_h}}
+    \triangleright \mathcal{R}_1$ and $\Delta_{t_t} \vdash
+    t_{\text{\it equ}_{t_t}} \triangleright {\mathcal{R}_1}^*$ with the
+    constraint of $\mathpzc{Dom}(\Delta_{t_h}) \cap \mathpzc{Dom}(
+    \Delta_{t_t}) = \phi$. Then $\bigl(\mathpzc{Dom}(\Gamma_{t_h}) \cup
     \bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) \bigr) \subseteq
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_{\text{\it equ}_t})
-    \bigr) \Bigr)$ as desired. Since,
+    \bigr) \Bigr)$, since
     $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_{\text{\it equ}_t})
     \bigr) \Bigr) =
     \mathpzc{sub}\bigl(\mathcal{M}(t_{\text{\it equ}_t},
@@ -2572,19 +2492,14 @@ term.
     t_{\text{\it equ}_{t_h}} \wedge t'_{\text{\it equ}_{t_t}},
     {\mathcal{R}_1}^*, \infty, (\Delta_{t_h} \cup \Delta'_{t_t}) \bigr)
     \Bigr) =
-    \mathpzc{sub}\biggl(\Bigl\{\mathcal{M}\bigl(
-    (\Delta_{t_h} \cup \Delta'_{t_t})(t_{\text{\it equ}_{t_h}}) \bigr),
-    t''_2, \cdots t''_l \Bigr\} \biggl) =
-    \mathpzc{sub}\biggl(\Bigl\{\mathcal{M}\bigl(
-    (\Delta_{t_h} \cup \Delta'_{t_t})(t_{\text{\it equ}_{t_h}}) \bigr),
-    t'_2, \cdots t'_m \Bigr\} \biggl) =
-    \mathpzc{sub}\biggl(\Bigl\{\mathcal{M}\bigl(
-    \Delta_{t_h}(t_{\text{\it equ}_{t_h}}) \bigr), t'_2, \cdots t'_m
-    \Bigr\} \biggl) \supseteq
+    \mathpzc{sub}\biggl(\Bigl\{\mathcal{M}\bigl(\Delta_{t_h}(
+    t_{\text{\it equ}_{t_h}}) \bigr), t'_2, \cdots t'_m \Bigr\} \biggl)
+    \supseteq
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_h}(t_{\text{\it equ}_{t_h}})
     \bigr) \Bigr) \cup \bigcup_{j=2}^m\mathpzc{sub}(t'_j) \supseteq
     \mathpzc{Dom}(\Gamma_{t_h}) \cup \bigcup_{j=2}^m\mathpzc{Dom}(
-    \Gamma'_j)$
+    \Gamma'_j)$ for $\Gamma_{t_h} \vdash \mathcal{M}\bigl(\Delta_{t_h}(
+    t_{\text{\it equ}_{t_h}}) \bigr): \mathcal{R}_1$, as desired.
     $\Box$
   \end{Proof}
 \end{Claim}
@@ -2603,7 +2518,7 @@ term.
               \Delta' = \Delta_h \cup \Delta'_t  \\
            \Delta_h \vdash t_{\text{\it equ}_h} \triangleright
             \mathcal{R}_1\ \text{\it s.t.}\ 
-             \Delta_h(t_{\text{\it equ}_h}) = (t_{\text{\it equ}_h},
+             \Delta_h(t_{\text{\it equ}_h}) = (t_{\text{\it equ}_h}
               t'_{\text{\it equ}_h}, \mathcal{R}_1,
                \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h )\
                 \text{\it for some}\ t'_{\text{\it equ}_h},
@@ -2614,21 +2529,21 @@ term.
               t'_{\text{\it equ}_t}, {\mathcal{R}_1}^+,
                \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t)\
                 \text{\it for some}\ t'_{\text{\it equ}_t},
-                 \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t.               
+                 \mathcal{S}_{\mathpzc{fin}_t}
          \end{array}  \\
       \mbox{satsifies the following conditions}\\
        \quad \Gamma_1 \vdash t_2: \mathcal{R}_1, \cdots
         \Gamma_n \vdash t_n: \mathcal{R}_1\ \text{\it for some}\
-         \Gamma_2, \cdots \Gamma_n\ \text{\it with}\
+         \Gamma_2, \cdots \Gamma_n\ \text{\it s.t.}\
           \mathpzc{Dom}(\Gamma_j) \cap \mathpzc{Dom}(\Gamma_k) = \phi\
-           \text{\it if}\ j \neq k.  \\
-       \quad \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \subseteq
-        \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_{\text{\it equ}_t})
-         \bigr) \Bigr)
+           \text{\it if}\ j \neq k,  \\
+       \quad \text{\it and}\ \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)
+        \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
+         \Delta_t(t_{\text{\it equ}_t}) \bigr) \Bigr)
      \end{array}
   \]
   \begin{Proof}
-    Proof is similar to the case of. \ref{claim1_for_completeness}.
+    Proof is similar to Claim \ref{claim1_for_completeness}.
     $\Box$
   \end{Proof}
 \end{Claim}
@@ -2648,7 +2563,7 @@ term.
               \Delta' ),\ \Delta' = \Delta_h \cup \Delta'_t  \\
            \Delta_h \vdash t_{\text{\it equ}_h} \triangleright
             \mathcal{R}_1\ \text{\it s.t.}\ 
-             \Delta_h(t_{\text{\it equ}_h}) = (t_{\text{\it equ}_h},
+             \Delta_h(t_{\text{\it equ}_h}) = (t_{\text{\it equ}_h}
               t'_{\text{\it equ}_h}, \mathcal{R}_1,
                \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h )\
                 \text{\it for some}\ t'_{\text{\it equ}_h},
@@ -2659,21 +2574,21 @@ term.
               t'_{\text{\it equ}_t}, {\mathcal{R}_1}^\downarrow,
                \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t)\
                 \text{\it for some}\ t'_{\text{\it equ}_t},
-                 \mathcal{S}_{\mathpzc{fin}_t}, \Delta'_t.               
+                 \mathcal{S}_{\mathpzc{fin}_t}
          \end{array}  \\
       \mbox{satsifies the following conditions}\\
        \quad \Gamma_1 \vdash t_2: \mathcal{R}_1, \cdots
         \Gamma_n \vdash t_n: \mathcal{R}_1\ \text{\it for some}\
-         \Gamma_2, \cdots \Gamma_n\ \text{\it with}\
+         \Gamma_2, \cdots \Gamma_n\ \text{\it s.t.}\
           \mathpzc{Dom}(\Gamma_j) \cap \mathpzc{Dom}(\Gamma_k) = \phi\
            \text{\it if}\ j \neq k.  \\
-       \quad \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \subseteq
-        \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_{\text{\it equ}_t})
-         \bigr) \Bigr)
+       \quad \text{\it and}\ \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)
+        \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
+         \Delta_t(t_{\text{\it equ}_t}) \bigr) \Bigr)
      \end{array}
   \]
   \begin{Proof}
-    Proof is similar to the case of. \ref{claim2_for_completeness}.
+    Proof is similar to Claim \ref{claim2_for_completeness}.
     $\Box$
   \end{Proof}
 \end{Claim}

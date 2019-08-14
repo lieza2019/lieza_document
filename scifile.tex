@@ -90,13 +90,11 @@
 % settings shown here.
 
 \author
-{A. Goto,$^{1\ast}$ K. Sakari,$^{1}$ R. Matsuda$^{2}$\\
+{A. Goto,$^{1\ast}$ K. Sakari,$^{1}$ R. Matsuda$^{1}$\\
 \\
-\normalsize{$^{1}$Department of Chemistry, University of Wherever,}\\
-\normalsize{An Unknown Address, Wherever, ST 00000, USA}\\
-\normalsize{$^{2}$Another Unknown Address, Palookaville, ST 99999, USA}\\
-\\
-\normalsize{$^\ast$To whom correspondence should be addressed; E-mail:  jsmith@wherever.edu.}
+\normalsize{$^{1}$THE NIPPON SIGNAL CO., LTD. Tokyo Japan}\\
+\normalsize{$^\ast$To whom correspondence should be addressed;
+  E-mail: goto-akr@signal.co.jp.}
 }
 
 % Include the date command, but leave its argument blank.
@@ -124,11 +122,11 @@
 % Place your abstract within the special {sciabstract} environment.
 
 \begin{sciabstract}
-  Recent progressive Artificial Inteligence technology brings drastically
+  Recently progressive Artificial Inteligence technology brings drastically
   distribution to many of industorial fields including railway and
   signalling engineering. This paper proposes one of the way to
   make use the type theory based A.I. technology on railway signalling
-  engineering field.
+  engineering domain.
 \end{sciabstract}
 
 
@@ -168,7 +166,6 @@ equipment development process, and increase our productivity.
 
 
 \section*{Introduction}
-Matching system on interlocking logic structures.
 In this paper, we suggest the type theory based matching system on
 interlocking logic structures. Our matching system bringns a capability of
 pattern recongnition on interlocking logic structures, which encourges us to
@@ -661,7 +658,9 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
 \end{Property}
 
 
-In above section, we develop 
+In above section, we develop
+
+
 \pagebreak
 \begin{Definition}[Intuitionistic equivalence over canonical terms]
   \label{equality_on_CANONICALS}
@@ -710,15 +709,15 @@ In above section, we develop
       \\
       
       \begin{array}{rl}
-        \dfrac{ t \simeq (t_1 \wedge t_2) \wedge t_3 \quad
-          t' \simeq t_1 \wedge (t_2 \wedge t_3) }{
+        \dfrac{ t \equiv (t_1 \wedge t_2) \wedge t_3 \quad
+          t' \equiv t_1 \wedge (t_2 \wedge t_3) }{
           t \simeq t'
         }  &  (\text{\it Associativity-Cas})
       \end{array}  \\
       \\
       
       \begin{array}{rl}
-        \dfrac{ t \simeq (t_1 \vee t_2) \vee t_3 \quad
+        \dfrac{ t \equiv (t_1 \vee t_2) \vee t_3 \quad
           t' \simeq t_1 \vee (t_2 \wedge t_3) }{
           t \simeq t'
         }  &  (\text{\it Associativity-Par})
@@ -727,7 +726,7 @@ In above section, we develop
       
       \begin{array}{ll}
         \begin{array}{rl}
-          \dfrac{ t \simeq t' }{ t \simeq \{t'\} }
+          \dfrac{ t \equiv t' }{ t \simeq \{t'\} }
           & (\text{\it Associativity-Cat0}_1)
         \end{array}
         & \begin{array}[c]{l}
@@ -807,26 +806,54 @@ In above section, we develop
         \begin{array}{rl}
           \dfrac{ t \simeq \{\,\} \wedge t' }{
             t \simeq t'
-          }  &  (\text{\it RevealH-Cas})
+          }  &  (\text{\it RevealH-Cas}_{\{\}})
         \end{array}
         & \begin{array}{rl}
             \dfrac{ t \simeq t' \wedge \{\,\} }{
               t \simeq t'
-            }  &  (\text{\it RevealT-Cas})
+            }  &  (\text{\it RevealT-Cas}_{\{\}})
           \end{array}
       \end{array}  \\
       \\
-      
+
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{ t \simeq \circ \wedge t' }{
+            t \simeq t'
+          }  &  (\text{\it RevealH-Cas}_\circ)
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{ t \simeq t' \wedge \circ }{
+              t \simeq t'
+            }  &  (\text{\it RevealT-Cas}_\circ)
+          \end{array}
+      \end{array}  \\
+      \\
+            
       \begin{array}{ll}
         \begin{array}{rl}
           \dfrac{ t \simeq \{\,\} \vee t' }{
             t \simeq t'
-          }  &  (\text{\it RevealH-Par})
+          }  &  (\text{\it RevealH-Par}_{\{\}})
         \end{array}
         & \begin{array}{rl}
             \dfrac{ t \simeq t' \vee \{\,\} }{
               t \simeq t'
-            }  &  (\text{\it RevealT-Par})
+            }  &  (\text{\it RevealT-Par}_{\{\}})
+          \end{array}
+      \end{array}  \\
+      \\
+
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{ t \simeq \circ \vee t' }{
+            t \simeq t'
+          }  &  (\text{\it RevealH-Par}_\circ)
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{ t \simeq t' \vee \circ }{
+              t \simeq t'
+            }  &  (\text{\it RevealT-Par}_\circ)
           \end{array}
       \end{array}  \\
       \\
@@ -835,12 +862,12 @@ In above section, we develop
         \begin{array}{rl}
           \dfrac{ t \simeq t' }{
             t \simeq \{\,\} \wedge t'
-          }  &  (\text{\it PhonyH-Cas})
+          }  &  (\text{\it PhonyH-Cas}_{\{\}})
         \end{array}
         & \begin{array}{rl}
             \dfrac{ t \simeq t' }{
               t \simeq t' \wedge \{\,\}
-            }  &  (\text{\it PhonyT-Cas})
+            }  &  (\text{\it PhonyT-Cas}_{\{\}})
           \end{array}
       \end{array}  \\
       \\
@@ -848,13 +875,41 @@ In above section, we develop
       \begin{array}{ll}
         \begin{array}{rl}
           \dfrac{ t \simeq t' }{
+            t \simeq \circ \wedge t'
+          }  &  (\text{\it PhonyH-Cas}_\circ)
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{ t \simeq t' }{
+              t \simeq t' \wedge \circ
+            }  &  (\text{\it PhonyT-Cas}_\circ)
+          \end{array}
+      \end{array}  \\
+      \\
+            
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{ t \simeq t' }{
             t \simeq \{\,\} \vee t'
-          }  &  (\text{\it PhonyH-Par})
+          }  &  (\text{\it PhonyH-Par}_{\{\}})
         \end{array}
         & \begin{array}{rl}
             \dfrac{ t \simeq t' }{
               t \simeq t' \vee \{\,\}
-            }  &  (\text{\it PhonyT-Par})
+            }  &  (\text{\it PhonyT-Par}_{\{\}})
+          \end{array}
+      \end{array}  \\
+      \\
+
+      \begin{array}{ll}
+        \begin{array}{rl}
+          \dfrac{ t \simeq t' }{
+            t \simeq \circ \vee t'
+          }  &  (\text{\it PhonyH-Par}_\circ)
+        \end{array}
+        & \begin{array}{rl}
+            \dfrac{ t \simeq t' }{
+              t \simeq t' \vee \circ
+            }  &  (\text{\it PhonyT-Par}_\circ)
           \end{array}
       \end{array}  \\
       \\
@@ -893,6 +948,7 @@ And we extend the definition of judgement to use equivalent set of each
 term.
 
 
+\pagebreak
 \begin{Definition}[Binding pentagram]
   We extend the definition of bindings range over $\Gamma$ we have defined
   above, and we call the extended ones range over $\Delta$  as binding
@@ -954,7 +1010,7 @@ term.
 \begin{Definition}[Typing rules on polymorphic equivalent terms]
   We extend the typing rules on pure canonical terms defined above, to
   enlarge the domain of typematching, e.g. we use $t'$ s.t. $t \cong t'$ on
-  typematching, as follow.
+  typematching, as follows.
   \begin{displaymath}
     \begin{array}{c}
 
@@ -1048,7 +1104,7 @@ term.
                \quad \Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*
                 \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
                 = \phi  \\
-               t \simeq t_h \wedge t_t'\ \text{\it s.t.}\ t_t' \neq \{\}  \\
+               t \simeq t_h \wedge t_t  \\
                \left\{\begin{array}{l}
                  \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
                   \Delta_h \cup \Delta_t) = \phi\quad \text{\it if}\
@@ -1067,7 +1123,8 @@ term.
               \text{\it where}\ 
                \Delta_t(t_t) = (t_t, t_t', {\mathcal{R}_1}^*,
                 \mathcal{S}_{\mathpzc{fin}_t}, \Delta_t')\ \text{\it s.t.}\
-                 \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it sol}, \infty\}
+                 \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it sol},
+                  \infty\},\ t_t' \neq \{\}
             \end{array}
           }  &  (\infty)
         \end{array} \right\}  &  \text{\it (T-Cat0-xtend)}
@@ -1096,7 +1153,7 @@ term.
                \quad \Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^+
                 \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
                  = \phi  \\
-              t \simeq t_h \wedge t'_t  \\
+              t \simeq t_h \wedge t_t  \\
               \left\{\begin{array}{l}
                 \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
                  \Delta_h \cup \Delta_t) = \phi\quad \text{\it if}\
@@ -1140,7 +1197,7 @@ term.
                 {\mathcal{R}_1}^\downarrow
                  \quad \mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t)
                   = \phi  \\
-              t \simeq t_h \vee t'_t  \\
+              t \simeq t_h \vee t_t  \\
               \left\{\begin{array}{l}
                 \{t,\, t_h \vee t'_t \} \cap \mathpzc{Dom}(
                  \Delta_h \cup \Delta_t) = \phi\quad \text{\it if}\
@@ -1288,7 +1345,7 @@ term.
     from def, of (T-Cat0-canon-nil) and (T-Cat0-xtend-nil),
     
     Case (T-Cat0-canon-$\infty$): From induction hypothesis we can assume
-    that $\Delta_j \vdash t_j : \mathcal{R}_j$ s.t.
+    that $\Delta_j \vdash t_j \triangleright \mathcal{R}_j$ s.t.
     $\mathpzc{Dom}(\Delta_j) = \mathpzc{Dom}(\Gamma_j)$ for each
     $1 \le j \le n$. Now we examines soundness for each cases,
     $j = 1$ and $j \ge 2$.
@@ -1343,15 +1400,15 @@ term.
     corollary \ref{self_similarity_on_subterms}, which contradicts
     $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2) = \phi$.
     Consequently, we can derive the equivalency
-    $\{t_1, t_2\} \cong t_1 \wedge t_2$, which derivation's detail is
+    $\{t_1, t_2\} \cong t_1 \wedge \{t_2\}$, which derivation's detail is
     explained in Claim \ref{claim_for_soundness_on_extended_matching}, s.t.
     both $\{t_1, t_2\}$ and $t_1 \wedge t_2$ aren't belonging to
     $\mathpzc{Dom}(\Delta_1 \cup \Delta_t) =
     \bigl(\mathpzc{Dom}(\Delta_1) \cup \mathpzc{Dom}(\Delta_t) \bigr) =
     \Bigl(\mathpzc{Dom}(\Delta_1) \cup \bigl(\{t_2\} \cup
     \mathpzc{Dom}({\Delta_2}) \bigr) \Bigr) =
-    \Bigl(\mathpzc{Dom}(\Gamma_1) \cup \bigl(\{t_2\} \cup
-    \mathpzc{Dom}({\Gamma_2}) \bigr) \Bigr)$ for their size constraints.
+    \Bigl(\bigl(\mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}({\Gamma_2})
+    \bigr) \cup \{t_2\} \Bigr)$ for their size constraints.
     Then we eventually derive our goal of this case as
     $\Bigl\{\big(\{t_1, t_2\}, t_1 \wedge t_2', {\mathcal{R}_1}^*,
     \infty, (\Delta_1 \cup \Delta_t') \bigr) \Bigr\} \cup
@@ -1378,8 +1435,8 @@ term.
     $j \neq k$. Accounting on the fact of
     $\{t_2 \cdots t_n\} \not\in \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)$
     since term size of $\{t_2 \cdots t_n\}$ is greater than any of
-    $t_2 \cdots t_n$ s.t. $\Gamma_1 \vdash t_1: \mathcal{R}_1 \cdots
-    \Gamma_1 \vdash t_1: \mathcal{R}_1$ respectively, we can derive
+    $t_2 \cdots t_n$ s.t. $\Gamma_2 \vdash t_2: \mathcal{R}_1 \cdots
+    \Gamma_n \vdash t_n: \mathcal{R}_1$ respectively, we can derive
     $\Bigl\{\bigl(\{t_2 \cdots t_n\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
     \bigcup_{j=2}^n\Gamma_j \vdash \{t_2 \cdots t_n\}: {\mathcal{R}_1}^*$
     from (T-Cat0-canon). Here we let n be the number of subterms of
@@ -1398,8 +1455,8 @@ term.
     $\Bigl\{\bigl(\{t_1 \cdots t_n\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
     \bigcup_{j=1}^n\Gamma_j  \vdash \{t_1 \cdots t_n\}: {\mathcal{R}_1}^*$
     includes the fact of $\Gamma_1 \vdash t_1 : \mathcal{R}_1$, 
-    which also brings us $\Delta_1 \vdash t_1 : {\mathcal{R}_1}^*$
-    with the condition of
+    which also brings us $\Delta_1 \vdash t_1 : \mathcal{R}_1$ with
+    the condition of
     $\mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$ by
     induction hypothesis. Thus we can still find the property of
     $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_t) =
@@ -1428,7 +1485,8 @@ term.
     Accounting on the fact that the last applied rule on
     $\Delta_t \vdash \{t_2 \cdots t_n\} \triangleright {\mathcal{R}_1}^*$
     is (T-Cat0-xtend-$\infty$), we find
-    $t_t' \not\in \mathpzc{Dom}(\Delta_t)$ because of $t_t \neq t_t'$.
+    $t_t' \not\in \mathpzc{Dom}(\Delta_t)$ because of $t_t = \{t_2 \cdots
+    t_n\} \neq t_t'$.
     We even can let $t_t' = t_2 \wedge t_{t_t}'$ for some $t_{t_t}'$ s.t.
     $\Delta_2 \vdash t_2 \triangleright \mathcal{R}_1$ comming from
     $\Gamma_2 \vdash t_2 : \mathcal{R}_1$, on which we can say
@@ -1447,8 +1505,6 @@ term.
     $\mathpzc{Dom}\biggl(\Bigl\{\bigl(\{t_1 \cdots t_n\}, t_1 \wedge t_t',
     {\mathcal{R}_1}^*, \infty, (\Delta_1 \cup \Delta_t') \bigr) \Bigr\} \cup
     (\Delta_1 \cup \Delta_t') \biggr) =
-    \mathpzc{Dom}\bigl(\{t_1 \cdots t_n\} \cup (\Delta_1 \cup \Delta_t')
-    \bigr) =
     \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \mathpzc{Dom}(\Delta_1 \cup
     \Delta_t') =
     \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \bigl(\mathpzc{Dom}(\Delta_1)
@@ -1496,7 +1552,9 @@ term.
 
 
 \pagebreak
-\begin{Definition}
+\begin{Definition}[Term transducer]
+  We define the term transducer $\mathcal{M}$ as follow, which sustains
+  equality over transducing, see Property \ref{equality_over_transduction}.
   \begin{displaymath}
     \begin{array}{l}
     \mathcal{M}\bigl(t, t_{\text{\it equ}}, \mathcal{R},
@@ -1658,6 +1716,19 @@ term.
     \end{array}
   \end{displaymath}
 \end{Definition}
+
+
+\begin{Property}
+  \label{equality_over_transduction}
+  \[ \text{\it if}\ \Delta \vdash t \triangleright \mathcal{R},\
+      \text{\it then}\ \mathcal{M}\bigl(\Delta(t) \bigr) \simeq t
+  \]
+  \begin{Proof}
+    Proof is induction on derivation of
+    $\Delta \vdash t \triangleright \mathcal{R}$.
+    $\Box$
+  \end{Proof}
+\end{Property}
 
 
 \begin{Definition}
@@ -2594,6 +2665,694 @@ term.
 \end{Claim}
 
 
+\section*{Implementation}
+
+In this section, we try to implement our logic on microcomputer based
+machine using Caml, which is one of the most well-known implementation of
+ML developped in INRIA France.
+
+
+\pagebreak
+\begin{Definition}[Intuitionistic equivalence for Implementation]
+  \label{equality_for_implementation}
+  We define the set of $\mathpzc{Equ}(t)$, which consists of equivalent
+  terms of $t$, as follows,
+  \begin{displaymath}
+    \begin{array}{c}
+      
+      t \in \mathpzc{Equ}(t)  \\
+      \\
+
+      \mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R}) \subseteq
+       \mathpzc{Equ}(t) \quad \text{\it if}\ t = t_1 \wedge t_2\;\;
+        \text{\it for some}\ t_1, t_2 \\
+      
+      \mathpzc{Assoc}_\vee(t_1, t_2, \mathpzc{L_2R}) \subseteq
+       \mathpzc{Equ}(t) \quad \text{\it if}\  t = t_1 \vee t_2\;\;
+        \text{\it for some}\ t_1, t_2  \\
+      \\
+
+      \begin{array}{lll}
+        t_1 \in \mathpzc{Equ}\bigl(\{t_1\} \bigr)
+        & t_1 \in \mathpzc{Equ}\bigl([t_1] \bigr)
+        & t_1 \in \mathpzc{Equ}\bigl(\langle t_1 \rangle \bigr)
+      \end{array}  \\
+      \\
+
+      \begin{array}{ll}
+        t_1 \wedge \{t_2, \cdots t_n\} \in
+        \mathpzc{Equ}\bigl(\{t_1, t_2, \cdots t_n\} \bigr)
+        & t_1 \wedge [t_2, \cdots t_n] \in
+        \mathpzc{Equ}\bigl([t_1, t_2, \cdots t_n] \bigr)  \\
+        & t_1 \wedge \langle t_2, \cdots t_n \rangle \in
+        \mathpzc{Equ}\bigl(\langle t_1, t_2, \cdots t_n \rangle \bigr)
+      \end{array}  \\
+      \\
+      
+      \begin{array}{ll}
+        \begin{array}{l}
+          \{\} \wedge t \in \mathpzc{Equ}(t)\quad \text{\it if}\ t \neq \{\}
+           \wedge t_1\;\; \text{\it for some}\ t_1.  \\
+          
+          t \wedge \{\} \in \mathpzc{Equ}(t)\quad \text{\it if}\ t \neq t_1
+           \wedge \{\}\;\; \text{\it for some}\ t_1.  \\
+        \end{array}
+        & \begin{array}{l}
+            \circ \wedge t \in \mathpzc{Equ}(t)\quad \text{\it if}\
+             t \neq \circ \wedge t_1\;\; \text{\it for some}\ t_1.  \\
+             
+             t \wedge \circ \in \mathpzc{Equ}(t)\quad \text{\it if}\
+              t \neq t_1 \wedge \circ\;\; \text{\it for some}\ t_1.  \\
+          \end{array}
+      \end{array}  \\
+      \\
+
+      \begin{array}{ll}
+        \begin{array}{l}
+          \{\} \vee t \in \mathpzc{Equ}(t)\quad \text{\it if}\ t \neq \{\}
+           \vee t_1\;\; \text{\it for some}\ t_1.  \\
+          
+           t \vee \{\} \in \mathpzc{Equ}(t)\quad \text{\it if}\ t \neq t_1
+            \vee \{\}\;\; \text{\it for some}\ t_1.  \\
+        \end{array}
+        & \begin{array}{l}
+            \circ \vee t \in \mathpzc{Equ}(t)\quad \text{\it if}\
+             t \neq \circ \vee t_1\;\; \text{\it for some}\ t_1.  \\
+             
+             t \vee \circ \in \mathpzc{Equ}(t)\quad \text{\it if}\
+             t \neq t_1 \vee \circ\;\; \text{\it for some}\ t_1.
+          \end{array}
+      \end{array}  \\   
+      \\
+      
+      \begin{array}{ll}
+        \begin{array}{ll}
+          t_1 \in \mathpzc{Equ}\bigl(\{\} \wedge t_1 \bigr)
+          & t_1 \in \mathpzc{Equ}\bigl(t_1 \wedge \{\} \bigr)
+        \end{array}
+        & \begin{array}{ll}
+            t_1 \in \mathpzc{Equ}\bigl(\circ \wedge t_1 \bigr)
+            & t_1 \in \mathpzc{Equ}\bigl(t_1 \wedge \circ \bigr)
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{ll}
+        \begin{array}{ll}
+          t_1 \in \mathpzc{Equ}\bigl(\{\} \vee t_1 \bigr)
+          & t_1 \in \mathpzc{Equ}\bigl(t_1 \vee \{\} \bigr)
+        \end{array}
+        & \begin{array}{ll}
+            t_1 \in \mathpzc{Equ}\bigl(\circ \vee t_1 \bigr)
+            & t_1 \in \mathpzc{Equ}\bigl(t_1 \vee \circ \bigr)
+          \end{array}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{lll}
+        t_1 \in \mathpzc{Equ}({t_1}^?)
+        & t_1 \in \mathpzc{Equ}({t_1}^{\leftarrow})
+        & t_1 \in \mathpzc{Equ}({t_1}^{\rightarrow})
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+
+where $\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{dir})$,
+$\mathpzc{Assoc}_\vee(t_1, t_2, \mathpzc{dir})$ and related functions are
+as follows.
+\begin{displaymath}
+  \begin{array}{l}
+    \mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{dir})
+     \stackrel{\mathrm{def}}{:=} \left\{\begin{array}{l}
+       \phi \quad \text{\it if}\ \mathpzc{una}(t_1), \mathpzc{una}(t_2)\
+        \text{\it respectively}.  \\
+       \!\!\!\!\begin{array}{l}
+         \{t'_1 \wedge t'_2 \} \cup \mathpzc{Assoc}_\wedge(t'_1, t'_2,
+          \mathpzc{L_2R})
+           \quad \text{\it if}\ \mathpzc{dir} = \mathpzc{L_2R}  \\
+         \quad \text{\it where}\ t'_1 \wedge t'_2 =
+          \mathpzc{assoc_{cas}R}(t_1, t_2)\ \text{\it s.t.}\
+           t_1 \wedge t_2 \neq t'_1 \wedge t'_2
+       \end{array}  \\
+       
+       \!\!\!\!\begin{array}{l}
+         \mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{R_2L}) \quad
+          \text{\it if}\ \mathpzc{dir} = \mathpzc{L_2R}  \\
+         \quad \text{\it where}\ t'_1 \wedge t'_2 =
+          \mathpzc{assoc_{cas}R}(t_1, t_2)\ \text{\it s.t.}\
+           t_1 \wedge t_2 = t'_1 \wedge t'_2
+       \end{array}  \\
+       
+       \!\!\!\!\begin{array}{l}
+         \{t'_1 \wedge t'_2 \} \cup \mathpzc{Assoc}_\wedge(t'_1, t'_2,
+          \mathpzc{R_2L})
+           \quad \text{\it if}\ \mathpzc{dir} = \mathpzc{R_2L}  \\
+         \quad \text{\it where}\ t'_1 \wedge t'_2 =
+          \mathpzc{assoc_{cas}L}(t_1, t_2)\ \text{\it s.t.}\
+           t_1 \wedge t_2 \neq t'_1 \wedge t'_2
+       \end{array}  \\
+       
+       \phi \quad \text{\it otherwise}
+     \end{array}\right.  \\
+    \\
+    
+    \mathpzc{assoc_{cas}R}(t_1, t_2) \stackrel{\mathrm{def}}{:=}
+     \left\{\begin{array}{l}
+       t_1 \wedge t_2 \quad \text{\it if}\ \mathpzc{una}(t_1)  \\
+       t_{1l} \wedge (t_{1r} \wedge t_2) \quad \text{\it if}\
+        t_1 = t_{1l} \wedge t_{1r}\ \text{\it s.t.}\
+         \mathpzc{una}(t_{1r})  \\
+        
+       \!\!\!\!\begin{array}[t]{l}
+         (t_{1l} \wedge t'_{{1r}_l}) \wedge t'_{{1r}_r} \quad
+          \text{\it if}\ t_1 = t_{1l} \wedge t_{1r}\ \text{\it s.t.}\
+           t_{1r} = t_{{1r}_l} \wedge t_{{1r}_r}  \\
+         \quad \text{\it where}\
+          t'_{{1r}_l} \wedge t'_{{1r}_r} = \mathpzc{assoc_{cas}R}\bigl(
+           (t_{{1r}_l} \wedge t_{{1r}_r}), t_2 \bigr),\
+            \text{\it we let}.
+       \end{array}  \\
+       
+       t_{1l} \wedge (t_{1r} \wedge t_2) \quad
+        \text{\it if}\ t_1 = t_{1l} \wedge t_{1r}  \\
+       
+       t_1 \wedge t_2 \quad \text{\it otherwise}
+    \end{array}\right.
+    
+  \end{array}
+\end{displaymath}
+
+\begin{displaymath}
+  \begin{array}{l}
+    \mathpzc{assoc_{cas}L}(t_1, t_2) \stackrel{\mathrm{def}}{:=}
+     \left\{\begin{array}{l}
+       t_1 \wedge t_2 \quad \text{\it if}\ \mathpzc{una}(t_2)  \\
+       (t_{1} \wedge t_{2l}) \wedge t_{2r} \quad \text{\it if}\
+        t_2 = t_{2l} \wedge t_{2r}\ \text{\it s.t.}\
+         \mathpzc{una}(t_{2l})  \\
+       \!\!\!\!\begin{array}[t]{l}
+         (t_{1l} \wedge t'_{{1r}_l}) \wedge t'_{{1r}_r} \quad
+          \text{\it if}\ t_2 = t_{2l} \wedge t_{2r}\ \text{\it s.t.}\
+           t_{2l} = t_{{2l}_l} \wedge t_{{2l}_r}  \\
+          
+         \quad \text{\it where}\
+          t'_{{1r}_l} \wedge t'_{{1r}_r} = \mathpzc{assoc_{cas}L}\bigl(
+           t_1, (t_{{2l}_l} \wedge t_{{2l}_r}) \bigr),\ \text{\it we let}.
+       \end{array}  \\
+       
+       (t_1 \wedge t_{2l}) \wedge t_{2r} \quad
+        \text{\it if}\ t_2 = t_{2l} \wedge t_{2r}  \\
+       t_1 \wedge t_2 \quad \text{\it otherwise}
+     \end{array}\right.  \\
+    \\
+     
+    \mathpzc{Assoc}_\vee(t_1, t_2, \mathpzc{dir})
+     \stackrel{\mathrm{def}}{:=} \left\{\begin{array}{l}
+       \phi \quad \text{\it if}\ \mathpzc{una}(t_1), \mathpzc{una}(t_2)\
+       \text{\it respectively}.  \\
+       
+       \!\!\!\!\begin{array}{l}
+         \{t'_1 \vee t'_2 \} \cup \mathpzc{Assoc}_\vee(t'_1, t'_2,
+          \mathpzc{L_2R})
+           \quad \text{\it if}\ \mathpzc{dir} = \mathpzc{L_2R}  \\
+         \quad \text{\it where}\ t'_1 \vee t'_2 =
+          \mathpzc{assoc_{par}R}(t_1, t_2)\ \text{\it s.t.}\
+           t_1 \vee t_2 \neq t'_1 \vee t'_2
+       \end{array}  \\
+       
+       \!\!\!\!\begin{array}{l}
+         \mathpzc{Assoc}_\vee(t_1, t_2, \mathpzc{R_2L}) \quad
+          \text{\it if}\ \mathpzc{dir} = \mathpzc{L_2R}  \\
+         \quad \text{\it where}\ t'_1 \vee t'_2 =
+          \mathpzc{assoc_{par}R}(t_1, t_2)\ \text{\it s.t.}\
+           t_1 \vee t_2 = t'_1 \vee t'_2
+       \end{array}  \\
+       
+       \!\!\!\!\begin{array}{l}
+         \{t'_1 \vee t'_2 \} \cup \mathpzc{Assoc}_\vee(t'_1, t'_2,
+          \mathpzc{R_2L})
+         \quad \text{\it if}\ \mathpzc{dir} = \mathpzc{R_2L}  \\
+          \quad \text{\it where}\ t'_1 \vee t'_2 =
+           \mathpzc{assoc_{par}L}(t_1, t_2)\ \text{\it s.t.}\
+            t_1 \vee t_2 \neq t'_1 \vee t'_2
+       \end{array}  \\
+        
+       \phi \quad \text{\it otherwise}
+     \end{array}\right.  \\
+    \\
+      
+    \mathpzc{assoc_{par}R}(t_1, t_2) \stackrel{\mathrm{def}}{:=}
+     \left\{\begin{array}{l}
+       t_1 \vee t_2 \quad \text{\it if}\ \mathpzc{una}(t_1)  \\
+       t_{1l} \vee (t_{1r} \vee t_2) \quad \text{\it if}\
+        t_1 = t_{1l} \vee t_{1r}\ \text{\it s.t.}\
+         \mathpzc{una}(t_{1r})  \\
+        
+       \!\!\!\!\begin{array}[t]{l}
+         (t_{1l} \vee t'_{{1r}_l}) \vee t'_{{1r}_r} \quad
+          \text{\it if}\ t_1 = t_{1l} \vee t_{1r}\ \text{\it s.t.}\
+           t_{1r} = t_{{1r}_l} \vee t_{{1r}_r}  \\
+         \quad \text{\it where}\
+          t'_{{1r}_l} \vee t'_{{1r}_r} = \mathpzc{assoc_{par}R}\bigl(
+           (t_{{1r}_l} \vee t_{{1r}_r}), t_2 \bigr),\
+            \text{\it we let}.
+       \end{array}  \\
+       
+       t_{1l} \vee (t_{1r} \vee t_2) \quad
+        \text{\it if}\ t_1 = t_{1l} \vee t_{1r}  \\
+       
+       t_1 \vee t_2 \quad \text{\it otherwise}
+     \end{array}\right.  \\
+    \\
+     
+    \mathpzc{assoc_{par}L}(t_1, t_2) \stackrel{\mathrm{def}}{:=}
+     \left\{\begin{array}{l}
+       t_1 \vee t_2 \quad \text{\it if}\ \mathpzc{una}(t_2)  \\
+       (t_{1} \vee t_{2l}) \vee t_{2r} \quad \text{\it if}\
+        t_2 = t_{2l} \vee t_{2r}\ \text{\it s.t.}\
+         \mathpzc{una}(t_{2l})  \\
+       \!\!\!\!\begin{array}[t]{l}
+         (t_{1l} \vee t'_{{1r}_l}) \vee t'_{{1r}_r} \quad
+          \text{\it if}\ t_2 = t_{2l} \vee t_{2r}\ \text{\it s.t.}\
+           t_{2l} = t_{{2l}_l} \vee t_{{2l}_r}  \\
+         
+         \quad \text{\it where}\
+          t'_{{1r}_l} \vee t'_{{1r}_r} = \mathpzc{assoc_{par}L}\bigl(
+           t_1, (t_{{2l}_l} \vee t_{{2l}_r}) \bigr),\ \text{\it we let}.
+       \end{array}  \\
+       
+       (t_1 \vee t_{2l}) \vee t_{2r} \quad
+        \text{\it if}\ t_2 = t_{2l} \vee t_{2r}  \\
+       
+       t_1 \vee t_2 \quad \text{\it otherwise}
+     \end{array}\right.  \\
+    \\
+    
+    \mathpzc{una}(t) \stackrel{\mathrm{def}}{:=} \left\{\begin{array}{l}
+      \text{\it true}\quad \text{\it if}\
+       \left\{\begin{array}{l}
+         t = t_0\ \text{\it s.t.}\ (t_0, \mathcal{R}_0) \in \Gamma_{gnd}  \\
+         t = t_1\ \text{\it s.t.}\ (t_1, \mathcal{R}_1) \in \Gamma_{def}  \\
+         t \in \bigl\{\{\}, \circ \bigr\}  \\
+         t = {t_1}^?  \\
+         t = {t_1}^\leftarrow  \\
+         t = {t_1}^\rightarrow
+       \end{array}\right.  \\
+       \\
+       \text{\it false}\quad \text{\it otherwise}
+    \end{array}\right.
+    
+  \end{array}
+\end{displaymath}
+
+
+\begin{Property}
+  \label{semiequivalency_on_implementation}
+  \[ \text{\it if}\ t' \in \mathpzc{Equ}(t),\ \text{\it then}\ t \simeq t'
+  \]
+  \begin{Proof}
+    Proof is directly from def. of \ref{equality_on_CANONICALS} and
+    \ref{equality_for_implementation}.
+    $\Box$
+  \end{Proof}
+\end{Property}
+
+
+\pagebreak
+\begin{Definition}[Implementation form of Typing rules on
+    polymorphic equivalent terms]
+  We modify the extended typing rules defined above, for implementation on
+  modern electronic computers or equivalent machines as follows.
+  \begin{displaymath}
+    \begin{array}{c}
+
+      \begin{array}{rl}
+        \dfrac{
+          t_0 \in \mathpzc{Equ}(t)
+           \quad (t_0, \mathcal{R}_0) \in \Gamma_\text{\it gnd}
+        }{
+          \bigl\{(t, t_0, \mathcal{R}_0, \text{\it gnd}, \phi ) \bigr\}
+           \vdash t \blacktriangleright \mathcal{R}_0
+        }  &  \!\!\text{\it (T-Atom0-impl)}
+      \end{array}  \\
+      \\
+
+      \begin{array}{rl}
+        \dfrac{
+          t_1 \in \mathpzc{Equ}(t)
+           \quad (t_1, \mathcal{R}_1) \in \Gamma_\text{\it def}
+        }{
+          \bigl\{(t, t_1, \mathcal{R}_1, \text{\it def}, \phi ) \bigr\}
+           \vdash t \blacktriangleright \mathcal{R}_1
+        }  &  \!\!\text{\it (T-Atom1-impl)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          \begin{array}{c}
+            \Lambda_1 \vdash t_1 \blacktriangleright \mathcal{R}_1
+             \quad \Lambda_2 \vdash t_2 \blacktriangleright \mathcal{R}_2
+              \quad \mathpzc{Dom}(\Lambda_1) \cap \mathpzc{Dom}(\Lambda_2)
+               = \phi  \\
+            t_1 \wedge t_2 \in \mathpzc{Equ}(t)\
+             \text{\it s.t.}\ t,\, t_1 \wedge t_2 \not\in \mathpzc{Dom}(
+              \Lambda_1 \cup \Lambda_2)
+          \end{array}
+        }{
+          \Bigl\{\bigl(t, t_1 \wedge t_2,
+           \mathcal{R}_1 \wedge \mathcal{R}_2, \wedge,
+            (\Lambda_1 \cup \Lambda_2) \bigr) \Bigr\}
+             \cup (\Lambda_1 \cup \Lambda_2) \vdash
+              t \blacktriangleright \mathcal{R}_1 \wedge \mathcal{R}_2
+        }  &  \text{\it (T-Cas-impl)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \dfrac{
+          \begin{array}{c}
+            \Lambda_1 \vdash t_1 \blacktriangleright \mathcal{R}_1
+             \quad \Lambda_2 \vdash t_2 \blacktriangleright \mathcal{R}_2
+              \quad \mathpzc{Dom}(\Lambda_1) \cap \mathpzc{Dom}(\Lambda_2)
+               = \phi  \\
+            t_1 \vee t_2 \in \mathpzc{Equ}(t)\
+             \text{\it s.t.}\ t,\, t_1 \vee t_2 \not\in \mathpzc{Dom}(
+              \Lambda_1 \cup \Lambda_2)
+          \end{array}
+        }{
+          \Bigl\{\bigl(t, t_1 \vee t_2, \mathcal{R}_1 \vee \mathcal{R}_2,
+           \vee, (\Lambda_1 \cup \Lambda_2) \bigr) \Bigr\} \cup
+            (\Lambda_1 \cup \Lambda_2) \vdash
+             t \blacktriangleright \mathcal{R}_1 \vee \mathcal{R}_2
+        }  &  \text{\it (T-Par-impl)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \{\} \in \mathpzc{Equ}(t)
+             \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
+          }{
+            \Bigl\{\bigl(t, \{\}, \mathcal{R}_1^*, \text{\it nil}, \phi
+             \bigr) \Bigr\} \vdash t \blacktriangleright {\mathcal{R}_1}^*
+          }  &  (\text{\it nil}\,)  \\
+          \\
+          
+          \dfrac{
+            \Lambda' \vdash t' \blacktriangleright \mathcal{R}_1 \quad
+             t' \in \mathpzc{Equ}(t)\ \text{\it s.t.}\ t \not\in
+              \mathpzc{Dom}(\Lambda')
+          }{
+            \bigl\{(t, t', {\mathcal{R}_1}^*, \text{\it sol}, \Lambda' )
+             \bigr\} \cup \Lambda'
+              \vdash t \blacktriangleright {\mathcal{R}_1}^*
+          }  &  (\text{\it sol}\,)  \\
+          \\
+          
+          \dfrac{
+            \begin{array}{c}
+              \Lambda_h \vdash t_h \blacktriangleright \mathcal{R}_1
+               \quad \Lambda_t \vdash t_t \blacktriangleright {\mathcal{R}_1}^*
+                \quad \mathpzc{Dom}(\Lambda_h) \cap \mathpzc{Dom}(\Lambda_t)
+                = \phi  \\
+               \{\} \wedge (t_h \wedge t_t) \in \mathpzc{Equ}(t)\;\;
+                \text{\it or}\;\; t_h \wedge t_t \in \mathpzc{Equ}(t) \\
+               \left\{\begin{array}{l}
+                 \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
+                  \Lambda_h \cup \Lambda_t) = \phi\quad \text{\it if}\
+                   \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it nil},\,
+                    \text{\it sol} \}  \\
+                 \{t,\, t_h \wedge t'_t,\, t'_t \} \cap \mathpzc{Dom}(
+                  \Lambda_h \cup \Lambda_t) = \phi\quad \text{\it otherwise}
+               \end{array}\right.
+            \end{array}
+          }{
+            \begin{array}{r}
+              \Bigl\{\bigl(t, t_h \wedge t_t', {\mathcal{R}_1}^*, \infty,
+               (\Lambda_h \cup \Lambda_t') \bigr) \Bigr\} \cup
+                (\Lambda_h \cup \Lambda_t') \vdash
+                 t \blacktriangleright {\mathcal{R}_1}^*  \\
+              \text{\it where}\ 
+               \Lambda_t(t_t) = (t_t, t_t', {\mathcal{R}_1}^*,
+                \mathcal{S}_{\mathpzc{fin}_t}, \Lambda_t')\ \text{\it s.t.}\
+                 \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it sol},
+                  \infty\},\ t'_t \neq \{\}
+            \end{array}
+          }  &  (\infty)
+        \end{array} \right\}  &  \text{\it (T-Cat0-impl)}
+      \end{array}  \\
+      
+    \end{array}
+  \end{displaymath}
+  
+  \begin{displaymath}
+    \begin{array}{c}
+
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \quad \Lambda' \vdash t' \blacktriangleright \mathcal{R}_1 \quad
+             t' \in \mathpzc{Equ}(t)\ \text{\it s.t.}\ t \not\in
+              \mathpzc{Dom}(\Lambda')
+          }{
+            \bigl\{(t, t', {\mathcal{R}_1}^+, \text{\it sol}, \Lambda')
+             \bigr\} \cup \Lambda' \vdash
+              t \blacktriangleright {\mathcal{R}_1}^+
+          }  &  (\text{\it sol}\,)  \\
+          \\
+          \dfrac{
+            \begin{array}{c}
+              \Lambda_h \vdash t_h \blacktriangleright \mathcal{R}_1
+               \quad \Lambda_t \vdash t_t \blacktriangleright {\mathcal{R}_1}^+
+                \quad \mathpzc{Dom}(\Lambda_h) \cap \mathpzc{Dom}(\Lambda_t)
+                 = \phi  \\
+              \{\} \wedge (t_h \wedge t_t) \in \mathpzc{Equ}(t)\;\;
+               \text{\it or}\;\; t_h \wedge t_t \in \mathpzc{Equ}(t)  \\
+              \left\{\begin{array}{l}
+                \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
+                 \Lambda_h \cup \Lambda_t) = \phi\quad \text{\it if}\
+                  \mathcal{S}_{\mathpzc{fin}_t} = \text{\it sol}  \\
+                \{t,\, t_h \wedge t'_t,\, t'_t \} \cap \mathpzc{Dom}(
+                 \Lambda_h \cup \Lambda_t) = \phi\quad \text{\it otherwise}
+              \end{array}\right.
+            \end{array}
+          }{
+            \begin{array}{r}
+              \Bigl\{\bigl(t, t_h \wedge t_t', {\mathcal{R}_1}^+, \infty,
+               (\Lambda_h \cup \Lambda_t') \bigr) \Bigr\} \cup
+                (\Lambda_h \cup \Lambda_t') \vdash
+                 t \blacktriangleright {\mathcal{R}_1}^+  \\
+              \text{\it where}\
+               \Lambda_t(t_t) = (t_t, t_t', {\mathcal{R}_1}^+,
+                \mathcal{S}_{\mathpzc{fin}_t}, \Lambda_t')\ \text{\it s.t.}\
+                 \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it sol}, \infty\}
+            \end{array}
+          }  &  (\infty)
+        \end{array} \right\}  &  \text{\it (T-Cat1-impl)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \Lambda' \vdash t' \blacktriangleright \mathcal{R}_1 \quad
+             t' \in \mathpzc{Equ}(t)\ \text{\it s.t.}\ t \not\in
+              \mathpzc{Dom}(\Lambda')
+          }{
+            \bigl\{(t, t', {\mathcal{R}_1}^\downarrow, \text{\it sol},
+             \Lambda') \bigr\} \cup \Lambda' \vdash
+              t \blacktriangleright {\mathcal{R}_1}^\downarrow
+          }  &  (\text{\it sol}\,)  \\
+          \\
+          
+          \dfrac{
+            \begin{array}{c}
+              \Lambda_h \vdash t_h \blacktriangleright \mathcal{R}_1
+               \quad \Lambda_t \vdash t_t \blacktriangleright
+                {\mathcal{R}_1}^\downarrow
+                 \quad \mathpzc{Dom}(\Lambda_h) \cap \mathpzc{Dom}(\Lambda_t)
+                  = \phi  \\
+              \{\} \vee (t_h \vee t_t) \in \mathpzc{Equ}(t)\;\;
+               \text{\it or}\;\; t_h \vee t_t \in \mathpzc{Equ}(t)  \\
+              \left\{\begin{array}{l}
+                \{t,\, t_h \vee t'_t \} \cap \mathpzc{Dom}(
+                 \Lambda_h \cup \Lambda_t) = \phi\quad \text{\it if}\
+                  \mathcal{S}_{\mathpzc{fin}_t} = \text{\it sol}  \\
+                \{t,\, t_h \vee t'_t,\, t'_t \} \cap \mathpzc{Dom}(
+                 \Lambda_h \cup \Lambda_t) = \phi\quad \text{\it otherwise}
+              \end{array}\right.
+            \end{array}
+          }{
+            \begin{array}{r}
+              \Bigl\{\bigl(t, t_h \vee t_t', {\mathcal{R}_1}^\downarrow,
+               \infty, (\Lambda_h \cup \Lambda_t') \bigr) \Bigr\} \cup
+                (\Lambda_h \cup \Lambda_t') \vdash
+                 t \blacktriangleright {\mathcal{R}_1}^\downarrow  \\
+              \text{\it where}\
+               \Lambda_t(t_t) = (t_t, t_t', {\mathcal{R}_1}^\downarrow,
+                \mathcal{S}_{\mathpzc{fin}_t}, \Lambda_t')\ \text{\it s.t.}\
+                 \mathcal{S}_{\mathpzc{fin}_t} \in \{\text{\it sol}, \infty\}
+            \end{array}
+          }  &  (\infty)
+        \end{array} \right\}  &  \text{\it (T-Dup-impl)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \{\} \in \mathpzc{Equ}(t)
+             \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
+          }{
+            \Bigl\{\bigl(t, \{\}, {\mathcal{R}_1}^?, \text{\it nil}, \phi
+            \bigr) \Bigr\} \vdash
+            t \blacktriangleright {\mathcal{R}_1}^?
+          }  &  (\text{\it nil}\,)  \\
+          \\
+          
+          \dfrac{
+            \Lambda' \vdash t' \blacktriangleright \mathcal{R}_1 \quad
+             t' \in \mathpzc{Equ}(t)\ \text{\it s.t.}\
+              t \not\in \mathpzc{Dom}(\Lambda')
+          }{
+            \bigl\{(t, t', {\mathcal{R}_1}^?, \text{\it sol},
+             \Lambda') \bigr\} \cup \Lambda' \vdash
+              t \blacktriangleright {\mathcal{R}_1}^?
+          }  &  (\text{\it sol}\,)
+        \end{array} \right\}  &  \text{\it (T-Opt-impl)}
+      \end{array}  \\
+      \\
+      
+      \begin{array}{rl}
+        \left. \begin{array}{rl}
+          \dfrac{
+            \Lambda' \vdash t' \blacktriangleright \mathcal{R}_1 \quad
+             \mathcal{R}_2 \,\text{\it is}\, \text{\it Any}. \quad
+              t' \in \mathpzc{Equ}(t)\ \text{\it s.t.}\
+               t \not\in \mathpzc{Dom}(\Lambda')
+          }{
+            \bigl\{(t, t', \mathcal{R}_1|\mathcal{R}_2,
+             \text{\it L}, \Lambda') \bigr\} \cup \Lambda' \vdash
+              t \blacktriangleright \mathcal{R}_1|\mathcal{R}_2
+          }  &  (\text{\it L})  \\
+          \\
+          
+          \dfrac{
+            \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}. \quad
+             \Lambda'' \vdash t' \blacktriangleright \mathcal{R}_2 \quad
+              t' \in \mathpzc{Equ}(t)\ \text{\it s.t.}\
+               t \not\in \mathpzc{Dom}(\Lambda'')
+          }{
+            \bigl\{(t, t', \mathcal{R}_1|\mathcal{R}_2,
+             \text{\it R}, \Lambda'') \bigr\} \cup \Lambda'' \vdash
+              t \blacktriangleright \mathcal{R}_1|\mathcal{R}_2
+          }  &  (\text{\it R})
+        \end{array} \right\}  &  \text{\it (T-Alt-impl)}
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+
+
+\begin{Lemma}{completeness on implementation.}
+  \label{completeness_on_implementation}
+  \[ \text{\it if}\ \Lambda \vdash t \blacktriangleright \mathcal{R},\
+      \text{\it then}\ \Delta \vdash t \triangleright \mathcal{R}
+       \begin{array}[t]{l}
+         \text{\it s.t.}\ \mathpzc{Dom}(\Delta) = \mathpzc{Dom}(\Lambda),
+          t'_\Delta = t'_\Lambda,
+           \mathcal{S}_\Delta = \mathcal{S}_\Lambda,  \\           
+         \text{\it where} \!\begin{array}[t]{l}
+           \Lambda = \bigl\{(t, t'_\Lambda, \mathcal{R},
+            \mathcal{S}_\Lambda, \Lambda') \bigr\} \cup \Lambda'  \\
+           \Delta = \bigl\{(t, t'_\Delta, \mathcal{R},
+            \mathcal{S}_\Delta, \Delta') \bigr\} \cup \Delta',\
+             \text{\it we let}.
+         \end{array}
+       \end{array}
+  \]
+  \begin{Proof}
+    Proof is induction on structure of derivation for
+    $\Lambda \vdash t \blacktriangleright \mathcal{R}$.
+    
+    Considering the fact that most of rules for implementation have same
+    structure of original ones, therefore we show only significant cases.
+    
+    Case (T-Cat0-impl-$\infty$): We suppose
+    $\Lambda \vdash t \blacktriangleright {\mathcal{R}_1}^*$ where
+    $\Lambda = \Bigl\{\bigl(t, t_h \wedge t'_{t_\Lambda},
+    {\mathcal{R}_1}^*, \infty, (\Lambda_h \cup \Lambda'_t) \bigr) \Bigr\}
+    \cup (\Lambda_h \cup \Lambda'_t)$. From def. of (T-Cat0-impl-$\infty$),
+    we know that its subderivations of
+    $\Lambda_h \vdash t_h \blacktriangleright \mathcal{R}_1$ and
+    $\Lambda_t \vdash t_t \blacktriangleright {\mathcal{R}_1}^*$ implies
+    the existences of $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$
+    and $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ with
+    the conditions of
+    $\mathpzc{Dom}(\Delta_h) = \mathpzc{Dom}(\Lambda_h)$,
+    $t'_{h_\Delta} = t'_{h_\Lambda}$,
+    $\mathcal{S}_{h_\Delta} = \mathcal{S}_{h_\Lambda}$ and
+    $\mathpzc{Dom}(\Delta_t) = \mathpzc{Dom}(\Lambda_t)$,
+    $t'_{t_\Delta} = t'_{t_\Lambda}$,
+    $\mathcal{S}_{t_\Delta} = \mathcal{S}_{t_\Lambda}$ respectively
+    from induction hypotheses. Consequently, we find
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ from
+    the above facts of $\mathpzc{Dom}(\Delta_h) = \mathpzc{Dom}(\Lambda_h)$
+    and $\mathpzc{Dom}(\Delta_t) = \mathpzc{Dom}(\Lambda_t)$ accounting on
+    $\mathpzc{Dom}(\Lambda_h) \cap \mathpzc{Dom}(\Lambda_t) = \phi$ comming
+    from the def. of (T-Cat0-impl-$\infty$). Next, we see each cases
+    according to the condition on $\mathcal{S}_\Lambda$ as follows.
+    Subcase
+    $\mathcal{S}_{t_\Lambda} \in \{\text{\it nil},\, \text{\it sol} \}$:
+    Considering
+    $\{t, t_h \wedge t'_{t_\Lambda} \} \cap \mathpzc{Dom}(\Lambda_h
+    \cup \Lambda_t) = \phi$ with the facts of
+    $t'_{t_\Delta} = t'_{t_\Lambda}$ and
+    $\mathpzc{Dom}(\Delta_h \cup \Delta_t) =
+    \mathpzc{Dom}(\Delta_h) \cup \mathpzc{Dom}(\Delta_t) =
+    \mathpzc{Dom}(\Lambda_h) \cup \mathpzc{Dom}(\Lambda_t) =
+    \mathpzc{Dom}(\Lambda_h \cup \Lambda_t)$ revealed above,
+    we find $\{t, t_h \wedge t'_{t_\Delta} \} \cap \mathpzc{Dom}(\Delta_h   
+    \cup \Delta_t) = \phi$. Then we know $t \simeq t_h \wedge t_t$ for
+    $t_h \wedge t_t \in \mathpzc{Equ}(t)$ from
+    \ref{semiequivalency_on_implementation}. Recalling the fact of
+    $\mathcal{S}_{t_\Delta} = \mathcal{S}_{t_\Lambda}$, we obtain
+    $\Delta \vdash t \triangleright {\mathcal{R}_1}^*$,
+    where we let $\Delta = \Bigl\{\bigl(t, t_h \wedge t'_{t_\Delta},
+    {\mathcal{R}_1}^*, \infty, (\Delta_h \cup \Delta'_t) \bigr)\Bigr\}
+    \cup (\Delta_h \cup \Delta'_t)$ s.t.
+    $t_h \wedge t'_{t_\Delta} = t_h \wedge t'_{t_\Lambda}$ and
+    $\mathpzc{Dom}(\Delta) = \mathpzc{Dom}(\Lambda)$, since
+    $\mathpzc{Dom}(\Delta) = \{t\} \cup \mathpzc{Dom}(\Delta_h \cup
+    \Delta'_t) =
+    \{t\} \cup \bigl(\mathpzc{Dom}(\Delta_h) \cup \mathpzc{Dom}(\Delta'_t)
+    \bigr) =
+    \{t\} \cup \bigl(\mathpzc{Dom}(\Lambda_h) \cup \mathpzc{Dom}(\Lambda'_t)
+    \bigr) =
+    \{t\} \cup \mathpzc{Dom}(\Lambda_h \cup \Lambda'_t) =
+    \mathpzc{Dom}(\Lambda)$ as
+    $\{t_t\} \cup \mathpzc{Dom}(\Delta'_t) =
+    \{t_t\} \cup \mathpzc{Dom}(\Lambda'_t)$ implies
+    $\mathpzc{Dom}(\Delta'_t) = \mathpzc{Dom}(\Lambda'_t)$.
+    Subcase
+    $\mathcal{S}_{t_\Lambda} \not\in \{\text{\it nil},\, \text{\it sol} \}$:
+    In this case, we obtain $t \simeq \{\} \wedge (t_h \wedge t_t)$ by
+    applying \ref{semiequivalency_on_implementation} on
+    $\{\} \wedge (t_h \wedge t) \in \mathpzc{Equ}(t)$, thus
+    we still do $t \simeq t_h \wedge t_t$ from
+    $\text{\it RevealH-Cas}_{\{\}}$. And remaining steps are similar to
+    previous case.   
+    $\Box$
+  \end{Proof}
+\end{Lemma}
+
+
+
 Citations can be handled in one of three ways.  The most
 straightforward (albeit labor-intensive) would be to hardwire your
 citations into your \LaTeX\ source, as you would if you were using an
@@ -2824,7 +3583,6 @@ the text per {\it Science\/} style, and include the list of captions at
 the end of the document, coded as ordinary paragraphs as shown in the
 \texttt{scifile.tex} template file.  Your actual figure files should
 be submitted separately.
-
 
 
 \end{document}

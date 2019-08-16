@@ -928,7 +928,7 @@ In above section, we develop
               t \simeq t'
             }{
               t \simeq {t'}^\leftarrow
-            }  &  (\text{\it AltL-L})
+            }  &  (\text{\it Alt-L})
           \end{array}
         
         & \begin{array}{rl}
@@ -936,7 +936,7 @@ In above section, we develop
               t \simeq t'
             }{
               t \simeq {t'}^\rightarrow
-            }  &  (\text{\it AltR-L})
+            }  &  (\text{\it Alt-L})
           \end{array}
       \end{array}
       
@@ -1228,9 +1228,8 @@ term.
             t \simeq \circ
              \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
           }{
-            \Bigl\{\bigl(t, \circ, {\mathcal{R}_1}^?, \text{\it nil}, \phi
-            \bigr) \Bigr\} \vdash
-            t \triangleright {\mathcal{R}_1}^?
+            \bigl\{(t, \circ, {\mathcal{R}_1}^?, \text{\it nil}, \phi)
+             \bigr\} \vdash t \triangleright {\mathcal{R}_1}^?           
           }  &  (\text{\it nil}\,)  \\
           \\
           
@@ -1552,23 +1551,25 @@ term.
 
 
 \pagebreak
-\begin{Definition}[Term transducer]
-  We define the term transducer $\mathcal{M}$ as follow, which sustains
-  equality over transducing, see Property \ref{equality_over_transduction}.
+\begin{Definition}[Term canonicalizer]
+  We define the term canonicalizer $\mathcal{M}$, which transduces the term
+  matched on extended rules to corresponding canonical one, as follow. It
+  also sustains equality over canonicalizing,
+  see Property \ref{equality_over_transduction}.
   \begin{displaymath}
     \begin{array}{l}
     \mathcal{M}\bigl(t, t_{\text{\it equ}}, \mathcal{R},
     \mathcal{S}_{\mathpzc{fin}}, \Delta' \bigr) := \left\{\begin{array}{l}
       t_{\text{\it equ}} \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}}
-       \in \bigl\{\text{\it gnd}, \text{\it def}, \text{\it nil}, \circ\}\\
+       \in \bigl\{\text{\it gnd}, \text{\it def}, \text{\it nil} \}  \\
       \mathcal{M}\bigl(\Delta'(t_1)\bigr) \wedge
        \mathcal{M}\bigl(\Delta'(t_2)\bigr) \quad \text{\it if}\
         \mathcal{S}_{\mathpzc{fin}} \in \{\wedge\}\ \text{\it and}\
-         t = \exists t_1 \wedge \exists t_2.  \\
+         t_{\text{\it equ}} = t_1 \wedge t_2.  \\
       \mathcal{M}\bigl(\Delta'(t_1) \bigr) \vee
        \mathcal{M}(\bigl(\Delta'(t_2) \bigr) \quad \text{\it if}\
         \mathcal{S}_{\mathpzc{fin}} \in \{\vee\}\ \text{\it and}\
-         t = \exists t_1 \vee \exists t_2.  \\
+         t_{\text{\it equ}} = t_1 \vee t_2.  \\
      \Bigl\{\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}}) \bigr) \Bigr\}
       \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in
        \{\text{\it sol} \}\ \text{\it and}\
@@ -1585,7 +1586,7 @@ term.
      \Bigl\{\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_h}) \bigr),
        t_2 \cdots t_n \Bigr\}
       \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in \{\infty\},\
-       \mathcal{R} = {\mathcal{R}_1}^*,\ \text{\it otherwize}  \\
+       \mathcal{R} = {\mathcal{R}_1}^*  \\
        \quad \text{\it where}\ \{t_2 \cdots t_n\} =
         \mathcal{M}_{\{\}}\biggl(t_{\text{\it equ}_t}, \mathcal{R},
          \Bigl(\Delta' \setminus \bigl(\Delta'(t_{\text{\it equ}_h}) \cup
@@ -1611,7 +1612,7 @@ term.
      \Bigl[\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_h}) \bigr),
        t_2 \cdots t_n \Bigr]
       \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in \{\infty\},\
-       \mathcal{R} = {\mathcal{R}_1}^+,\ \text{\it otherwize}  \\
+       \mathcal{R} = {\mathcal{R}_1}^+  \\
        \quad \text{\it where}\ [t_2 \cdots t_n] =
         \mathcal{M}_{[]}\biggl(t_{\text{\it equ}_t}, \mathcal{R},
          \Bigl(\Delta' \setminus \bigl(\Delta'(t_{\text{\it equ}_h}) \cup
@@ -1637,7 +1638,7 @@ term.
      \Bigl\langle\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}_h}) \bigr),
        t_2 \cdots t_n \Bigr\rangle
       \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in \{\infty\},\
-       \mathcal{R} = {\mathcal{R}_1}^\downarrow,\ \text{\it otherwize}  \\
+       \mathcal{R} = {\mathcal{R}_1}^\downarrow  \\
        \quad \text{\it where}\ \langle t_2 \cdots t_n\rangle =
         \mathcal{M}_{\langle\rangle}\biggl(t_{\text{\it equ}_t}, \mathcal{R},
          \Bigl(\Delta' \setminus \bigl(\Delta'(t_{\text{\it equ}_h}) \cup
@@ -1657,7 +1658,7 @@ term.
      {\mathcal{M}\bigl(\Delta'(t_{\text{\it equ}}) \bigr)}^\rightarrow
       \quad \text{\it if}\ \mathcal{S}_{\mathpzc{fin}} \in
        \{\text{\it R}\}  \\
-     t \quad \text{\it otherwize}
+     t \quad \text{\it otherwise}
     \end{array}\right.
     
    \end{array}
@@ -1665,53 +1666,51 @@ term.
 
   \begin{displaymath}
     \begin{array}{l}
-    \mathcal{M}_{\{\}}\bigl(t, \mathcal{R},\Delta') :=
+    \mathcal{M}_{\{\}}\bigl(t, \mathcal{R},\Delta) :=
      \left\{\begin{array}{l}
-       \Bigl\{\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr\}
-        \quad \text{\it if}\ t \in \mathpzc{Dom}(\Delta')  \\ [5pt]
-       \Bigl\{\mathcal{M}\bigl(\Delta'(t_h) \bigr), t_2 \cdots t_m \Bigr\}\
-        \text{\it else if}\ t = t_h \wedge t_t\ \text{\it s.t.}\
-         \Delta'(t_h) = (t_h, t_{h_{\text{\it equ}}}, \mathcal{R}_1,
+       \Bigl\{\mathcal{M}\bigl(\Delta(t) \bigr) \Bigr\}
+        \quad \text{\it if}\ t \in \mathpzc{Dom}(\Delta)  \\ [5pt]
+       \Bigl\{\mathcal{M}\bigl(\Delta(t_h) \bigr), t_2 \cdots t_m \Bigr\}
+        \quad \text{\it if}\ t = t_h \wedge t_t\ \text{\it s.t.}\
+         \Delta(t_h) = (t_h, t_{h_{\text{\it equ}}}, \mathcal{R}_1,
           \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h)  \\
        \quad \text{\it where}\ \mathcal{R} = {\mathcal{R}_1}^*,\,
         \{t_2 \cdots t_m\} =
-         \mathcal{M}_{\{\}}\Bigl(t_t, \mathcal{R}, \bigl(\Delta' \setminus
-          \Delta'(t_h) \cup \Delta'_h \bigr) \Bigr)  \\
-       \Bigl\{\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr\}
-        \quad \text{\it otherwise}
+         \mathcal{M}_{\{\}}\Bigl(t_t, \mathcal{R}, \bigl(\Delta \setminus
+          \Delta(t_h) \cup \Delta'_h \bigr) \Bigr)  \\
+       \{t\} \quad \text{\it otherwise}
      \end{array}\right.  \\
      \\
      
-     \mathcal{M}_{[]}\bigl(t, \mathcal{R},\Delta') :=
+     \mathcal{M}_{[]}\bigl(t, \mathcal{R},\Delta) :=
      \left\{\begin{array}{l}
-       \Bigl[\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr]
-        \quad \text{\it if}\ t \in \mathpzc{Dom}(\Delta')  \\ [5pt]
-       \Bigl[\mathcal{M}\bigl(\Delta'(t_h) \bigr), t_2 \cdots t_m \Bigr]\
-        \text{\it else if}\ t = t_h \wedge t_t\ \text{\it s.t.}\
-         \Delta'(t_h) = (t_h, t_{h_{\text{\it equ}}}, \mathcal{R}_1,
+       \Bigl[\mathcal{M}\bigl(\Delta(t) \bigr) \Bigr]
+        \quad \text{\it if}\ t \in \mathpzc{Dom}(\Delta)  \\ [5pt]
+       \Bigl[\mathcal{M}\bigl(\Delta(t_h) \bigr), t_2 \cdots t_m \Bigr]
+        \quad \text{\it if}\ t = t_h \wedge t_t\ \text{\it s.t.}\
+         \Delta(t_h) = (t_h, t_{h_{\text{\it equ}}}, \mathcal{R}_1,
           \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h)  \\
        \quad \text{\it where}\ \mathcal{R} = {\mathcal{R}_1}^+,\,
         [t_2 \cdots t_m] =
-         \mathcal{M}_{[]}\Bigl(t_t, \mathcal{R}, \bigl(\Delta' \setminus
-          \Delta'(t_h) \cup \Delta'_h \bigr) \Bigr)  \\
-       \Bigl[\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr]
-        \quad \text{\it otherwise}
+         \mathcal{M}_{[]}\Bigl(t_t, \mathcal{R}, \bigl(\Delta \setminus
+          \Delta(t_h) \cup \Delta'_h \bigr) \Bigr)  \\
+       {[}t{]} \quad \text{\it otherwise}
      \end{array}\right.  \\
      \\
-     \mathcal{M}_{\langle\rangle}\bigl(t, \mathcal{R},\Delta') :=
+     
+     \mathcal{M}_{\langle\rangle}\bigl(t, \mathcal{R},\Delta) :=
      \left\{\begin{array}{l}
-       \Bigl\langle\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr\rangle
-        \quad \text{\it if}\ t \in \mathpzc{Dom}(\Delta')  \\ [5pt]
-       \Bigl\langle\mathcal{M}\bigl(\Delta'(t_h) \bigr), t_2 \cdots t_m
-        \Bigr\rangle\ \text{\it else if}\ t = t_h \vee t_t\ \text{\it s.t.}\
-         \Delta'(t_h) = (t_h, t_{h_{\text{\it equ}}}, \mathcal{R}_1,
+       \Bigl\langle\mathcal{M}\bigl(\Delta(t) \bigr) \Bigr\rangle
+        \quad \text{\it if}\ t \in \mathpzc{Dom}(\Delta)  \\ [5pt]
+       \Bigl\langle\mathcal{M}\bigl(\Delta(t_h) \bigr), t_2 \cdots t_m
+        \Bigr\rangle \quad \text{\it if}\ t = t_h \vee t_t\ \text{\it s.t.}\
+         \Delta(t_h) = (t_h, t_{h_{\text{\it equ}}}, \mathcal{R}_1,
           \mathcal{S}_{\mathpzc{fin}_h}, \Delta'_h)  \\
        \quad \text{\it where}\ \mathcal{R} = {\mathcal{R}_1}^\downarrow,\,
         \langle t_2 \cdots t_m\rangle =
          \mathcal{M}_{\langle\rangle}\Bigl(t_t, \mathcal{R}, \bigl(
-          \Delta' \setminus \Delta'(t_h) \cup \Delta'_h \bigr) \Bigr)  \\
-       \Bigl\langle\mathcal{M}\bigl(\Delta'(t) \bigr) \Bigr\rangle
-        \quad \text{\it otherwise}
+          \Delta \setminus \Delta(t_h) \cup \Delta'_h \bigr) \Bigr)  \\
+       \langle t \rangle \quad \text{\it otherwise}
      \end{array}\right.
     \end{array}
   \end{displaymath}
@@ -2704,7 +2703,7 @@ ML developped in INRIA France.
         \mathpzc{Equ}\bigl(\{t_1, t_2, \cdots t_n\} \bigr)
         & t_1 \wedge [t_2, \cdots t_n] \in
         \mathpzc{Equ}\bigl([t_1, t_2, \cdots t_n] \bigr)  \\
-        & t_1 \wedge \langle t_2, \cdots t_n \rangle \in
+        & t_1 \vee \langle t_2, \cdots t_n \rangle \in
         \mathpzc{Equ}\bigl(\langle t_1, t_2, \cdots t_n \rangle \bigr)
       \end{array}  \\
       \\
@@ -3205,12 +3204,11 @@ as follows.
       \begin{array}{rl}
         \left. \begin{array}{rl}
           \dfrac{
-            \{\} \in \mathpzc{Equ}(t)
+            \circ \in \mathpzc{Equ}(t)
              \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
           }{
-            \Bigl\{\bigl(t, \{\}, {\mathcal{R}_1}^?, \text{\it nil}, \phi
-            \bigr) \Bigr\} \vdash
-            t \blacktriangleright {\mathcal{R}_1}^?
+            \bigl\{(t, \circ, {\mathcal{R}_1}^?, \text{\it nil}, \phi)
+             \bigr\} \vdash t \blacktriangleright {\mathcal{R}_1}^?
           }  &  (\text{\it nil}\,)  \\
           \\
           

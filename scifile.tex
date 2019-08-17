@@ -3364,16 +3364,16 @@ $\text{\it TR}_1 \wedge (\text{\it TR}_2 \vee \text{\it NKR}_{\#3}) \wedge
 
 Then, we are now trying to match above with the pattern of
 $\bigl(\text{\it TR} \vee
-{(\text{\it NKR} | \text{\it RKR})^\downarrow}^* \bigr)^+ \wedge
+{(\text{\it NKR} | \text{\it RKR})^\downarrow}^? \bigr)^+ \wedge
 (\text{\it TLSR} | \text{\it TRSR})^*$.
 
 We can express above instance as \verb@TR_1&(TR_2|NKR_#3)&TLSR_TR4@,
 accroding to def. of term, and pattern is also expressed as
-\verb@(TR|(NKR%RKR)!*)+&(TLSR%TRSR)*@.
+\verb@(TR|(NKR%RKR)!?)+&(TLSR%TRSR)*@.
 Consequently, The result of pattern matching is shown as follows.
 \begin{verbatim}
 # term (typematch (compile "TR_1 & (TR_2 | NKR_#3) & TLSR_TR4 :
-(TR | (NKR % RKR)!*)+ & (TLSR % TRSR)*"));;
+(TR | (NKR % RKR)!?)+ & (TRSR % TLSR)*"));;
 - : string = "(TR_1 & ((((TR_2 | NKR_#3)) & TLSR_TR4)))"
 \end{verbatim}
 
@@ -3381,38 +3381,37 @@ Looking at the last line of above, it just been generated from her
 coginition, which shows that LIezA has successed to match given term with
 pattern, and recognize its structual meaning, which stored in the form of
 Binding internally. We can still access her cognition as follows.
-
 \begin{verbatim}
-# let sig_ctrl = cli_pat (compile "* : (TR | (NKR % RKR)!*)+");; 
+# let sig_ctrl = cli_pat (compile "* : (TR | (NKR % RKR)!?)+");;
 val sig_ctrl : Lie_type.pattern = ...
-# term1 (resolv sig_ctrl (typematch (compile "TR_1 & (TR_2 |
-NKR_#3) & TLSR_TR4 : (TR | (NKR % RKR)!*)+ & (TLSR % TRSR)*")));;
-- : string = "(((TR_1 | {})) & ((TR_2 | NKR_#3)))"
+# foreach (resolv sig_ctrl (typematch (compile "TR_1 & (TR_2 |
+NKR_#3) & TLSR_TR4 : (TR | (NKR % RKR)!?)+ & (TRSR % TLSR)*")));;
+- : string list = ["(((TR_1 | *)) & ((TR_2 | NKR_#3)))"]
 \end{verbatim}
 
 The first command of above specifies the target pattern we refer.
 Then we try to refer the subterms bounded the target
 pattern, which is currently assigned to \verb|sig_ctrl|, on next command,
-And we can see that the last line depicts the subterm bounded to the target
+And we can find that the last line depicts the subterm bounded to the target
 pattern we specified correctly.
 
 Similar to above, we can access more internal subterms, as follow.
 \begin{verbatim}
-let sig_ctrl = cli_pat (compile "* : (NKR % RKR)!");; 
+# let sig_ctrl = cli_pat (compile "* : (NKR % RKR)!");;
 val sig_ctrl : Lie_type.pattern = ...
-# term1 (resolv sig_ctrl (typematch (compile "TR_1 & (TR_2 |
-NKR_#3) & TLSR_TR4 : (TR | (NKR % RKR)!*)+ & (TLSR % TRSR)*")));;
-- : string = "NKR_#3"
+# foreach (resolv sig_ctrl (typematch (compile "TR_1 & (TR_2 |
+NKR_#3) & TLSR_TR4 : (TR | (NKR % RKR)!?)+ & (TRSR % TLSR)*")));;
+- : string list = ["NKR_#3"]
 \end{verbatim}
 
 Bindings for counterpart condition, i.e.
 $\text{\it TLSR}_{{\text{\it TR}_4}}$, is also accessible as follow.
 \begin{verbatim}
-let sig_ctrl = cli_pat (compile "* : (TLSR % TRSR)*");;
+# let sig_ctrl = cli_pat (compile "* : (TRSR % TLSR)*");;
 val sig_ctrl : Lie_type.pattern = ...
-# term1 (resolv sig_ctrl (typematch (compile "TR_1 & (TR_2 |
-NKR_#3) & TLSR_TR4 : (TR | (NKR % RKR)!*)+ & (TLSR % TRSR)*")));;
-- : string = "TLSR_TR4"
+# foreach (resolv sig_ctrl (typematch (compile "TR_1 & (TR_2 |
+NKR_#3) & TLSR_TR4 : (TR | (NKR % RKR)!?)+ & (TRSR % TLSR)*")));;
+- : string list = ["TLSR_TR4"]
 \end{verbatim}
 
 Finally, we present more practical examples in the domain of railway
@@ -3446,13 +3445,13 @@ Locking a.k.a. ASR on related route's signal aspect controlling.
 And we can see the condition of ASR verification by finding the condition
 bonded to the subpattern of $\text{\it ASR}$, as follow.
 \begin{verbatim}
-# let ver_ASR = cli_pat (compile "* : ASR");; 
+# let ver_ASR = cli_pat (compile "* : ASR");;
 val ver_ASR : Lie_type.pattern = ...
-# term1 (resolv ver_ASR (typematch (compile "HR_11L & (LR_11 |
-RKR_#21) & (LR_12 | NKR_#21 | RKR_#22) & (TR_21i | (TENR_30 &
-MSlR_11L) | ASR_11L) : HR & (LR | (NKR % RKR)!)* & (TR+ | (TENR
-& MSlR) | ASR)")));;
-- : string = "ASR_11L"
+# foreach (resolv ver_ASR (typematch (compile "HR_11L & (LR_11 |
+RKR_21) & (LR_12 | NKR_#21 | RKR_#22) & (TR_21i | (TENR_30 &
+MSlR_11L) | ASR_11L) : HR & (LR | (NKR % RKR)!)* & (TR+ | (TENR &
+MSlR) | ASR)")));;
+- : string list = ["ASR_11L"]
 \end{verbatim}
 LIezA correctly recognize and reply the asked condition on the last line
 as desired.
@@ -3461,13 +3460,13 @@ Similarly we try again to refer the condition of Approaching Track, which is
 another specific one occuring on Signal Controlling Circuit . And we also
 obtain correct result from LIeza, as follow.
 \begin{verbatim}
-# let ver_appTR = cli_pat (compile "* : TR+");; 
+# let ver_appTR = cli_pat (compile "* : TR+");;
 val ver_appTR : Lie_type.pattern = ...
-# term1 (resolv ver_appTR (typematch (compile "HR_11L & (LR_11 |
-RKR_#21) & (LR_12 | NKR_#21 | RKR_#22) & (TR_21i | (TENR_30 &
+# foreach (resolv ver_appTR (typematch (compile "HR_11L & (LR_11 |
+RKR_21) & (LR_12 | NKR_#21 | RKR_#22) & (TR_21i | (TENR_30 &
 MSlR_11L) | ASR_11L) : HR & (LR | (NKR % RKR)!)* & (TR+ | (TENR &
 MSlR) | ASR)")));;
-- : string = "TR_21i"
+- : string list = ["TR_21i"]
 \end{verbatim}
 
 

@@ -2682,6 +2682,7 @@ term.
 \end{Claim}
 
 
+\pagebreak
 \section*{Implementation}
 
 In this section, we try to implement our logic on microcomputer based
@@ -2843,7 +2844,7 @@ and related functions are as follows.
            t_{1r} = t_{{1r}_l} \wedge t_{{1r}_r}  \\
          \quad \text{\it where}\
           t'_{{1r}_l} \wedge t'_{{1r}_r} = \mathpzc{assoc_{cas}R}(
-           t_{{1r}_l} \wedge t_{{1r}_r}, t_2 )
+           t_{{1r}_l} \wedge t_{{1r}_r}, t_2)
        \end{array}  \\
        
        t_1 \wedge t_2 \quad \text{\it otherwise}
@@ -3304,6 +3305,7 @@ and related functions are as follows.
 \end{Property}
 
 
+\pagebreak
 \begin{Lemma}
   \label{semiequivalency_on_implementation}
   \[ t \simeq t'\ \text{\it where}\ t' \in \mathpzc{Equ}(t)
@@ -3612,7 +3614,7 @@ and related functions are as follows.
     $\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R})$ also has termination
     in the case of $t'_1 \wedge t'_2 = t_1 \wedge t_2$ where
     $t'_1 \wedge t'_2 = \mathpzc{assoc_{cas}R}(t_1, t_2)$, from
-    def. of $\mathpzc{assoc_{cas}R}(t_1, t_2, \mathpzc{L_2R})$.
+    def. of $\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R})$.
     
     Otherwise, i.e. $t'_1 \wedge t'_2 \neq t_1 \wedge t_2$, we know that
     $\mathpzc{size}(t_1) > \mathpzc{size}(t'_1)$ from Property
@@ -3637,6 +3639,7 @@ and related functions are as follows.
     \]
     Note that, above ordering scheme is same as the one on Property
     \ref{property6_for_semiequiv_impl}.
+    
     Hence $\mathpzc{Assoc}_\wedge(t_1, t_2)$ has termination for
     $\mathpzc{Assoc}_\wedge(t_1, t_2) =
     \mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R}) \cup
@@ -3647,6 +3650,105 @@ and related functions are as follows.
     $\Box$
   \end{Proof}
 \end{Lemma}
+
+
+\begin{Property}
+  \label{size_restriction_on_equivalency_of_implementation}
+  \[ \mathpzc{size}(t') \le \mathpzc{size}(t) + 2\;\; \text{\it where}\
+      t' \in \mathpzc{Equ}(t)
+  \]
+  \begin{Proof}
+    From def. of $\mathpzc{Equ}(t)$, we focus on the only cases to be
+    particularly considered, that are
+    $\mathpzc{Assoc}_\wedge(t_1, t_2)$ and $\mathpzc{Assoc}_\vee(t_1, t_2)$
+    s.t. $t = t_1 \wedge t_2$ and $t = t_1 \vee t_2$ respectively.
+
+    Here, we can say that both $\mathpzc{assoc_{cas}R}(t_1, t_2)$ and
+    $\mathpzc{assoc_{cas}L}(t_1, t_2)$ satisfy the conditions of
+    $\mathpzc{size}(t'_1 \wedge t'_2) = \mathpzc{size}(t_1 \wedge t_2)$
+    where $t'_1 \wedge t'_2 = \mathpzc{assoc_{cas}R}(t_1, t_2)$ and
+    $t'_1 \wedge t'_2 = \mathpzc{assoc_{cas}L}(t_1, t_2)$ respectively,
+    from induction hypotheses according to the reasoning as below.
+    
+    Def. of $\mathpzc{assoc_{cas}R}(t_1, t_2)$ has 2 cases to be
+    considered. One is the case of
+    $t_{1l} \wedge (t_{1r} \wedge t_2) = \mathpzc{assoc_{cas}R}(t_1, t_2)$
+    s.t. $t_1 = t_{1l} \wedge t_{1r}$. It's trivial for
+    $\mathpzc{size}\bigl(t_{1l} \wedge (t_{1r} \wedge t_2) \bigr) =
+    \mathpzc{size}(t_{1l}) + \mathpzc{size}(t_{1r} \wedge t_2) + 1 =
+    \mathpzc{size}(t_{1l}) + \bigl(\mathpzc{size}(t_{1r}) +
+    \mathpzc{size}(t_2) + 1 \bigr) + 1 =
+    \bigl(\mathpzc{size}(t_{1l}) + \mathpzc{size}(t_{1r}) + 1 \bigr) +
+    \mathpzc{size}(t_2) + 1 =
+    \mathpzc{size}(t_{1l} \wedge t_{1r}) + \mathpzc{size}(t_2) + 1 =
+    \mathpzc{size}(t_1) + \mathpzc{size}(t_2) + 1 =
+    \mathpzc{size}(t_1 \wedge t_2)$.
+    
+    For another case, we suppose
+    $(t_{1l} \wedge t'_{{1r}_l}) \wedge t'_{{1r}_r} =
+    \mathpzc{assoc_{cas}R}(t_1, t_2)$ where
+    $t'_{{1r}_l} \wedge t'_{{1r}_r} =
+    \mathpzc{assoc_{cas}R}(t_{{1r}_l} \wedge t_{{1r}_r}, t_2) =
+    \mathpzc{assoc_{cas}R}(t_{1r}, t_2)$. Here we find
+    $\mathpzc{size}(t'_{{1r}_l}) + \mathpzc{size}(t'_{{1r}_r}) =
+    \mathpzc{size}(t_{1r}) + \mathpzc{size}(t_2)$ since
+    $\mathpzc{size}(t'_{{1r}_l} \wedge t'_{{1r}_r}) =
+    \mathpzc{size}(t_{1r} \wedge t_2)$ by applying induction hypotheses on
+    $\mathpzc{assoc_{cas}R}(t_{1r}, t_2)$ s.t.
+    $t_1 = t_{1l} \wedge t_{1r}$. Therefore
+    $\mathpzc{size}\bigl((t_{1l} \wedge t'_{{1r}_l}) \wedge t'_{{1r}_r}
+    \bigr) =
+    \bigl(\mathpzc{size}(t_{1l}) + \mathpzc{size}(t'_{{1r}_l}) + 1 \bigr) +
+    \mathpzc{size}(t'_{{1r}_r}) + 1 =
+    \Bigl(\mathpzc{size}(t_{1l}) + \bigl(\mathpzc{size}(t'_{{1r}_l}) +
+    \mathpzc{size}(t'_{{1r}_r}) \bigr) + 1 \Bigr) + 1 =
+    \Bigl(\mathpzc{size}(t_{1l}) + \bigl(\mathpzc{size}(t_{1r}) +
+    \mathpzc{size}(t_2) \bigr) + 1 \Bigr) + 1 =
+    \bigl(\mathpzc{size}(t_{1l}) + \mathpzc{size}(t_{1r}) + 1 \bigr) +
+    \mathpzc{size}(t_2) + 1 =
+    \mathpzc{size}(t_{1l} \wedge t_{1r}) + \mathpzc{size}(t_2) + 1 =
+    \mathpzc{size}(t_1) + \mathpzc{size}(t_2) + 1 =
+    \mathpzc{size}(t_1 \wedge t_2)$ as desired.
+    Similarly we also can see that for $\mathpzc{assoc_{cas}L}(t_1, t_2)$.
+    
+    Then we examine for both cases according to whether
+    $t'_1 \wedge t'_2 = t_1 \wedge t_2$ or not, where
+    $t'_1 \wedge t'_2 = \mathpzc{assoc_{cas}R}(t_1, t_2)$. The former case
+    is trivial for
+    $\{t_1 \wedge t_2\} = \mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R})$,
+    where $t_1 \wedge t_2 = \mathpzc{assoc_{cas}R}(t_1, t_2)$. And for
+    latter case, we know $\mathpzc{size}(t_1) >  \mathpzc{size}(t'_1)$
+    from Property \ref{property2_for_semiequiv_impl}, thus we can say that
+    $\mathpzc{size}(t') = \mathpzc{size}(t'_1 \wedge t'_2)$ for any
+    $t' \in \mathpzc{Assoc}_\wedge(t'_1, t'_2, \mathpzc{L_2R})$ from
+    induction hypotheses. And we still know that
+    $\mathpzc{size}(t'_1 \wedge t'_2) = \mathpzc{size}(t_1 \wedge t_2)$
+    where $t'_1 \wedge t'_2 = \mathpzc{assoc_{cas}R}(t_1, t_2)$ from
+    the fact revealed above.Therefore
+    $\mathpzc{size}(t') = \mathpzc{size}(t_1 \wedge t_2)$ for any
+    $t' \in \mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R})$ since
+    $\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R}) = \{t'_1 \wedge t'_2\}
+    \cup \mathpzc{Assoc}_\wedge(t'_1, t'_2, \mathpzc{L_2R})$, where
+    $t'_1 \wedge t'_2 = \mathpzc{assoc_{cas}R}(t_1, t_2)$ s.t.
+    $\mathpzc{size}(t'_1 \wedge t'_2) = \mathpzc{size}(t_1 \wedge t_2)$.
+    We similarly can try it for
+    $\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{R_2L})$, i.e.
+    $\mathpzc{size}(t') = \mathpzc{size}(t_1 \wedge t_2)$ for any
+    $t' \in \mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{R_2L})$, 
+    with Property \ref{property4_for_semiequiv_impl} and same
+    ordering scheme as Property \ref{property6_for_semiequiv_impl}.
+    
+    Consequently, we conclude that
+    $\mathpzc{size}(t') = \mathpzc{size}(t_1 \wedge t_2)$ for any
+    $t' \in \bigl(\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R}) \cup
+    \mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{R_2L}) \bigr) =
+    \mathpzc{Assoc}_\wedge(t_1, t_2)$.
+    
+    And according to def. of $\mathpzc{Equ}(t)$, the remaining cases of
+    $\mathpzc{Equ}(t)$ are limited to $\mathpzc{size}(t) + 2$.
+    $\Box$
+  \end{Proof}
+\end{Property}
 
 
 \pagebreak
@@ -3927,12 +4029,46 @@ and related functions are as follows.
 \end{Definition}
 
 
+\pagebreak
 \begin{Lemma}{termination on implementation.}
   \[ \Lambda \vdash t \blacktriangleright \mathcal{R}\
       \text{\it has termination}.
   \]
   \begin{Proof}
     Proof is induction on structure of $(\mathcal{R}, t)$.
+    
+    From def. of $\Lambda \vdash t \blacktriangleright \mathcal{R}$,
+    the significant cases to be examined are only (T-Cat0-impl-$\infty$),
+    (T-Cat1-impl-$\infty$) and (T-Dup-impl-$\infty$).
+    
+    Case (T-Cat0-impl-$\infty$):
+    From def. of (T-Cat0-impl-$\infty$),
+    $\Lambda_h \vdash t_h \blacktriangleright \mathcal{R}_1$ which
+    is one of its subderivations, has termination from induction
+    hypotheses. For the other one, i.e.
+    $\Lambda_t \vdash t_t \blacktriangleright {\mathcal{R}_1}^*$, we can
+    say that it also has termination from induction hypotheses
+    according to the reason as below.
+    
+    We suppose $t_t$ s.t.
+    $\{\} \wedge (t_h \wedge t_t) \in \mathpzc{Equ}(t)$. Then we find
+    $\mathpzc{size}(t_t) < \mathpzc{size}(t)$ since
+    $\mathpzc{size}\bigl(\{\} \bigr) + \bigl(\mathpzc{size}(t_h) +
+    \mathpzc{size}(t_t) + 1\bigr) + 1 =
+    \mathpzc{size}\bigl(\{\} \wedge (t_t \wedge t_t) \bigr) \le
+    \mathpzc{size}(t) + 2$ from Property
+    \ref{size_restriction_on_equivalency_of_implementation},
+    which implies the fact of
+    $({\mathcal{R}_1}^*, t_t) < ({\mathcal{R}_1}^*, t)$. Therefore
+    we conclude that
+    $\Lambda_t \vdash t_t \blacktriangleright {\mathcal{R}_1}^*$ has
+    termination from induction hypotheses.
+    
+    The other case, which is $t_h \wedge t_t\in \mathpzc{Equ}(t)$, is
+    also from similar reasoning as above case.
+    
+    Case of (T-Cat1-impl-$\infty$) and (T-Dup-impl-$\infty$) are
+    similar to the case of (T-Cat0-impl-$\infty$).
     $\Box$
   \end{Proof}
 \end{Lemma}
@@ -3947,11 +4083,10 @@ and related functions are as follows.
           t'_\Delta = t'_\Lambda,
            \mathcal{S}_\Delta = \mathcal{S}_\Lambda,  \\           
          \text{\it where} \!\begin{array}[t]{l}
-           \Lambda = \bigl\{(t, t'_\Lambda, \mathcal{R},
-            \mathcal{S}_\Lambda, \Lambda') \bigr\} \cup \Lambda'  \\
            \Delta = \bigl\{(t, t'_\Delta, \mathcal{R},
-            \mathcal{S}_\Delta, \Delta') \bigr\} \cup \Delta',\
-             \text{\it we let}.
+            \mathcal{S}_\Delta, \Delta') \bigr\} \cup \Delta'  \\
+           \Lambda = \bigl\{(t, t'_\Lambda, \mathcal{R},
+            \mathcal{S}_\Lambda, \Lambda') \bigr\} \cup \Lambda'
          \end{array}
        \end{array}
   \]
@@ -3959,8 +4094,8 @@ and related functions are as follows.
     Proof is induction on structure of derivation for
     $\Lambda \vdash t \blacktriangleright \mathcal{R}$.
     
-    Considering the fact that most of rules for implementation have same
-    structure of original ones, therefore we show only significant cases.
+    According to the fact that most of rules for implementation have same
+    structure of original ones, we show only significant cases.
     
     Case (T-Cat0-impl-$\infty$): We suppose
     $\Lambda \vdash t \blacktriangleright {\mathcal{R}_1}^*$ where
@@ -3998,7 +4133,7 @@ and related functions are as follows.
     \mathpzc{Dom}(\Lambda_h \cup \Lambda_t)$ revealed above,
     we find $\{t, t_h \wedge t'_{t_\Delta} \} \cap \mathpzc{Dom}(\Delta_h   
     \cup \Delta_t) = \phi$. Then we know $t \simeq t_h \wedge t_t$ for
-    $t_h \wedge t_t \in \mathpzc{Equ}(t)$ from
+    $t_h \wedge t_t \in \mathpzc{Equ}(t)$ from Lemma
     \ref{semiequivalency_on_implementation}. Recalling the fact of
     $\mathcal{S}_{t_\Delta} = \mathcal{S}_{t_\Lambda}$, we obtain
     $\Delta \vdash t \triangleright {\mathcal{R}_1}^*$,
@@ -4014,16 +4149,18 @@ and related functions are as follows.
     \{t\} \cup \bigl(\mathpzc{Dom}(\Lambda_h) \cup \mathpzc{Dom}(\Lambda'_t)
     \bigr) =
     \{t\} \cup \mathpzc{Dom}(\Lambda_h \cup \Lambda'_t) =
-    \mathpzc{Dom}(\Lambda)$ as
+    \mathpzc{Dom}(\Lambda)$ according to the fact that
     $\{t_t\} \cup \mathpzc{Dom}(\Delta'_t) =
     \{t_t\} \cup \mathpzc{Dom}(\Lambda'_t)$ implies
-    $\mathpzc{Dom}(\Delta'_t) = \mathpzc{Dom}(\Lambda'_t)$.
+    $\mathpzc{Dom}(\Delta'_t) = \mathpzc{Dom}(\Lambda'_t)$ for
+    $t_t \not\in \mathpzc{Dom}(\Delta'_t)$ and
+    $t_t \not\in \mathpzc{Dom}(\Lambda'_t)$.
     Subcase
     $\mathcal{S}_{t_\Lambda} \not\in \{\text{\it nil},\, \text{\it sol} \}$:
-    In this case, we obtain $t \simeq \{\} \wedge (t_h \wedge t_t)$ by
-    applying \ref{semiequivalency_on_implementation} on
-    $\{\} \wedge (t_h \wedge t) \in \mathpzc{Equ}(t)$, thus
-    we still do $t \simeq t_h \wedge t_t$ from
+    In this case, we obtain $t \simeq \{\} \wedge (t_h \wedge t_t)$ for
+    $\{\} \wedge (t_h \wedge t) \in \mathpzc{Equ}(t)$ from
+    Lemma \ref{semiequivalency_on_implementation}, thus
+    it's obvious that $t \simeq t_h \wedge t_t$ from
     $\text{\it RevealH-Cas}_{\{\}}$. And remaining steps are similar to
     previous case.   
     $\Box$
@@ -4031,6 +4168,7 @@ and related functions are as follows.
 \end{Lemma}
 
 
+\pagebreak
 \section*{LIezA, the Logic for Interlocking logics self recognizing
   Architecture}
 We implemented our logic on machine using Caml, which is one of the most
@@ -4150,6 +4288,7 @@ MSlR) | ASR)")));;
 \end{verbatim}
 
 
+\pagebreak
 Citations can be handled in one of three ways.  The most
 straightforward (albeit labor-intensive) would be to hardwire your
 citations into your \LaTeX\ source, as you would if you were using an

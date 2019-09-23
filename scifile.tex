@@ -38,7 +38,6 @@
 
 \DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
 
-
 % The following parameters seem to provide a reasonable page setup.
 
 \topmargin 0.0cm
@@ -68,10 +67,10 @@
 % item at the end, and it will be numbered automatically.
 
 \newcounter{lastnote}
-\newenvironment{scilastnote}{%
-\setcounter{lastnote}{\value{enumiv}}%
-\addtocounter{lastnote}{+1}%
-\begin{list}%
+\newenvironment{scilastnote}{
+\setcounter{lastnote}{\value{enumiv}}
+\addtocounter{lastnote}{+1}
+\begin{list}
 {\arabic{lastnote}.}
 {\setlength{\leftmargin}{.22in}}
 {\setlength{\labelsep}{.5em}}}
@@ -90,11 +89,11 @@
 % settings shown here.
 
 \author
-{A. Goto,$^{1\ast}$ K. Sakari,$^{1}$ R. Matsuda$^{1}$\\
+{Nobody,$^{1\ast}$Somebody,$^{1}$Anybody$^{1}$\\
 \\
 \normalsize{$^{1}$THE NIPPON SIGNAL CO., LTD. Tokyo Japan}\\
 \normalsize{$^\ast$To whom correspondence should be addressed;
-  E-mail: goto-akr@signal.co.jp.}
+  E-mail: noname@nowhere.com.}
 }
 
 % Include the date command, but leave its argument blank.
@@ -130,19 +129,7 @@
 \end{sciabstract}
 
 
-
-% In setting up this template for *Science* papers, we've used both
-% the \section* command and the \paragraph* command for topical
-% divisions.  Which you use will of course depend on the type of paper
-% you're writing.  Review Articles tend to have displayed headings, for
-% which \section* is more appropriate; Research Articles, when they have
-% formal topical divisions at all, tend to signal them with bold text
-% that runs into the paragraph, for which \paragraph* is the right
-% choice.  Either way, use the asterisk (*) modifier, as shown, to
-% suppress numbering.
-
-\section*{Motivation}
-
+\section{Motivation}
 Interlocking equipment acts as the vital role of train traffic safety. And
 its internal logic is ordinary described in the form of ``wired logic
 notation'', for the fact that interlocking equipment is constructed of
@@ -165,19 +152,19 @@ for designing, manufacturing and debugging in interlocking
 equipment development process, and increase our productivity.
 
 
-\section*{Introduction}
-In this paper, we suggest the type theory based matching system on
-interlocking logic structures. Our matching system bringns a capability of
-pattern recongnition on interlocking logic structures, which encourges us to
-realize automated verification its logical consistency and correctness.
+\section{Introduction}
+In this paper, we suggest the type theory based matching system suitable
+for interlocking logic structures. Our matching system brings a capability
+of pattern recongnition on interlocking logic structures, which encourges us
+to realize automated verification its logical consistency and correctness.
 
 
-\section*{Basic Logic}
+\section{Basic Logic}
 In this section, we present our basic logic. As the first step, we define
-the terms and typing rules on our typing system.
+the terms and matching rules on our matching system.
 
-\begin{Definition}[Terms]
-  We define the Terms $t$ range over $\mathbb{T}$ as follow.
+\begin{Definition}[terms]
+  We define the terms $t$ range over $\mathbb{T}$ as follow.
   \[ t \;\stackrel{\mathrm{def}}{:=}\!
       \begin{array}[t]{l}
              t_0 \ \text{\it s.t.}\; (t_0, \mathcal{R}_0) \!\in\!
@@ -199,7 +186,7 @@ We sometime call the terms $t \in \mathbb{T}$ defined above as canonical
 terms in certain situation.
 
 
-\begin{Definition}[Grand terms]
+\begin{Definition}[grand terms]
   We define the set of grand terms of a given term $t \in \mathbb{T}$ as
   follows.
   \begin{displaymath}
@@ -222,7 +209,7 @@ terms in certain situation.
 \end{Definition}
 
 
-\begin{Definition}[Subterms]
+\begin{Definition}[subterms]
   We define the set of subterms of a given term $t \in \mathbb{T}$ as
   follows.
   \begin{displaymath}
@@ -257,9 +244,9 @@ terms in certain situation.
 \end{Definition}
 
 
-\begin{Corollary}
+\begin{Property}
   \label{self_similarity_on_subterms}
-  \[ \mathpzc{sub}(t') \subseteq \mathpzc{sub}(t),\ \text{\it for any}\
+  \[ \mathpzc{sub}(t') \subseteq \mathpzc{sub}(t)\ \text{\it where}\
       t' \in \mathpzc{sub}(t)
   \]
   \begin{Proof}
@@ -277,11 +264,11 @@ terms in certain situation.
     induction hypothesis.
     $\Box$
   \end{Proof}
-\end{Corollary}
+\end{Property}
 
 
-\begin{Definition}[Types]
-  We define the Types $\mathcal{R}$ range over $\mathbb{R}$ as follow.
+\begin{Definition}[patterns]
+  We define the patterns $\mathcal{R}$ range over $\mathbb{R}$ as follow.
   \[ \mathcal{R} \;\stackrel{\mathrm{def}}{:=}\!
   \begin{array}[t]{l}
     \mathcal{R}_0 \ \text{\it s.t.}\; (t_0, \mathcal{R}_0) \!\in\!
@@ -298,18 +285,18 @@ terms in certain situation.
 \end{Definition}
 
 
-\begin{Definition}[Binding]
+\begin{Definition}[binding]
   We define a set of pairs of $(t, \mathcal{R})$ where
-  $t \in \mathbb{T}$ and $\mathcal{R} \in \mathbb{R}$, e.g.
+  $t \in \mathbb{T}$ and $\mathcal{R} \in \mathbb{R}$, i.e.
   $\bigl\{(t, \mathcal{R}) \ |\ t \in \mathbb{T},\
-  \mathcal{R} \in \mathbb{R} \bigr\}$, as Binding ranging over $\Gamma$.
+  \mathcal{R} \in \mathbb{R} \bigr\}$, as binding ranging over $\Gamma$.
 \end{Definition}
 
 
-\begin{Definition}[Binding domain]
+\begin{Definition}[binding domain]
   We define a set of terms $t$ comming from $\Gamma$ s.t.
   $\bigl\{ t \ |\ (t, \mathcal{R}) \in \Gamma \bigr\}$, as
-  $\mathpzc{Dom}(\Gamma)$, e.g.
+  $\mathpzc{Dom}(\Gamma)$.
   \[ \mathpzc{Dom}(\Gamma) \,\stackrel{\mathrm{def}}{:=}\,
       \bigl\{ t \ |\ (t, \mathcal{R}) \in \Gamma \bigr\}
   \]
@@ -319,7 +306,7 @@ terms in certain situation.
 We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
 
 
-\begin{Corollary} \label{dom_bin_join}
+\begin{Property} \label{dom_bin_join}
   \[ \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2) =
       \mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}(\Gamma_2)
   \]
@@ -356,10 +343,10 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
     $\mathpzc{Dom}$.
     $\Box$
   \end{Proof}
-\end{Corollary}
+\end{Property}
 
 
-\begin{Corollary} \label{dom_mul_join}
+\begin{Property} \label{dom_mul_join}
   \[ \mathpzc{Dom}\Biggl(\bigcup_{j=1}^{n} \Gamma_j \Biggr) =
       \bigcup_{j=1}^{n} \mathpzc{Dom}(\Gamma_j)
   \]
@@ -368,14 +355,14 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
     $\, \Gamma_j$ s.t. $\mathpzc{Dom}(\Gamma_j)$.
     
     B.C.): $n = 1$: Trivial.
-    $n = 2$: From corollary \ref{dom_bin_join},
+    $n = 2$: From Property \ref{dom_bin_join},
     $\mathpzc{Dom}(\Gamma_1 \cup \Gamma_2) = \mathpzc{Dom}(\Gamma_1) \cup
     \mathpzc{Dom}(\Gamma_2)$.
     
     I.S.): $n \ge 3$: $\mathpzc{Dom}\bigl(\bigcup_{j=1}^{n} \Gamma_j \bigr)
     = \mathpzc{Dom}\bigl(\Gamma_1 \cup \bigcup_{j=2}^{n} \Gamma_j \bigr) =
     \mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}\bigl(
-    \bigcup_{j=2}^{n} \Gamma_j \bigr)$, from corollary \ref{dom_bin_join}.
+    \bigcup_{j=2}^{n} \Gamma_j \bigr)$, from Property \ref{dom_bin_join}.
     Consequently we find that $\mathpzc{Dom}(\Gamma_1) \cup
     \mathpzc{Dom}\bigl(\bigcup_{j=2}^{n} \Gamma_j \bigr) =
     \mathpzc{Dom}(\Gamma_1) \cup \bigl(\bigcup_{j=2}^{n}
@@ -386,14 +373,14 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
     \bigcup_{j=1}^{n} \mathpzc{Dom}(\Gamma_j)$.
     $\Box$
   \end{Proof}
-\end{Corollary}
+\end{Property}
 
 
 \pagebreak
-\begin{Definition}[Typing rules on pure canonical terms]
-  We define the typing rules on canonical terms as follow.
-  Here canonical term $t$ ranges over $\mathbb{T}$, and type $\mathcal{R}$
-  does over $\mathbb{R}$.
+\begin{Definition}[matching rules on pure canonical terms]
+  We define the matching rules on canonical terms as follow,
+  where canonical terms $t$ range over $\mathbb{T}$, and patterns
+  $\mathcal{R}$ over $\mathbb{R}$.
   
   \begin{displaymath}
     \begin{array}{c}
@@ -573,8 +560,8 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
 
 \begin{Property}
   \label{dom_of_Gamma}
-  \[ \text{\it if}\ \Gamma \vdash t : \mathcal{R},\ \text{\it then}\
-      \mathpzc{Dom}(\Gamma) = \mathpzc{sub}(t).
+  \[ \mathpzc{Dom}(\Gamma) = \mathpzc{sub}(t)\ \text{\it where}\
+      \Gamma \vdash t : \mathcal{R}.
   \]
   \begin{Proof}
     Proof is simple induction on structure of $t$ s.t.
@@ -612,7 +599,7 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
 \end{Property}
 
 
-\begin{Definition}[Size of terms]
+\begin{Definition}[term size]
   We define size of a given term $t \in \mathbb{T}$ as follow.
   \begin{displaymath}
     \begin{array}{lll}
@@ -646,53 +633,76 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
 
 \begin{Property}
   \label{termsize_constraint_on_Gamma}
-  \[ \text{\it if}\ \Gamma \vdash t : \mathcal{R}, \text{\it then}\
-      \mathpzc{size}(t) \ge \mathpzc{size}(t')\ \text{\it s.t.}\
-       t' \in \mathpzc{Dom}(\Gamma)
+  \[ \mathpzc{size}(t) \ge \mathpzc{size}(t')\ \text{\it s.t.}\
+      t' \in \mathpzc{Dom}(\Gamma),\ \text{\it where}\
+       \Gamma \vdash t : \mathcal{R}.
   \]
   \begin{Proof}
-    Proof is directly from def. of size of terms, with property
+    Proof is directly from def. of size of terms, with Property
     \ref{dom_of_Gamma}.
     $\Box$
   \end{Proof}
 \end{Property}
 
 
-In above section, we develop
+\section{More flexible logic}
+We have developed the basic system in previous chapter,
+but as you see, it's hard to use. Rigid discipline forces us to behave
+strictly on describing expressions. However excessive strictness also
+decreases its usability. E.g. $1+(2+3)$ and $(1+2)+3$ aren't identical
+syntactically,
+but it's natural to regard them as identical, since associativity has little
+importance on same precedence operations. Similar to that, it's preferable
+to match both instances of
+$\text{\it TR}_1 \wedge (\text{\it TR}_2 \wedge \text{\it TR}_3)$ and
+$(\text{\it TR}_1 \wedge \text{\it TR}_2) \wedge \text{\it TR}_3$, but
+pattern of $\text{\it TR} \wedge (\text{\it TR} \wedge \text{\it TR})$
+matches only former one since their associativity corresponds to their
+own structures. Accordingly, we hope to match ones having intuitionistic
+equivalence. For example it's preferable that
+$\text{\it TR}_1 \wedge (\text{\it TR}_2 \wedge \text{\it TR}_3)$ matches
+with the pattern of $\text{\it TR}^*$ accounting on semantic meaming of
+it, but it's also impossible on current system.
 
+In this chapter, we bring our system more flexibility, and make it more
+usable based on a well known type theoretical technology as polymorphism.
 
-\pagebreak
-\begin{Definition}[Intuitionistic equivalence over canonical terms]
+As first step, we define relations of intuitionistic equivalence over
+terms, which allow us to regard distinct terms as equivalent, as follow.
+
+\begin{Definition}[intuitionistic equivalence over canonical terms]
   \label{equality_on_CANONICALS}
   We define the set of intuitionistic equivalence terms of $t$ as follow.
   We write $t \simeq t'$ if $t$ is intuitionistic equivalent to $t'$.
   
   \begin{displaymath}
     \begin{array}{c}
-      
-      \begin{array}{rll}
-        \begin{array}{rl}
-          \dfrac{
-            \dfrac{}{
-              t \equiv t'
-            }
-          }{
-            t \simeq t'
-          }  &  (\text{\it Identity})
-        \end{array}
-        & \begin{array}{rl}
-            \dfrac{
-              t \simeq t'\
-            }{
-              t' \simeq t
-            }  &  (\text{\it Symmetry})
-          \end{array}  \\
+
+      \begin{array}{rl}
+        \dfrac{
+          \dfrac{}{
+            \raisebox{0.5ex}[2.3ex][0ex]{$t \equiv t'$}
+          }
+        }{
+          t \simeq t'
+        }  &  (\text{\it Identity})
       \end{array}  \\
       \\
+        
       \begin{array}{rl}
-        \dfrac{t_1 \simeq t_2 \quad t_2 \simeq t_3}{
-          t_1 \simeq t_3
-        }  &  (\text{\it Transitivity})
+        \begin{array}{rl}
+          \dfrac{
+            t \simeq t'\
+          }{
+            t' \simeq t
+          }  &  (\text{\it Symmetry})
+        \end{array}
+        
+        & \begin{array}{rl}
+            \dfrac{t_1 \simeq t_2 \quad t_2 \simeq t_3}{
+              t_1 \simeq t_3
+            }  &  (\text{\it Transitivity})
+          \end{array}
       \end{array}  \\
       \\
       
@@ -812,13 +822,8 @@ In above section, we develop
               }  &  (\text{\it AssociativityT-Dup}_\infty)
             \end{array}
           \end{array}
-      \end{array}
-            
-    \end{array}
-  \end{displaymath}
-  
-  \begin{displaymath}
-    \begin{array}{c}
+      \end{array}  \\
+      \\
       
       \begin{array}{ll}
         \begin{array}{rl}
@@ -831,9 +836,14 @@ In above section, we develop
               t \simeq t'
             }  &  (\text{\it RevealT-Cas}_{\{\}})
           \end{array}
-      \end{array}  \\
-      \\
-
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+  
+  \begin{displaymath}
+    \begin{array}{c}
+      
       \begin{array}{ll}
         \begin{array}{rl}
           \dfrac{ t \simeq \circ \wedge t' }{
@@ -962,15 +972,14 @@ In above section, we develop
   \end{displaymath}
 \end{Definition}
 
-And we extend the definition of judgement to use equivalent set of each
-term.
 
+\vspace{\baselineskip}
+Then we extend the definition of judgement to use set of equivalent terms
+given from above definition of $t \simeq t_{\text{\it equ}}$.
 
-\pagebreak
-\begin{Definition}[Binding pentagram]
-  We extend the definition of bindings range over $\Gamma$ we have defined
-  above, and we call the extended ones range over $\Delta$  as binding
-  pentagram.
+\begin{Definition}[binding pentagram]
+  We extend the definition of bindings $\Gamma$ defined above,
+  and we call the extended ones range over $\Delta$  as binding pentagram.
   \begin{displaymath}
     \Delta \;\stackrel{\mathrm{def}}{:=}\;
      \bigl\{(t, t_{\text{\it equ}}, \mathcal{R},
@@ -985,30 +994,23 @@ term.
         \end{array}
       \end{array}
   \end{displaymath}
-\end{Definition}
-
-
-\begin{Definition}
-  We regard extended bindings $\Delta$ as the mapping of
-  $\mathbb{T} \mapsto \bigl\{(t, t_{\text{\it equ}}, \mathcal{R},
-  \mathcal{S}_{\mathpzc{fin}}, \Delta') \bigr\}$, as follow.
+  We even regard extended bindings $\Delta$ as the mapping of
+  $\mathbb{T} \mapsto \Delta$ as follow.
   \begin{displaymath}
-    \Delta(t') \;\stackrel{\mathrm{def}}{:=} \,\left\{\begin{array}{l}
-      \bigl\{(t, t_{\text{\it equ}}, \mathcal{R},
-       \mathcal{S}_{\mathpzc{fin}}, \Delta') \bigr\} \quad \text{\it if}\
-        t' = t  \\
-      \Delta'(t') \quad \text{\it if}\ t' \neq t,\ \Delta' \neq \phi  \\
-       \phi \quad \text{\it if}\ t' \neq t,\ \Delta' = \phi
+    \Delta(t) \;\stackrel{\mathrm{def}}{:=} \,\left\{\begin{array}{l}
+      \bigl\{(t', t'_{\text{\it equ}}, \mathcal{R},
+      \mathcal{S}_{\mathpzc{fin}}, \Delta') \bigr\}
+       \quad \text{\it if}\ t = t'  \\
+      \Delta'(t) \quad \text{\it if}\ t \neq t',\ \Delta' \neq \phi  \\
+       \phi \quad \text{\it if}\ t \neq t',\ \Delta' = \phi
     \end{array}\right.
-  \end{displaymath}
+  \end{displaymath}  
 \end{Definition}
 
 
-\begin{Definition}[Binding domain extended]
+\begin{Definition}[binding domain extended]
   We define a set of terms $t$ and $t_{\text{\it equ}}$ comming from
-  $\Delta$ s.t. $(t, t_{\text{\it equ}}, \mathcal{R},
-  \mathcal{S}_{\mathpzc{fin}}, \Delta') \in \Delta$ as
-  $\mathpzc{Dom}(\Delta)$, e.g.
+  $\Delta$ as $\mathpzc{Dom}(\Delta)$ s.t.
   \[ \mathpzc{Dom}(\Delta) \,\stackrel{\mathrm{def}}{:=}\,
   \bigl\{ t \ |\  (t, t_{\text{\it equ}}, \mathcal{R},
   \mathcal{S}_{\mathpzc{fin}}, \Delta') \in \Delta \bigr\}
@@ -1024,14 +1026,16 @@ term.
 \end{Definition}
 
 
-\pagebreak
-\begin{Definition}[Typing rules on polymorphic equivalent terms]
-  We extend the typing rules on pure canonical terms defined above, to
-  enlarge the domain of typematching, e.g. we use $t'$ s.t. $t \cong t'$ on
-  typematching, as follows.
+And we extend the inference rules to accept intuitionistic equivalence
+as follow.
+
+\begin{Definition}[matching rules on polymorphic equivalent terms]
+  We extend the matching rules on pure canonical terms defined above, to
+  enlarge the domain of patternmatching,
+  Here we use $t'$ s.t. $t \cong t'$ on matching, as follows.
   \begin{displaymath}
     \begin{array}{c}
-
+      
       \begin{array}{rl}
         \dfrac{
           t \simeq t_0
@@ -1042,7 +1046,7 @@ term.
         }  &  \!\!\text{\it (T-Atom0-xtend)}
       \end{array}  \\
       \\
-
+      
       \begin{array}{rl}
         \dfrac{
           t \simeq t_1
@@ -1058,19 +1062,19 @@ term.
         \dfrac{
           \begin{array}{c}
             \Delta_1 \vdash t_1 \triangleright \mathcal{R}_1
-             \quad \Delta_2 \vdash t_2 \triangleright \mathcal{R}_2
-              \quad \mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2)
-               = \phi  \\
+            \quad \Delta_2 \vdash t_2 \triangleright \mathcal{R}_2
+            \quad \mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2)
+            = \phi  \\
             t \simeq t_1 \wedge t_2\
-             \text{\it s.t.}\ t,\, t_1 \wedge t_2 \not\in \mathpzc{Dom}(
-              \Delta_1 \cup \Delta_2)
+            \text{\it s.t.}\ t,\, t_1 \wedge t_2 \not\in \mathpzc{Dom}(
+            \Delta_1 \cup \Delta_2)
           \end{array}
         }{
           \Bigl\{\bigl(t, t_1 \wedge t_2,
-           \mathcal{R}_1 \wedge \mathcal{R}_2, \wedge,
-            (\Delta_1 \cup \Delta_2) \bigr) \Bigr\}
-             \cup (\Delta_1 \cup \Delta_2) \vdash
-              t \triangleright \mathcal{R}_1 \wedge \mathcal{R}_2
+          \mathcal{R}_1 \wedge \mathcal{R}_2, \wedge,
+          (\Delta_1 \cup \Delta_2) \bigr) \Bigr\}
+          \cup (\Delta_1 \cup \Delta_2) \vdash
+          t \triangleright \mathcal{R}_1 \wedge \mathcal{R}_2
         }  &  \text{\it (T-Cas-xtend)}
       \end{array}  \\
       \\
@@ -1092,8 +1096,13 @@ term.
             (\Delta_1 \cup \Delta_2) \vdash
              t \triangleright \mathcal{R}_1 \vee \mathcal{R}_2
         }  &  \text{\it (T-Par-xtend)}
-      \end{array}  \\
-      \\
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+    
+  \begin{displaymath}
+    \begin{array}{c}
       
       \begin{array}{rl}
         \left. \begin{array}{rl}
@@ -1147,13 +1156,8 @@ term.
           }  &  (\infty)
         \end{array} \right\}  &  \text{\it (T-Cat0-xtend)}
       \end{array}  \\
+      \\
       
-    \end{array}
-  \end{displaymath}
-  
-  \begin{displaymath}
-    \begin{array}{c}
-
       \begin{array}{rl}
         \left. \begin{array}{rl}
           \dfrac{
@@ -1237,8 +1241,13 @@ term.
             \end{array}
           }  &  (\infty)
         \end{array} \right\}  &  \text{\it (T-Dup-xtend)}
-      \end{array}  \\
-      \\
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+  
+  \begin{displaymath}
+    \begin{array}{c}
       
       \begin{array}{rl}
         \left. \begin{array}{rl}
@@ -1298,10 +1307,10 @@ term.
 
 \begin{Lemma}{soundness on extended matching}
   \label{soundness_on_extended_matching}
-  \[ \text{\it if}\ \Gamma \vdash t : \mathcal{R},\
-      \text{\it then}\ \Delta \vdash t \triangleright \mathcal{R}\;\;
-       \text{\it for some}\ \Delta\
-        \text{\it s.t.}\ \mathpzc{Dom}(\Delta) = \mathpzc{Dom}(\Gamma).
+  \[ \Delta \vdash t \triangleright \mathcal{R}\;\; \text{\it for some}\
+      \Delta\ \text{\it s.t.}\
+       \mathpzc{Dom}(\Delta) = \mathpzc{Dom}(\Gamma),\
+        \text{\it where}\ \Gamma \vdash t : \mathcal{R}.
   \]
   \begin{Proof}
     Proof is induction on structure of term $t$ s.t.
@@ -1335,7 +1344,7 @@ term.
     Similarly we still find the fact that $t_1 \wedge t_2$ isn't belonging
     to $\bigl(\mathpzc{Dom}(\Delta_1) \cup \mathpzc{Dom}(\Delta_1) \bigr) =
     \bigl(\mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}(\Gamma_1) \bigr)$ from
-    property \ref{termsize_constraint_on_Gamma} accounting on that
+    Property \ref{termsize_constraint_on_Gamma} accounting on that
     $\mathpzc{size}(t_1 \wedge t_2)$ is greater than both
     $\mathpzc{size}(t_1)$ and $\mathpzc{size}(t_2)$. Therefore we obtain
     the deduction of $\Bigl\{\bigl(t_1 \wedge t_2, t_1 \wedge t_2,
@@ -1370,7 +1379,7 @@ term.
     $(\text{\it Associativity-Cat0}_1)$ and (Symmetry), where we mention that
     $\{t_1\} \not\in \mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$ for
     $\Gamma_1 \vdash t_1 : \mathcal{R}_1$ with
-    property \ref{termsize_constraint_on_Gamma}. Then we derive    
+    Property \ref{termsize_constraint_on_Gamma}. Then we derive    
     $\Bigl\{\bigl(\{t_1\}, t_1, {\mathcal{R}_1}^*, \text{\it sol}, \Delta_1
     \bigr) \Bigr\} \cup \Delta_1 \vdash \{t_1\}
     \triangleright {\mathcal{R}_1}^*$ from (T-Cat0-xtend-sol),
@@ -1398,7 +1407,7 @@ term.
     the condition of
     $\{t_2\} \not\in \mathpzc{Dom}(\Delta_2) = \mathpzc{Dom}(\Gamma_2)$
     for $\mathpzc{size}\bigl(\{t_2\} \bigr) > \mathpzc{size}(t_2)$ with
-    property \ref{termsize_constraint_on_Gamma}. Then we derive
+    Property \ref{termsize_constraint_on_Gamma}. Then we derive
     $\Delta_t \vdash \{t_2\} \triangleright {\mathcal{R}_1}^*$ from
     (T-Cat0-xtend-sol), where we let
     $\Delta_t = \Bigl\{\bigl(\{t_2\}, t_2, {\mathcal{R}_1}^*,
@@ -1414,7 +1423,7 @@ term.
     $t_2 \in \mathpzc{Dom}(\Gamma_1)$ for $t_2 \in
     \mathpzc{sub}\bigl(\{t_2\} \bigr) \subseteq \mathpzc{sub}(t_1) =
     \mathpzc{Dom}(\Gamma_1)$ from
-    corollary \ref{self_similarity_on_subterms}, which contradicts
+    Property \ref{self_similarity_on_subterms}, which contradicts
     $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2) = \phi$.
     Consequently, we can derive the equivalency
     $\{t_1, t_2\} \cong t_1 \wedge \{t_2\}$, which derivation's detail is
@@ -1475,7 +1484,7 @@ term.
     which also brings us $\Delta_1 \vdash t_1 : \mathcal{R}_1$ with
     the condition of
     $\mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$ by
-    induction hypothesis. Thus we can still find the property of
+    induction hypothesis. Thus we can still find the Property of
     $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_t) =
     \mathpzc{Dom}(\Gamma_1) \cap
     \bigl(\{t_2 \cdots t_n\} \cup \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)
@@ -1496,7 +1505,7 @@ term.
     $t_1 \in \mathpzc{Dom}(\Gamma_j) = \mathpzc{sub}(t_j)$ s.t.
     $\Gamma_j \vdash t_j : \mathcal{R}_1$ because of
     $t_1 \in \mathpzc{sub}(t_1 \wedge t_t')$ s.t.
-    $t_1 \wedge t_t' \in \mathpzc{Dom}(\Gamma_j)$ from corollary
+    $t_1 \wedge t_t' \in \mathpzc{Dom}(\Gamma_j)$ from Property
     \ref{self_similarity_on_subterms}, it contradicts the fact of
     $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_j) = \phi$.
     Accounting on the fact that the last applied rule on
@@ -1518,7 +1527,7 @@ term.
     $\Delta_t' = \Delta_t \setminus \Delta_t\bigl(\{t_2 \cdots t_n\} \bigr)$
     where $\Delta_t\bigl(\{t_2 \cdots t_n\} \bigr) =
     \bigl(\{t_2 \cdots t_n\}, t_t', {\mathcal{R}_1}^*, \infty, \Delta_t'
-    \bigr)$ from (T-Cat0-xtend-$\infty$), with the property of
+    \bigr)$ from (T-Cat0-xtend-$\infty$), with the Property of
     $\mathpzc{Dom}\biggl(\Bigl\{\bigl(\{t_1 \cdots t_n\}, t_1 \wedge t_t',
     {\mathcal{R}_1}^*, \infty, (\Delta_1 \cup \Delta_t') \bigr) \Bigr\} \cup
     (\Delta_1 \cup \Delta_t') \biggr) =
@@ -1554,7 +1563,7 @@ term.
     \mathcal{R}_1 | \mathcal{R}_1, \text{\it L}, \Delta_1) \bigr\} \cup
     \Delta_1 \vdash {t_1}^\leftarrow \triangleright
     \mathcal{R}_1 | \mathcal{R}_1$ from (T-Alt-xtend-L) with desired
-    property of
+    Property of
     $\mathpzc{Dom}\Bigl(\bigl\{({t_1}^\leftarrow, {t_1}^\leftarrow,
     \mathcal{R}_1 | \mathcal{R}_1, \text{\it L}, \Delta_1) \bigr\} \cup
     \Delta_1 \Bigr) =
@@ -1567,13 +1576,44 @@ term.
   \end{Proof}      
 \end{Lemma}
 
+\pagebreak
+\begin{Claim}
+  \label{claim_for_soundness_on_extended_matching}
+  \[ \{t_1, t_2\} \simeq t_1 \wedge \{t_2\}
+  \]
+  \begin{Proof}
+    See below derivation.\vspace{-7mm}
+    \def\proofSkipAmount{\vskip.8ex plus.8ex minus.4ex}
+    \begin{prooftree}
+      \AxiomC{}
+      \UnaryInfC{$t_1 \equiv t_1$}
+      \LeftLabel{$(\text{\it Identity})$}
+      \UnaryInfC{$t_1 \simeq t_1$}
+      
+      \AxiomC{}
+      \UnaryInfC{$\{t_2\} \equiv \{t_2\}$}
+      \LeftLabel{$(\text{\it Identity})$}
+      \UnaryInfC{$\{t_2\} \simeq \{t_2\}$}
+      
+      \RightLabel{$(\text{\it Transparency-Cas})$}
+      \BinaryInfC{$t_1 \wedge \{t_2\} \simeq t_1 \wedge \{t_2\}$}
+      
+      \RightLabel{$(\text{\it AssociativityH-Cat0}_\infty)$}
+      \UnaryInfC{$t_1 \wedge \{t_2\} \simeq \{t_1, t_2\}$}
+      
+      \LeftLabel{$(\text{\it Symmetry})$}
+      \UnaryInfC{$\{t_1, t_2\} \simeq t_1 \wedge \{t_2\}$}
+    \end{prooftree}
+    $\Box$
+  \end{Proof}
+\end{Claim}
 
 \pagebreak
-\begin{Definition}[Term canonicalizer]
+\begin{Definition}[term canonicalizer]
   We define the term canonicalizer $\mathcal{M}$, which transduces the term
-  matched on extended rules to corresponding canonical one, as follow. It
-  also sustains equality over canonicalizing,
-  see Property \ref{equality_over_transduction}.
+  matched on extended rules to corresponding canonical one, as follow.
+  It also sustains equality over canonicalizing, see Property
+  \ref{equality_over_transduction}.
   \begin{displaymath}
     \begin{array}{l}
     \mathcal{M}\bigl(t, t_{\text{\it equ}}, \mathcal{R},
@@ -1737,8 +1777,8 @@ term.
 
 \begin{Property}
   \label{equality_over_transduction}
-  \[ \text{\it if}\ \Delta \vdash t \triangleright \mathcal{R},\
-      \text{\it then}\ \mathcal{M}\bigl(\Delta(t) \bigr) \simeq t
+  \[ \mathcal{M}\bigl(\Delta(t) \bigr) \simeq t\ \text{\it s.t.}\
+      \Delta \vdash t \triangleright \mathcal{R}.
   \]
   \begin{Proof}
     Proof is induction on derivation of
@@ -1812,9 +1852,9 @@ term.
 
 \begin{Lemma}{completeness on extended matching.}
   \label{completeness_on_extended_matching}
-  \[ \text{\it if}\ \Delta \vdash t \triangleright \mathcal{R},\
-      \text{\it then}\ \Gamma \vdash \mathcal{M}\bigl( \Delta(t) \bigr):
-       \mathcal{R}\;\; \text{\it for some}\ \Gamma
+  \[ \Gamma \vdash \mathcal{M}\bigl( \Delta(t) \bigr) : \mathcal{R}\;\;
+      \text{\it for some}\ \Gamma,\ \text{\it where}\
+       \Delta \vdash t \triangleright \mathcal{R}.
   \]
   \begin{Proof}
     Proof is induction on structure of derivation of
@@ -2683,19 +2723,18 @@ term.
 
 
 \pagebreak
-\section*{Implementation}
+\section{Implementation}
 
-In this section, we try to implement our logic on microcomputer based
-machine. We define implementation oriented deduction rules, examine several
-properties i.e. termination property, and implement it using well known
-computer language.
-
+In this section, we refine our logic more suitably to implementation.
+Specifically, termination Property is necessary for machine computation.
+And based on the revised logic called as Algorithmic form, which has
+termination Property, we implement our logic on machine.
 
 \pagebreak
-\begin{Definition}[Intuitionistic equivalence for Implementation]
+\begin{Definition}[intuitionistic equivalence for implementation]
   \label{equality_for_implementation}
-  We define the set of $\mathpzc{Equ}(t)$, which consists of equivalent
-  terms of $t$, as follows,
+  We define the set of equivalent terms of $t$ as $\mathpzc{Equ}(t)$,
+  in following rules.
   \begin{displaymath}
     \begin{array}{c}
       
@@ -3015,7 +3054,7 @@ and related functions are as follows.
     \end{prooftree}
     
     For another case as $t_1 = t_{1l} \wedge (t_{{1r}_l} \wedge t_{{1r}_r})$.
-    By induction hypotheses we suppose
+    By induction hypothesis we suppose
     $t'_{{1r}_l} \wedge t'_{{1r}_r} \simeq (t_{{1r}_l} \wedge
     t_{{1r}_r}) \wedge t_2 = t_{1r} \wedge t_2$ where
     $t'_{{1r}_l} \wedge t'_{{1r}_r}
@@ -3121,7 +3160,7 @@ and related functions are as follows.
     (t_{1l} \wedge t_{1r}) \wedge t_2 = t_1 \wedge t_2$.
     Otherwise, i.e. $t'_{{1r}_l} \wedge t'_{{1r}_r} \neq t_{1r} \wedge t_2$,
     we know $\mathpzc{size}(t_{1r}) > \mathpzc{size}(t'_{{1r}_l})$ by
-    induction hypotheses, thus
+    induction hypothesis, thus
     $\mathpzc{size}(t_1) = \mathpzc{size}(t_{1l} \wedge t_{1r})
     = \mathpzc{size}(t_{1l}) \wedge \mathpzc{size}(t_{1r}) + 1
     > \mathpzc{size}(t_{1l}) \wedge \mathpzc{size}(t'_{{1r}_l}) + 1
@@ -3237,7 +3276,7 @@ and related functions are as follows.
 
 \begin{Property}
   \label{property5_for_semiequiv_impl}
-  \[ t' \simeq t_1 \wedge t_2\;\; \text{\it for any}\
+  \[ t' \simeq t_1 \wedge t_2\ \text{\it where}\
       t' \in \mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R})
   \]
   \begin{Proof}
@@ -3269,7 +3308,7 @@ and related functions are as follows.
     the fact of $\mathpzc{size}(t_1) > \mathpzc{size}(t'_1)$ from Property
     \ref{property2_for_semiequiv_impl}, thus for any
     $t'' \in \mathpzc{Assoc}_\wedge(t'_1, t'_2, \mathpzc{L_2R})$ satisfies
-    $t'' \simeq t'_1 \wedge t'_2$ by induction hypotheses according to
+    $t'' \simeq t'_1 \wedge t'_2$ by induction hypothesis according to
     above ordering scheme.
     Accounting on the fact of $t'_1 \wedge t'_2 \simeq t_1 \wedge t_2$ as
     above, we can say that $t' \simeq t_1 \wedge t_2$ for any
@@ -3283,7 +3322,7 @@ and related functions are as follows.
 
 \begin{Property}
   \label{property6_for_semiequiv_impl}
-  \[ t' \simeq t_1 \wedge t_2\;\; \text{\it for any}\
+  \[ t' \simeq t_1 \wedge t_2\ \text{\it where}\
       t' \in \mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{R_2L})
   \]
   \begin{Proof}
@@ -3621,7 +3660,7 @@ and related functions are as follows.
     \ref{property2_for_semiequiv_impl}. Therefore we conclude that
     $\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R})$ has
     termination, since $\mathpzc{Assoc}_\wedge(t'_1, t'_2, \mathpzc{L_2R})$
-    also has termination from induction hypotheses.
+    also has termination from induction hypothesis.
 
     We can find termination on
     $\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{R_2L})$ similarly, with
@@ -3668,7 +3707,7 @@ and related functions are as follows.
     $\mathpzc{size}(t'_1 \wedge t'_2) = \mathpzc{size}(t_1 \wedge t_2)$
     where $t'_1 \wedge t'_2 = \mathpzc{assoc_{cas}R}(t_1, t_2)$ and
     $t'_1 \wedge t'_2 = \mathpzc{assoc_{cas}L}(t_1, t_2)$ respectively,
-    from induction hypotheses according to the reasoning as below.
+    from induction hypothesis according to the reasoning as below.
     
     Def. of $\mathpzc{assoc_{cas}R}(t_1, t_2)$ has 2 cases to be
     considered. One is the case of
@@ -3693,7 +3732,7 @@ and related functions are as follows.
     $\mathpzc{size}(t'_{{1r}_l}) + \mathpzc{size}(t'_{{1r}_r}) =
     \mathpzc{size}(t_{1r}) + \mathpzc{size}(t_2)$ since
     $\mathpzc{size}(t'_{{1r}_l} \wedge t'_{{1r}_r}) =
-    \mathpzc{size}(t_{1r} \wedge t_2)$ by applying induction hypotheses on
+    \mathpzc{size}(t_{1r} \wedge t_2)$ by applying induction hypothesis on
     $\mathpzc{assoc_{cas}R}(t_{1r}, t_2)$ s.t.
     $t_1 = t_{1l} \wedge t_{1r}$. Therefore
     $\mathpzc{size}\bigl((t_{1l} \wedge t'_{{1r}_l}) \wedge t'_{{1r}_r}
@@ -3721,7 +3760,7 @@ and related functions are as follows.
     from Property \ref{property2_for_semiequiv_impl}, thus we can say that
     $\mathpzc{size}(t') = \mathpzc{size}(t'_1 \wedge t'_2)$ for any
     $t' \in \mathpzc{Assoc}_\wedge(t'_1, t'_2, \mathpzc{L_2R})$ from
-    induction hypotheses. And we still know that
+    induction hypothesis. And we still know that
     $\mathpzc{size}(t'_1 \wedge t'_2) = \mathpzc{size}(t_1 \wedge t_2)$
     where $t'_1 \wedge t'_2 = \mathpzc{assoc_{cas}R}(t_1, t_2)$ from
     the fact revealed above.Therefore
@@ -3752,10 +3791,10 @@ and related functions are as follows.
 
 
 \pagebreak
-\begin{Definition}[Implementation form of Typing rules on
+\begin{Definition}[implementation form of matching rules on
     polymorphic equivalent terms]
-  We modify the extended typing rules defined above, for implementation on
-  modern electronic computers or equivalent machines as follows.
+  We modify the extended matching rules for implementation, which
+  is also called as algorithmic form, as follows.
   \begin{displaymath}
     \begin{array}{c}
 
@@ -4045,9 +4084,9 @@ and related functions are as follows.
     From def. of (T-Cat0-impl-$\infty$),
     $\Lambda_h \vdash t_h \blacktriangleright \mathcal{R}_1$ which
     is one of its subderivations, has termination from induction
-    hypotheses. For the other one, i.e.
+    hypothesis. For the other one, i.e.
     $\Lambda_t \vdash t_t \blacktriangleright {\mathcal{R}_1}^*$, we can
-    say that it also has termination from induction hypotheses
+    say that it also has termination from induction hypothesis
     according to the reason as below.
     
     We suppose $t_t$ s.t.
@@ -4062,7 +4101,7 @@ and related functions are as follows.
     $({\mathcal{R}_1}^*, t_t) < ({\mathcal{R}_1}^*, t)$. Therefore
     we conclude that
     $\Lambda_t \vdash t_t \blacktriangleright {\mathcal{R}_1}^*$ has
-    termination from induction hypotheses.
+    termination from induction hypothesis.
     
     The other case, which is $t_h \wedge t_t\in \mathpzc{Equ}(t)$, is
     also from similar reasoning as above case.
@@ -4114,7 +4153,7 @@ and related functions are as follows.
     $\mathpzc{Dom}(\Delta_t) = \mathpzc{Dom}(\Lambda_t)$,
     $t'_{t_\Delta} = t'_{t_\Lambda}$,
     $\mathcal{S}_{t_\Delta} = \mathcal{S}_{t_\Lambda}$ respectively
-    from induction hypotheses. Consequently, we find
+    from induction hypothesis. Consequently, we find
     $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ from
     the above facts of $\mathpzc{Dom}(\Delta_h) = \mathpzc{Dom}(\Lambda_h)$
     and $\mathpzc{Dom}(\Delta_t) = \mathpzc{Dom}(\Lambda_t)$ accounting on
@@ -4169,11 +4208,11 @@ and related functions are as follows.
 
 
 \pagebreak
-\section*{LIezA, the Logic for Interlocking logics self recognizing
+\section{LIezA, the Logic for Interlocking logics self recognizing
   Architecture}
 We implemented our logic on machine using Caml, which is one of the most
 well-known implementation of ML developped in INRIA France. In this section
-we introduce the it with practical examples.
+we introduce it with practical examples.
 
 
 We can express the following interlocking logic as
@@ -4188,7 +4227,8 @@ $\bigl(\text{\it TR} \vee
 We can express above instance as \verb@TR_1&(TR_2|NKR_#3)&TLSR_TR4@,
 accroding to def. of term, and pattern is also expressed as
 \verb@(TR|(NKR%RKR)!?)+&(TLSR%TRSR)*@.
-Consequently, The result of pattern matching is shown as follows.
+Consequently, we are trying patternmatching, and the result of it is
+shown as follows.
 \begin{verbatim}
 # term (typematch (compile "TR_1 & (TR_2 | NKR_#3) & TLSR_TR4 :
 (TR | (NKR % RKR)!?)+ & (TRSR % TLSR)*"));;
@@ -4197,8 +4237,9 @@ Consequently, The result of pattern matching is shown as follows.
 
 Looking at the last line of above, it just been generated from her
 coginition, which shows that LIezA has successed to match given term with
-pattern, and recognize its structual meaning, which stored in the form of
-Binding internally. We can still access her cognition as follows.
+pattern, and recognized its structual meaning, which stored in the form of
+Binding internally. We can still access more specific ones on her
+cognition as follows.
 \begin{verbatim}
 # let sig_ctrl = cli_pat (compile "* : (TR | (NKR % RKR)!?)+");;
 val sig_ctrl : Lie_type.pattern = ...
@@ -4208,12 +4249,12 @@ NKR_#3) & TLSR_TR4 : (TR | (NKR % RKR)!?)+ & (TRSR % TLSR)*")));;
 \end{verbatim}
 
 The first command of above specifies the target pattern we refer.
-Then we try to refer the subterms bounded the target
+Then we try to refer the subterms bound to the target
 pattern, which is currently assigned to \verb|sig_ctrl|, on next command,
-And we can find that the last line depicts the subterm bounded to the target
+And we can find that the last line depicts the subterm bound to the target
 pattern we specified correctly.
 
-Similar to above, we can access more internal subterms, as follow.
+Similar to above, we can access other internal subterms again.
 \begin{verbatim}
 # let sig_ctrl = cli_pat (compile "* : (NKR % RKR)!");;
 val sig_ctrl : Lie_type.pattern = ...
@@ -4260,8 +4301,8 @@ Then we make confirm her cognition for specific conditions on this circuit.
 Our pattern for Signal Controlling Circuit has a $\text{\it ASR}$ as
 its subpattern, which corresponds to verification of Approaching Stick
 Locking a.k.a. ASR on related route's signal aspect controlling.
-And we can see the condition of ASR verification by finding the condition
-bonded to the subpattern of $\text{\it ASR}$, as follow.
+And we can see the condition of ASR verification by searching the one
+bound to the subpattern of $\text{\it ASR}$, as follow.
 \begin{verbatim}
 # let ver_ASR = cli_pat (compile "* : ASR");;
 val ver_ASR : Lie_type.pattern = ...
@@ -4271,12 +4312,12 @@ MSlR_11L) | ASR_11L) : HR & (LR | (NKR % RKR)!)* & (TR+ | (TENR &
 MSlR) | ASR)")));;
 - : string list = ["ASR_11L"]
 \end{verbatim}
-LIezA correctly recognize and reply the asked condition on the last line
-as desired.
+LIezA correctly recognized and replied the condition we queried on
+the last line, as desired.
 
 Similarly we try again to refer the condition of Approaching Track, which is
 another specific one occuring on Signal Controlling Circuit . And we also
-obtain correct result from LIeza, as follow.
+obtain correct result from LIezA, as follow.
 \begin{verbatim}
 # let ver_appTR = cli_pat (compile "* : TR+");;
 val ver_appTR : Lie_type.pattern = ...
@@ -4286,239 +4327,5 @@ MSlR_11L) | ASR_11L) : HR & (LR | (NKR % RKR)!)* & (TR+ | (TENR &
 MSlR) | ASR)")));;
 - : string list = ["TR_21i"]
 \end{verbatim}
-
-
-\pagebreak
-Citations can be handled in one of three ways.  The most
-straightforward (albeit labor-intensive) would be to hardwire your
-citations into your \LaTeX\ source, as you would if you were using an
-ordinary word processor.  Thus, your code might look something like
-this:
-
-
-\begin{quote}
-\begin{verbatim}
-However, this record of the solar nebula may have been
-partly erased by the complex history of the meteorite
-parent bodies, which includes collision-induced shock,
-thermal metamorphism, and aqueous alteration
-({\it 1, 2, 5--7\/}).
-\end{verbatim}
-\end{quote}
-
-
-\noindent Compiled, the last two lines of the code above, of course, would give notecalls in {\it Science\/} style:
-
-\begin{quote}
-\ldots thermal metamorphism, and aqueous alteration ({\it 1, 2, 5--7\/}).
-\end{quote}
-
-Under the same logic, the author could set up his or her reference list as a simple enumeration,
-
-\begin{quote}
-\begin{verbatim}
-{\bf References and Notes}
-
-\begin{enumerate}
-\item G. Gamow, {\it The Constitution of Atomic Nuclei
-and Radioactivity\/} (Oxford Univ. Press, New York, 1931).
-\item W. Heisenberg and W. Pauli, {\it Zeitschr.\ f.\ 
-Physik\/} {\bf 56}, 1 (1929).
-\end{enumerate}
-\end{verbatim}
-\end{quote}
-
-\noindent yielding
-
-\begin{quote}
-{\bf References and Notes}
-
-\begin{enumerate}
-\item G. Gamow, {\it The Constitution of Atomic Nuclei and
-Radioactivity\/} (Oxford Univ. Press, New York, 1931).
-\item W. Heisenberg and W. Pauli, {\it Zeitschr.\ f.\ Physik} {\bf 56},
-1 (1929).
-\end{enumerate}
-\end{quote}
-
-That's not a solution that's likely to appeal to everyone, however ---
-especially not to users of B{\small{IB}}\TeX\ \cite{inclme}.  If you
-are a B{\small{IB}}\TeX\ user, we suggest that you use the
-\texttt{Science.bst} bibliography style file and the
-\texttt{scicite.sty} package, both of which we are downloadable from our author help site
-(http://www.sciencemag.org/about/authors/prep/TeX\_help/).  You can also
-generate your reference lists by using the list environment
-\texttt{\{thebibliography\}} at the end of your source document; here
-again, you may find the \texttt{scicite.sty} file useful.
-
-Whether you use B{\small{IB}}\TeX\ or \texttt{\{thebibliography\}}, be
-very careful about how you set up your in-text reference calls and
-notecalls.  In particular, observe the following requirements:
-
-\begin{enumerate}
-\item Please follow the style for references outlined at our author
-  help site and embodied in recent issues of {\it Science}.  Each
-  citation number should refer to a single reference; please do not
-  concatenate several references under a single number.
-\item Please cite your references and notes in text {\it only\/} using
-  the standard \LaTeX\ \verb+\cite+ command, not another command
-  driven by outside macros.
-\item Please separate multiple citations within a single \verb+\cite+
-  command using commas only; there should be {\it no space\/}
-  between reference keynames.  That is, if you are citing two
-  papers whose bibliography keys are \texttt{keyname1} and
-  \texttt{keyname2}, the in-text cite should read
-  \verb+\cite{keyname1,keyname2}+, {\it not\/}
-  \verb+\cite{keyname1, keyname2}+.
-\end{enumerate}
-
-\noindent Failure to follow these guidelines could lead
-to the omission of the references in an accepted paper when the source
-file is translated to Word via HTML.
-
-\section*{Handling Math, Tables, and Figures}
-
-Following are a few things to keep in mind in coding equations,
-tables, and figures for submission to {\it Science}.
-
-\paragraph*{In-line math.}  The utility that we use for converting
-from \LaTeX\ to HTML handles in-line math relatively well.  It is best
-to avoid using built-up fractions in in-line equations, and going for
-the more boring ``slash'' presentation whenever possible --- that is,
-for \verb+$a/b$+ (which comes out as $a/b$) rather than
-\verb+$\frac{a}{b}$+ (which compiles as $\frac{a}{b}$).  Likewise,
-HTML isn't tooled to handle certain overaccented special characters
-in-line; for $\hat{\alpha}$ (coded \verb+$\hat{\alpha}$+), for
-example, the HTML translation code will return [\^{}$(\alpha)$].
-Don't drive yourself crazy --- but if it's possible to avoid such
-constructs, please do so.  Please do not code arrays or matrices as
-in-line math; display them instead.  And please keep your coding as
-\TeX-y as possible --- avoid using specialized math macro packages
-like \texttt{amstex.sty}.
-
-\paragraph*{Displayed math.} Our HTML converter sets up \TeX\
-displayed equations using nested HTML tables.  That works well for an
-HTML presentation, but Word chokes when it comes across a nested
-table in an HTML file.  We surmount that problem by simply cutting the
-displayed equations out of the HTML before it's imported into Word,
-and then replacing them in the Word document using either images or
-equations generated by a Word equation editor.  Strictly speaking,
-this procedure doesn't bear on how you should prepare your manuscript
---- although, for reasons best consigned to a note \cite{nattex}, we'd
-prefer that you use native \TeX\ commands within displayed-math
-environments, rather than \LaTeX\ sub-environments.
-
-\paragraph*{Tables.}  The HTML converter that we use seems to handle
-reasonably well simple tables generated using the \LaTeX\
-\texttt{\{tabular\}} environment.  For very complicated tables, you
-may want to consider generating them in a word processing program and
-including them as a separate file.
-
-\paragraph*{Figures.}  Figure callouts within the text should not be
-in the form of \LaTeX\ references, but should simply be typed in ---
-that is, \verb+(Fig. 1)+ rather than \verb+\ref{fig1}+.  For the
-figures themselves, treatment can differ depending on whether the
-manuscript is an initial submission or a final revision for acceptance
-and publication.  For an initial submission and review copy, you can
-use the \LaTeX\ \verb+{figure}+ environment and the
-\verb+\includegraphics+ command to include your PostScript figures at
-the end of the compiled PostScript file.  For the final revision,
-however, the \verb+{figure}+ environment should {\it not\/} be used;
-instead, the figure captions themselves should be typed in as regular
-text at the end of the source file (an example is included here), and
-the figures should be uploaded separately according to the Art
-Department's instructions.
-
-
-\section*{What to Send In}
-
-What you should send to {\it Science\/} will depend on the stage your manuscript is in:
-
-\begin{itemize}
-\item {\bf Important:} If you're sending in the initial submission of
-  your manuscript (that is, the copy for evaluation and peer review),
-  please send in {\it only\/} a PostScript or PDF version of the
-  compiled file (including figures).  Please do not send in the \TeX\ 
-  source, \texttt{.sty}, \texttt{.bbl}, or other associated files with
-  your initial submission.  (For more information, please see the
-  instructions at our Web submission site,
-  http://www.submit2science.org/ .)
-\item When the time comes for you to send in your revised final
-  manuscript (i.e., after peer review), we require that you include
-  all source files and generated files in your upload.  Thus, if the
-  name of your main source document is \texttt{ltxfile.tex}, you
-  need to include:
-\begin{itemize}
-\item \texttt{ltxfile.tex}.
-\item \texttt{ltxfile.aux}, the auxilliary file generated by the
-  compilation.
-\item A PostScript file (compiled using \texttt{dvips} or some other
-  driver) of the \texttt{.dvi} file generated from
-  \texttt{ltxfile.tex}, or a PDF file distilled from that
-  PostScript.  You do not need to include the actual \texttt{.dvi}
-  file in your upload.
-\item From B{\small{IB}}\TeX\ users, your bibliography (\texttt{.bib})
-  file, {\it and\/} the generated file \texttt{ltxfile.bbl} created
-  when you run B{\small{IB}}\TeX.
-\item Any additional \texttt{.sty} and \texttt{.bst} files called by
-  the source code (though, for reasons noted earlier, we {\it
-    strongly\/} discourage the use of such files beyond those
-  mentioned in this document).
-\end{itemize}
-\end{itemize}
-
-% Your references go at the end of the main text, and before the
-% figures.  For this document we've used BibTeX, the .bib file
-% scibib.bib, and the .bst file Science.bst.  The package scicite.sty
-% was included to format the reference numbers according to *Science*
-% style.
-
-
-\bibliography{scibib}
-
-\bibliographystyle{Science}
-
-
-
-% Following is a new environment, {scilastnote}, that's defined in the
-% preamble and that allows authors to add a reference at the end of the
-% list that's not signaled in the text; such references are used in
-% *Science* for acknowledgments of funding, help, etc.
-
-\begin{scilastnote}
-\item We've included in the template file \texttt{scifile.tex} a new
-environment, \texttt{\{scilastnote\}}, that generates a numbered final
-citation without a corresponding signal in the text.  This environment
-can be used to generate a final numbered reference containing
-acknowledgments, sources of funding, and the like, per {\it Science\/}
-style.
-\end{scilastnote}
-
-
-
-
-% For your review copy (i.e., the file you initially send in for
-% evaluation), you can use the {figure} environment and the
-% \includegraphics command to stream your figures into the text, placing
-% all figures at the end.  For the final, revised manuscript for
-% acceptance and production, however, PostScript or other graphics
-% should not be streamed into your compliled file.  Instead, set
-% captions as simple paragraphs (with a \noindent tag), setting them
-% off from the rest of the text with a \clearpage as shown  below, and
-% submit figures as separate files according to the Art Department's
-% instructions.
-
-
-\clearpage
-
-\noindent {\bf Fig. 1.} Please do not use figure environments to set
-up your figures in the final (post-peer-review) draft, do not include graphics in your
-source code, and do not cite figures in the text using \LaTeX\
-\verb+\ref+ commands.  Instead, simply refer to the figure numbers in
-the text per {\it Science\/} style, and include the list of captions at
-the end of the document, coded as ordinary paragraphs as shown in the
-\texttt{scifile.tex} template file.  Your actual figure files should
-be submitted separately.
-
 
 \end{document}

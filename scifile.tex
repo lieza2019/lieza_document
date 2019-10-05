@@ -22,7 +22,8 @@
 % them in the preamble of your main LaTeX source file.
 
 \usepackage{amsmath, amssymb}
-\usepackage{graphicx, tabularx, graphicx, moreverb}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{tabularx, moreverb}
 \usepackage{mathrsfs}
 \usepackage{theorem}
 \usepackage{comment}
@@ -34,6 +35,7 @@
 \newtheorem{Proof}{Proof.}
 \renewcommand{\theProof}{}
 
+\usepackage{lscape}
 \usepackage{bussproofs}
 
 \DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
@@ -161,7 +163,8 @@ to realize automated verification its logical consistency and correctness.
 
 \section{Basic Logic}
 In this section, we present our basic logic. As the first step, we define
-the terms and matching rules on our matching system.
+the terms, patterns and matching rules to combine them, on our matching
+system.
 
 \begin{Definition}[terms]
   We define the terms $t$ range over $\mathbb{T}$ as follow.
@@ -185,6 +188,27 @@ the terms and matching rules on our matching system.
 We sometime call the terms $t \in \mathbb{T}$ defined above as canonical
 terms in certain situation.
 
+We can express arbitrary logics based on the above definition of terms,
+illustrated in Figure \ref{fig_of_instance_ex1} as one of examples of
+terms.
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[keepaspectratio, width=100mm]{fig1.eps}
+    \begin{displaymath}
+      t_{\text{\it TLSR}_{4T}} =
+      (\text{\it TLSR}_{1T} \vee \circ) \wedge
+      \Bigl(\bigl\{(\text{\it TLSR}_{2T} \vee
+      {\text{\it NKR}_{\#2}}^?), (\text{\it TLSR}_{3T} \vee
+      {\text{\it RKR}_{\#3}}^?)\bigr\} \wedge (\text{\it TLSR}_{4T} \vee
+      \text{\it TR}_{4}) \Bigr)
+    \end{displaymath}
+    \caption{interlocking logic example 1}
+    \label{fig_of_instance_ex1}
+  \end{center}
+\end{figure}
+
+Then we define some predicators and metrics on $\mathbb{T}$ as follows.
 
 \begin{Definition}[grand terms]
   We define the set of grand terms of a given term $t \in \mathbb{T}$ as
@@ -244,6 +268,38 @@ terms in certain situation.
 \end{Definition}
 
 
+\begin{Definition}[term size]
+  We define size of a given term $t \in \mathbb{T}$ as follow.
+  \begin{displaymath}
+    \begin{array}{lll}
+      \mathpzc{size}(t) &:=
+      & \left\{ \begin{array}{ll}
+          1  & \text{\it if}\;
+                \left\{ \! \begin{array}{l}
+                  t = t_0\ \text{\it s,t.}\
+                   (t_0, \mathcal{R}_0) \in \Gamma_{gnd}  \\
+                  t = t_1\ \text{\it s.t.}\
+                   (t_1, \mathcal{R}_1) \in \Gamma_{def}  \\
+                  t = \{\}  \\
+                  t = \circ
+                \end{array} \right.  \\
+          \bigl(\mathpzc{size}(t_1) + \mathpzc{size}(t_2) \bigr) + 1  &
+           \text{\it if}\;\; t = t_1 \wedge t_2,\ t_1 \vee t_2  \\
+          \bigl(\sum_{j=1}^{n} \mathpzc{size}(t_j) \bigr) + 1  &
+           \text{\it if}\;\; t = \{t_1 \cdots t_n \},
+            \ [t_1 \cdots t_n ], \ \langle t_1 \cdots t_n \rangle  \\
+          \mathpzc{size}(t_1) + 1  &
+           \text{\it if}\; \left\{ \! \begin{array}{l}
+             t = {t_1}^?  \\
+             t = {t_1}^\leftarrow \\
+             t = {t_1}^\rightarrow
+           \end{array} \right.
+        \end{array} \right.
+    \end{array}
+  \end{displaymath}
+\end{Definition}
+
+
 \begin{Property}
   \label{self_similarity_on_subterms}
   \[ \mathpzc{sub}(t') \subseteq \mathpzc{sub}(t)\ \text{\it where}\
@@ -284,6 +340,57 @@ terms in certain situation.
   \]
 \end{Definition}
 
+Intuitively we regard patterns as descripter of the set of specific terms,
+i.e. $\mathcal{R}_{\text{\it TLSR}}$ has
+$\text{\it TLSR}_{2T}, \text{\it TLSR}_{3T}, \text{\it TLSR}_{4T}, \cdots$
+and $(\mathcal{R}_{\text{\it NKR}} | \mathcal{R}_{\text{\it RKR}})$ does
+$\text{\it NKR}_{\#2}, \text{\it NKR}_{\#3}, \cdots$ , and
+$\mathcal{R}_{\text{\it TLSR}} \vee (\mathcal{R}_{\text{\it NKR}} |
+\mathcal{R}_{\text{\it RKR}})$ is 
+$\text{\it TLSR}_{2T} \vee \text{\it NKR}_{\#2}$ so forth.
+
+We also can describe arbitrary patterns to express any of terms belonging
+to them. Follwing is one of example of pattern matching comming from
+Figure \ref{fig_of_instance_ex1}.
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[keepaspectratio, width=100mm]{fig1.eps}
+    \begin{displaymath}
+      (\text{\it TLSR}_{1T} \vee \circ) \wedge \Bigl(\bigl\{(
+      \text{\it TLSR}_{2T} \vee {\text{\it NKR}_{\#2}}^?),
+      (\text{\it TLSR}_{3T} \vee {\text{\it RKR}_{\#3}}^?)\bigr\} \wedge
+      (\text{\it TLSR}_{4T} \vee \text{\it TR}_{4}) \Bigr) :
+      \mathcal{R}_{\text{\it TLSR}_{4T}}
+    \end{displaymath}
+    \begin{displaymath}
+      \text{\it where}\;\; \mathcal{R}_{\text{\it TLSR}_{4T}} =
+      \bigl(\text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^?
+      \bigr) \wedge \Bigl(\bigl(\text{\it TLSR} \vee
+      {(\text{\it NKR} | \text{\it RKR})}^? \bigr)^* \wedge
+      (\text{\it TLSR} \vee \text{\it TR}) \Bigr)
+    \end{displaymath}
+    \caption{pattern of interlocking logic example 1}
+    \label{fig_of_pattern_ex1}
+  \end{center}
+\end{figure}
+
+Here we wrote $\mathcal{R}_{\text{\it XXX}}$ as $\text{\it XXX}$ in
+shorthand, e.g. $\text{\it TLSR}$ as $\mathcal{R}_{\text{\it TLSR}}$. And
+we write $t : \mathcal{R}$ with the intention of that $t$ matches
+the pattern of $\mathcal{R}$, therefore
+$t_{\text{\it TLSR}_{4T}} : \mathcal{R}_{\text{\it TLSR}_{4T}}$ means that
+$t_{\text{\it TLSR}_{4T}}$ matches the pattern of
+$\mathcal{R}_{\text{\it TLSR}_{4T}}$ where
+$t_{\text{\it TLSR}_{4T}} =
+(\text{\it TLSR}_{1T} \vee \circ) \wedge \Bigl(\bigl\{(\text{\it TLSR}_{2T}
+\vee {\text{\it NKR}_{\#2}}^?), (\text{\it TLSR}_{3T} \vee {
+\text{\it RKR}_{\#3}}^?)\bigr\} \wedge (\text{\it TLSR}_{4T} \vee
+\text{\it TR}_{4}) \Bigr)$ as Figure \ref{fig_of_pattern_ex1}.
+
+Consequently, we define the entity holding the correspondence between
+term $t \in \mathbb{T}$ and patterns $\mathcal{R} \in \mathbb{R}$, as
+binding and some related properties.
 
 \begin{Definition}[binding]
   We define a set of pairs of $(t, \mathcal{R})$ where
@@ -388,18 +495,26 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
       \begin{array}{rl}
         \begin{array}{rl}
           \dfrac{
-            (t_0, \mathcal{R}_0) \!\in\! \Gamma_{gnd}
+            \dfrac{}{
+              \raisebox{0.6ex}[2.3ex][0ex]{
+                $(t_0, \mathcal{R}_0) \!\in\! \Gamma_{gnd}$
+              }
+            }
           }{
             \bigl\{(t_0, \mathcal{R}_0) \bigr\} \vdash t_0 : \mathcal{R}_0
           }  &  \!\! \text{\it (T-Atom0-canon)}
         \end{array}
-        
+
         & \begin{array}{rl}
-            \dfrac{
-              (t_1, \mathcal{R}_1) \!\in\! \Gamma_{def}
-            }{
-              \bigl\{(t_1, \mathcal{R}_1) \bigr\} \vdash t_1 : \mathcal{R}_1
-            }  &  \!\! \text{\it (T-Atom1-canon)}
+          \dfrac{
+            \dfrac{}{
+              \raisebox{0.6ex}[2.3ex][0ex]{
+                $(t_1, \mathcal{R}_1) \!\in\! \Gamma_{def}$
+              }
+            }
+          }{
+            \bigl\{(t_1, \mathcal{R}_1) \bigr\} \vdash t_1 : \mathcal{R}_1
+          }  &  \!\! \text{\it (T-Atom1-canon)}
           \end{array}
       \end{array}  \\
       \\
@@ -441,10 +556,10 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
       \begin{array}{rl}
         \left. \begin{array}{rl}
           \dfrac{
-            \mathcal{R}_1\,\text{\it is}\, \text{\it Any}
           }{
             \Bigl\{\bigl(\{\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \vdash
              \{\}: {\mathcal{R}_1}^*
+              \quad \mathcal{R}_1\,\text{\it is}\, \text{\it Any}
           }  &  (\text{\it nil}\,)  \\
           \\
           \dfrac{
@@ -513,10 +628,10 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
       \begin{array}{rl}
         \left. \begin{array}{rl}
           \dfrac{
-            \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
           }{
             \bigl\{(\circ, {\mathcal{R}_1}^? ) \bigr\} \vdash
-            \circ : {\mathcal{R}_1}^?
+             \circ : {\mathcal{R}_1}^?
+              \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
           }  &  (\text{\it nil}\,)  \\
           \\
           \dfrac{
@@ -556,6 +671,20 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
     \end{array}
   \end{displaymath}  
 \end{Definition}
+
+
+From def of pattern matching rules, next 2 lemmas are straitforward.
+
+\begin{Lemma}{termination on canonical pattern matching.}
+  \label{termination_on_canonical_matching}
+  \[ \Gamma \vdash t : \mathcal{R}\ \text{\it has termination.}
+  \]
+  \begin{Proof}
+    Proof is directly structual induction on $\mathcal{R}$ of
+    $\Gamma \vdash t : \mathcal{R}$.
+    $\Box$
+  \end{Proof}
+\end{Lemma}
 
 
 \begin{Property}
@@ -599,38 +728,6 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
 \end{Property}
 
 
-\begin{Definition}[term size]
-  We define size of a given term $t \in \mathbb{T}$ as follow.
-  \begin{displaymath}
-    \begin{array}{lll}
-      \mathpzc{size}(t) &:=
-      & \left\{ \begin{array}{ll}
-          1  & \text{\it if}\;
-                \left\{ \! \begin{array}{l}
-                  t = t_0\ \text{\it s,t.}\
-                   (t_0, \mathcal{R}_0) \in \Gamma_{gnd}  \\
-                  t = t_1\ \text{\it s.t.}\
-                   (t_1, \mathcal{R}_1) \in \Gamma_{def}  \\
-                  t = \{\}  \\
-                  t = \circ
-                \end{array} \right.  \\
-          \bigl(\mathpzc{size}(t_1) + \mathpzc{size}(t_2) \bigr) + 1  &
-           \text{\it if}\;\; t = t_1 \wedge t_2,\ t_1 \vee t_2  \\
-          \bigl(\sum_{j=1}^{n} \mathpzc{size}(t_j) \bigr) + 1  &
-           \text{\it if}\;\; t = \{t_1 \cdots t_n \},
-            \ [t_1 \cdots t_n ], \ \langle t_1 \cdots t_n \rangle  \\
-          \mathpzc{size}(t_1) + 1  &
-           \text{\it if}\; \left\{ \! \begin{array}{l}
-             t = {t_1}^?  \\
-             t = {t_1}^\leftarrow \\
-             t = {t_1}^\rightarrow
-           \end{array} \right.
-        \end{array} \right.
-    \end{array}
-  \end{displaymath}
-\end{Definition}
-
-
 \begin{Property}
   \label{termsize_constraint_on_Gamma}
   \[ \mathpzc{size}(t) \ge \mathpzc{size}(t')\ \text{\it s.t.}\
@@ -645,24 +742,331 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
 \end{Property}
 
 
-\section{More flexible logic}
+Based on the matching rules above, we show the matching of
+$t_{\text{\it TLSR}_{4T}} : \mathcal{R}_{\text{\it TLSR}}$ introduced
+by Figure \ref{fig_of_pattern_ex1} as
+Figure \ref{fig_of_patternmatching_ex1}.
+
+
+\begin{landscape}
+  \begin{figure}
+  \begin{tiny}
+  \begin{prooftree}
+    \AxiomC{}
+    \UnaryInfC{$(\text{\it TLSR}_{2T}, \text{\it TLSR})
+      \in \Gamma_{\text{\it gnd}}$}
+    \LeftLabel{$(0)$}
+    \UnaryInf$\Gamma_{10} \vdash \fCenter\
+      \text{\it TLSR}_{2T} : \text{\it TLSR}$
+    \noLine
+    \def\extraVskip{0.3pt}  
+    \UnaryInf$\Gamma_{10} = \fCenter\
+      \{\text{\it TLSR}_{2T}, \text{\it TLSR}\}$
+    \def\extraVskip{2pt}
+    
+    \AxiomC{}
+    \UnaryInfC{$(\text{\it NKR}_{\#2}, \text{\it NKR})
+      \in \Gamma_{\text{\it gnd}}$}
+    \LeftLabel{$(0)$}
+    \UnaryInf$\Gamma_{13} \vdash \fCenter\
+      \text{\it NKR}_{\#2} : \text{\it NKR}$
+    \noLine
+    \def\extraVskip{0.3pt}  
+    \UnaryInf$\Gamma_{13} = \fCenter\
+      \{\text{\it NKR}_{\#2}, \text{\it NKR}\}$
+    \def\extraVskip{2pt}
+
+    \LeftLabel{$(L)$}
+    \UnaryInf$\Gamma_{12} \vdash \fCenter\
+    \text{\it NKR}_{\#2} : \text{\it NKR} | \text{\it RKR}$
+    \noLine
+    \def\extraVskip{0.3pt}  
+    \UnaryInf$\Gamma_{12} = \fCenter\ 
+    \{\text{\it NKR}_{\#2}, \text{\it NKR} | \text{\it RKR}\}
+    \cup \Gamma_{13}$
+    \def\extraVskip{2pt}
+    
+    \LeftLabel{$(?)$}
+    \UnaryInf$\Gamma_{11} \vdash \fCenter\
+      {\text{\it NKR}_{\#2}}^? : {(\text{\it NKR} | \text{\it RKR})}^?$
+    \noLine
+    \def\extraVskip{0.3pt}  
+    \UnaryInf$\Gamma_{11} = \fCenter\ \bigl\{
+    {\text{\it NKR}_{\#2}}^?, {(\text{\it NKR} | \text{\it RKR})}^?\bigr\}
+    \cup \Gamma_{12}$
+    \def\extraVskip{2pt}
+    
+    \LeftLabel{$(\text{\it Par})$}
+    \BinaryInf$\Gamma_8 \vdash \fCenter\
+      \text{\it TLSR}_{2T} \vee {\text{\it NKR}_{\#2}}^? :
+      \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^?$
+    \noLine
+    \def\extraVskip{0.3pt}  
+    \UnaryInf$\Gamma_8 = \fCenter\
+      \bigl\{\text{\it TLSR}_{2T} \vee {\text{\it NKR}_{\#2}}^?,
+      \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^?\bigr\} \cup
+      (\Gamma_{10} \cup \Gamma_{11})$
+    \def\extraVskip{2pt}
+      
+    \AxiomC{}
+    \UnaryInfC{$(\text{\it TLSR}_{3T}, \text{\it TLSR})
+      \in \Gamma_{\text{\it gnd}}$}
+    \RightLabel{$(0)$}
+    \UnaryInf$\Gamma_{14} \vdash \fCenter\
+      \text{\it TLSR}_{3T} : \text{\it TLSR}$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_{14} = \fCenter\
+      \{\text{\it TLSR}_{3T}, \text{\it TLSR}\}$
+    \def\extraVskip{2pt}
+    
+    \AxiomC{}
+    \UnaryInfC{$(\text{\it RKR}_{\#3}, \text{\it RKR})
+      \in \Gamma_{\text{\it gnd}}$}
+    \RightLabel{$(0)$}
+    \UnaryInf$\Gamma_{17} \vdash \fCenter\
+      \text{\it RKR}_{\#3}, \text{\it RKR}$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_{17} = \fCenter\
+      \{\text{\it RKR}_{\#3}, \text{\it RKR}\}$
+    \def\extraVskip{2pt}
+    
+    \RightLabel{$(R)$}
+    \UnaryInf$\Gamma_{16} \vdash \fCenter\
+    \text{\it RKR}_{\#3} : \text{\it NKR} | \text{\it RKR}$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_{16} = \fCenter\
+    \{\text{\it RKR}_{\#3}, \text{\it NKR} | \text{\it RKR}\} \cup
+    \Gamma_{17}$
+    \def\extraVskip{2pt}
+    
+    \RightLabel{$(?)$}
+    \UnaryInf$\Gamma_{15} \vdash \fCenter\
+    {\text{\it RKR}_{\#3}}^? : {(\text{\it NKR} | \text{\it RKR})}^?$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_{15} = \fCenter\
+    \bigl\{{\text{\it RKR}_{\#3}}^?,
+    {(\text{\it NKR} | \text{\it RKR})}^?\bigr\} \cup \Gamma_{16}$
+    \def\extraVskip{2pt}
+    
+    \RightLabel{$(\text{\it Par})$}
+    \BinaryInf$\Gamma_9 \vdash \fCenter\
+      \text{\it TLSR}_{3T} \vee {\text{\it RKR}_{\#3}}^? :
+      \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^?$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_9 = \fCenter\
+      \bigl\{\text{\it TLSR}_{3T} \vee {\text{\it RKR}_{\#3}}^?,
+      \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^?\bigr\}
+      \cup (\Gamma_{14} \cup \Gamma_{15})$
+    \def\extraVskip{2pt}
+    
+    \RightLabel{$(\infty)$}
+    \BinaryInf$\Gamma_6 \vdash \fCenter\
+      \bigl\{(\text{\it TLSR}_{2T} \vee
+      {\text{\it NKR}_{\#2}}^?), (\text{\it TLSR}_{3T} \vee
+      {\text{\it RKR}_{\#3}}^?)\bigr\} :{\bigl(\text{\it TLSR} \vee
+        {(\text{\it NKR} | \text{\it RKR})}^?\bigr)}^*$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_6 = \fCenter\
+      \Bigl\{\bigl\{(\text{\it TLSR}_{2T} \vee
+      {\text{\it NKR}_{\#2}}^?), (\text{\it TLSR}_{3T} \vee
+      {\text{\it RKR}_{\#3}}^?)\bigr\}, {\bigl(\text{\it TLSR} \vee
+      {(\text{\it NKR} | \text{\it RKR})}^?\bigr)}^*\Bigr\} \cup
+      (\Gamma_8 \cup \Gamma_9)$
+    \def\extraVskip{2pt}
+  \end{prooftree}
+  
+  \begin{prooftree}
+    \noLine
+    \AxiomC{}
+    \UnaryInfC{$\Gamma_6 \vdash
+      \bigl\{(\text{\it TLSR}_{2T} \vee
+      {\text{\it NKR}_{\#2}}^?), (\text{\it TLSR}_{3T} \vee
+      {\text{\it RKR}_{\#3}}^?)\bigr\} :{\bigl(\text{\it TLSR} \vee
+      {(\text{\it NKR} | \text{\it RKR})}^?\bigr)}^*$}
+    
+    \AxiomC{}
+    \UnaryInfC{$(\text{\it TLSR}_{4T}, \text{\it TLSR})
+      \in \Gamma_{\text{\it gnd}}$}
+    \LeftLabel{$(0)$}
+    \UnaryInf$\Gamma_{18} \vdash \fCenter\
+      \text{\it TLSR}_{4T} : \text{\it TLSR}$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_{18} = \fCenter\
+      \{\text{\it TLSR}_{4T}, \text{\it TLSR}\}$
+    \def\extraVskip{2pt}
+    
+    \AxiomC{}
+    \UnaryInfC{$(\text{\it TR}_{4}, \text{\it TR})
+      \in \Gamma_{\text{\it gnd}}$}
+    
+    \LeftLabel{$(0)$}
+    \UnaryInf$\Gamma_{19} \vdash \fCenter\
+    \text{\it TR}_{4} : \text{\it TR}$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_{19} = \fCenter\
+    \{\text{\it TR}_{4}, \text{\it TR}\}$
+    \def\extraVskip{2pt}
+    
+    \RightLabel{$(\text{\it Par})$}
+    \BinaryInf$\Gamma_7 \vdash \fCenter\
+      \text{\it TLSR}_{4T} \vee \text{\it TR}_{4} :
+      \text{\it TLSR} \vee \text{\it TR}$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_7 = \fCenter\
+      \{\text{\it TLSR}_{4T} \vee \text{\it TR}_{4},
+      \text{\it TLSR} \vee \text{\it TR}\} \cup
+      (\Gamma_{18} \cup \Gamma_{19})$
+    \def\extraVskip{2pt}
+    
+    \RightLabel{$(\text{\it Cas})$}
+    \BinaryInf$\Gamma_3 \vdash \fCenter\
+    \bigl\{(\text{\it TLSR}_{2T} \vee {\text{\it NKR}_{\#2}}^?),
+    (\text{\it TLSR}_{3T} \vee {\text{\it RKR}_{\#3}}^?)\bigr\} \wedge
+    (\text{\it TLSR}_{4T} \vee \text{\it TR}_{4}) : \bigl(
+    \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^? \bigr)^*
+    \wedge (\text{\it TLSR} \vee \text{\it TR})$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_3 = \fCenter\
+    \Bigl\{\bigl\{(\text{\it TLSR}_{2T} \vee {\text{\it NKR}_{\#2}}^?),
+    (\text{\it TLSR}_{3T} \vee {\text{\it RKR}_{\#3}}^?)\bigr\} \wedge
+    (\text{\it TLSR}_{4T} \vee \text{\it TR}_{4}) \Bigr), \bigl(
+    \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^? \bigr)^*
+    \wedge (\text{\it TLSR} \vee \text{\it TR})\Bigr\} \cup
+    (\Gamma_6 \cup \Gamma_7)$
+    \def\extraVskip{2pt}
+  \end{prooftree}
+    
+  \begin{prooftree}
+    \AxiomC{}
+    \UnaryInfC{$\bigl(\text{\it TLSR}_{1T}, \text{\it TLSR}\bigr)
+      \in \Gamma_{\text{\it gnd}}$}
+      
+    \LeftLabel{$(0)$}
+    \UnaryInf$\Gamma_4 \vdash \fCenter\
+      \text{\it TLSR}_{1T} : \text{\it TLSR}$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_4 = \fCenter\
+      \bigl\{\text{\it TLSR}_{1T}, \text{\it TLSR}\bigr\}$
+    \def\extraVskip{2pt}
+    
+    \AxiomC{}
+    \LeftLabel{$\bigl({\text{\it nil}}^?\bigr)$}
+    \UnaryInf$\Gamma_5 \vdash \fCenter\
+      \circ : {(\text{\it NKR} | \text{\it RKR})}^?$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_5 = \fCenter\
+      \bigl\{\circ, {(\text{\it NKR} | \text{\it RKR})}^?\bigr\}$
+    \def\extraVskip{2pt}
+    
+    \RightLabel{$(\text{\it Par})$}
+    \BinaryInf$\Gamma_2 \vdash \fCenter\
+      \text{\it TLSR}_{1T} \vee \circ:
+      \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^?$
+    \noLine
+    \def\extraVskip{0.3pt}
+    \UnaryInf$\Gamma_2 = \fCenter\
+      \Bigl\{\text{\it TLSR}_{1T} \vee \circ,
+      \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^?\Bigr\}
+      \cup (\Gamma_4 \cup \Gamma_5)$
+    \def\extraVskip{2pt}
+    
+    \noLine
+    \AxiomC{}
+    \UnaryInfC{$\Gamma_3 \vdash
+      \bigl\{(\text{\it TLSR}_{2T} \vee
+      {\text{\it NKR}_{\#2}}^?), (\text{\it TLSR}_{3T} \vee
+      {\text{\it RKR}_{\#3}}^?)\bigr\} \wedge (\text{\it TLSR}_{4T} \vee
+      \text{\it TR}_{4}) : \bigl(
+      \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^? \bigr)^*
+      \wedge (\text{\it TLSR} \vee \text{\it TR})$}
+    
+    \RightLabel{$(\text{\it Cas})$}
+    \BinaryInf$\Gamma_1 \vdash \fCenter\
+      (\text{\it TLSR}_{1T} \vee \circ) \wedge
+      \Bigl(\bigl\{(\text{\it TLSR}_{2T} \vee
+      {\text{\it NKR}_{\#2}}^?), (\text{\it TLSR}_{3T} \vee
+      {\text{\it RKR}_{\#3}}^?)\bigr\} \wedge (\text{\it TLSR}_{4T} \vee
+      \text{\it TR}_{4}) \Bigr) :
+      \bigl(\text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^?
+      \bigr) \wedge \Bigl(\bigl(
+      \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^? \bigr)^*
+      \wedge (\text{\it TLSR} \vee \text{\it TR}) \Bigr)$
+    \noLine
+    \def\extraVskip{0.2pt}
+    \UnaryInf$\Gamma_1 = \fCenter\
+      \Biggl\{(\text{\it TLSR}_{1T} \vee \circ) \wedge
+      \Bigl(\bigl\{(\text{\it TLSR}_{2T} \vee
+      {\text{\it NKR}_{\#2}}^?), (\text{\it TLSR}_{3T} \vee
+      {\text{\it RKR}_{\#3}}^?)\bigr\} \wedge (\text{\it TLSR}_{4T} \vee
+      \text{\it TR}_{4}) \Bigr),
+      \bigl(\text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^?
+      \bigr) \wedge \Bigl(\bigl(
+      \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^? \bigr)^*
+      \wedge (\text{\it TLSR} \vee \text{\it TR}) \Bigr) \biggr\} \cup
+      (\Gamma_2 \cup \Gamma_3)$
+    \def\extraVskip{2pt}
+  \end{prooftree}
+  \begin{flushright}
+  legend
+  $(0)$: $\text{\it (T-Atom0-canon)}$,
+  $(\text{\it Cas})$: $\text{\it (T-Cas-canon)}$,
+  $(\text{\it Par})$: $\text{\it (T-Par-canon)}$, 
+  $(\infty)$: $\text{\it (T-Cat0-canon-$\infty$)}$,
+  $(?)$: $\text{\it (T-Opt-canon-sol)}$,
+  $\bigl({\text{\it nil}}^?\bigr)$: $\text{\it (T-Cat0-canon-nil)}$,
+  $(L)$: $\text{\it (T-Alt-canon-L)}$.
+  \end{flushright}
+  \end{tiny}
+  \caption{pattern matching of interlocking logic example 1}
+  \label{fig_of_patternmatching_ex1}
+  \end{figure}
+\end{landscape}
+
+
+\section{More flexible system}
 We have developed the basic system in previous chapter,
 but as you see, it's hard to use. Rigid discipline forces us to behave
-strictly on describing expressions. However excessive strictness also
+strictly for expressions. In short, excessive strictness also
 decreases its usability. E.g. $1+(2+3)$ and $(1+2)+3$ aren't identical
 syntactically,
 but it's natural to regard them as identical, since associativity has little
 importance on same precedence operations. Similar to that, it's preferable
 to match both instances of
-$\text{\it TR}_1 \wedge (\text{\it TR}_2 \wedge \text{\it TR}_3)$ and
-$(\text{\it TR}_1 \wedge \text{\it TR}_2) \wedge \text{\it TR}_3$, but
-pattern of $\text{\it TR} \wedge (\text{\it TR} \wedge \text{\it TR})$
-matches only former one since their associativity corresponds to their
-own structures. Accordingly, we hope to match ones having intuitionistic
-equivalence. For example it's preferable that
-$\text{\it TR}_1 \wedge (\text{\it TR}_2 \wedge \text{\it TR}_3)$ matches
-with the pattern of $\text{\it TR}^*$ accounting on semantic meaming of
-it, but it's also impossible on current system.
+$(\text{\it TLSR}_{1T} \vee \circ) \wedge \Bigl(\bigl\{
+(\text{\it TLSR}_{2T} \vee {\text{\it NKR}_{\#2}}^?),
+(\text{\it TLSR}_{3T} \vee {\text{\it RKR}_{\#3}}^?)\bigr\} \wedge
+(\text{\it TLSR}_{4T} \vee \text{\it TR}_{4}) \Bigr)$ and
+$\Bigl((\text{\it TLSR}_{1T} \vee \circ) \wedge \bigl\{
+(\text{\it TLSR}_{2T} \vee {\text{\it NKR}_{\#2}}^?),
+(\text{\it TLSR}_{3T} \vee {\text{\it RKR}_{\#3}}^?)\bigr\} \Bigr) \wedge
+(\text{\it TLSR}_{4T} \vee \text{\it TR}_{4})$, but pattern of
+$\bigl(\text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^? \bigr)
+\wedge \Bigl(\bigl(\text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^?
+\bigr)^* \wedge (\text{\it TLSR} \vee \text{\it TR}) \Bigr)$
+matches with only former one since their associativity embedded in their
+own structures. Accordingly, we hope to describe instances more simple, and
+match them more flexible. For example it's preferable that we can express
+more flexibly them above as
+$\text{\it TLSR}_{1T} \wedge (\text{\it TLSR}_{2T} \vee
+\text{\it NKR}_{\#2}) \wedge (\text{\it TLSR}_{3T} \vee
+\text{\it RKR}_{\#3}) \wedge (\text{\it TLSR}_{4T} \vee
+\text{\it TR}_{4})$, and matches with the pattern of
+$\bigl(\text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^? \bigr)^*
+\wedge (\text{\it TLSR} \vee \text{\it TR})$
+by accounting on semantic meaming, but it's also impossible on
+current system.
 
 In this chapter, we bring our system more flexibility, and make it more
 usable based on a well known type theoretical technology as polymorphism.
@@ -670,25 +1074,25 @@ usable based on a well known type theoretical technology as polymorphism.
 As first step, we define relations of intuitionistic equivalence over
 terms, which allow us to regard distinct terms as equivalent, as follow.
 
+\pagebreak
 \begin{Definition}[intuitionistic equivalence over canonical terms]
   \label{equality_on_CANONICALS}
   We define the set of intuitionistic equivalence terms of $t$ as follow.
   We write $t \simeq t'$ if $t$ is intuitionistic equivalent to $t'$.
-  
   \begin{displaymath}
     \begin{array}{c}
-
+      
       \begin{array}{rl}
-        \dfrac{
-          \dfrac{}{
-            \raisebox{0.5ex}[2.3ex][0ex]{$t \equiv t'$}
-          }
-        }{
-          t \simeq t'
-        }  &  (\text{\it Identity})
+          \dfrac{
+            \dfrac{}{
+              \raisebox{0.5ex}[2.3ex][0ex]{$t \equiv t'$}
+            }
+          }{
+            t \simeq t'
+          }  &  (\text{\it Identity})
       \end{array}  \\
       \\
-        
+      
       \begin{array}{rl}
         \begin{array}{rl}
           \dfrac{
@@ -750,78 +1154,48 @@ terms, which allow us to regard distinct terms as equivalent, as follow.
       \end{array}  \\
       \\
             
-      \begin{array}{ll}
+      \begin{array}{rl}
         \begin{array}{rl}
           \dfrac{ t \simeq t' }{ t \simeq \{t'\} }
           & (\text{\it Associativity-Cat0}_1)
         \end{array}
-        & \begin{array}[c]{l}
-            \begin{array}{rl}
-              \dfrac{
-                t \simeq t_1 \wedge \{t_2 \cdots t_n \}
-              }{
-                t \simeq \{t_1, t_2 \cdots t_n \}
-              }  &  (\text{\it AssociativityH-Cat0}_\infty)
-            \end{array}  \\
-            \\
-            \begin{array}{rl}
-              \dfrac{
-                t \simeq \{t_1 \cdots t_n \} \wedge t_{n+1}
-              }{
-                t \simeq \{t_1 \cdots t_n, t_{n+1} \}
-              }  &  (\text{\it AssociativityT-Cat0}_\infty)
-            \end{array}
+        & \begin{array}{rl}
+            \dfrac{
+              t \simeq t_1 \wedge \{t_2 \cdots t_n \}
+            }{
+              t \simeq \{t_1, t_2 \cdots t_n \}
+            }  &  (\text{\it AssociativityH-Cat0}_\infty)
           \end{array}
       \end{array}  \\
       \\
       
-      \begin{array}{ll}
+      \begin{array}{rl}
         \begin{array}{rl}
           \dfrac{ t \simeq t' }{ t \simeq [t'] }
           & (\text{\it Associativity-Cat1}_1)
         \end{array}
-        & \begin{array}[c]{l}
-            \begin{array}{rl}
-              \dfrac{
-                t \simeq t_1 \wedge [t_2 \cdots t_n ]
-              }{
-                t \simeq [t_1, t_2 \cdots t_n ]
-              }  &  (\text{\it AssociativityH-Cat1}_\infty)
-            \end{array}  \\
-            \\
-            \begin{array}{rl}
-              \dfrac{
-                t \simeq [t_1 \cdots t_n ] \wedge t_{n+1}
-              }{
-                t \simeq [t_1 \cdots t_n, t_{n+1} ]
-              }  &  (\text{\it AssociativityT-Cat1}_\infty)
-            \end{array}
+        & \begin{array}{rl}
+            \dfrac{
+              t \simeq t_1 \wedge [t_2 \cdots t_n ]
+            }{
+              t \simeq [t_1, t_2 \cdots t_n ]
+            }  &  (\text{\it AssociativityH-Cat1}_\infty)
           \end{array}
       \end{array}  \\
       \\
 
-      \begin{array}{ll}
+      \begin{array}{rl}
         \begin{array}{rl}
           \dfrac{ t \simeq t' }{ t \simeq \langle t' \rangle }
           & (\text{\it Associativity-Dup}_1)
         \end{array}
-        & \begin{array}[c]{l}
-            \begin{array}{rl}
-              \dfrac{
-                t \simeq t_1 \vee \langle t_2 \cdots t_n \rangle
-              }{
-                t \simeq \langle t_1, t_2 \cdots t_n \rangle
-              }  &  (\text{\it AssociativityH-Dup}_\infty)
-            \end{array}  \\
-            \\
-            \begin{array}{rl}
-              \dfrac{
-                t \simeq \langle t_1 \cdots t_n \rangle \vee t_{n+1}
-              }{
-                t \simeq \langle t_1 \cdots t_n, t_{n+1} \rangle
-              }  &  (\text{\it AssociativityT-Dup}_\infty)
-            \end{array}
-          \end{array}
+        & \begin{array}{rl}
+            \dfrac{
+              t \simeq t_1 \vee \langle t_2 \cdots t_n \rangle
+            }{
+              t \simeq \langle t_1, t_2 \cdots t_n \rangle
+            }  &  (\text{\it AssociativityH-Dup}_\infty)
+          \end{array}  \\
       \end{array}  \\
       \\
       
@@ -836,13 +1210,8 @@ terms, which allow us to regard distinct terms as equivalent, as follow.
               t \simeq t'
             }  &  (\text{\it RevealT-Cas}_{\{\}})
           \end{array}
-      \end{array}
-      
-    \end{array}
-  \end{displaymath}
-  
-  \begin{displaymath}
-    \begin{array}{c}
+      \end{array}  \\
+      \\
       
       \begin{array}{ll}
         \begin{array}{rl}
@@ -883,8 +1252,15 @@ terms, which allow us to regard distinct terms as equivalent, as follow.
               t \simeq t'
             }  &  (\text{\it RevealT-Par}_\circ)
           \end{array}
-      \end{array}  \\
-      \\
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+  
+  \begin{displaymath}
+    \begin{array}{c}
+      
+
       
       \begin{array}{ll}
         \begin{array}{rl}
@@ -974,8 +1350,8 @@ terms, which allow us to regard distinct terms as equivalent, as follow.
 
 
 \vspace{\baselineskip}
-Then we extend the definition of judgement to use set of equivalent terms
-given from above definition of $t \simeq t_{\text{\it equ}}$.
+Then we extend the definition of judgement to use the set of equivalent
+terms given from above definition of $t \simeq t_{\text{\it equ}}$.
 
 \begin{Definition}[binding pentagram]
   We extend the definition of bindings $\Gamma$ defined above,
@@ -994,7 +1370,7 @@ given from above definition of $t \simeq t_{\text{\it equ}}$.
         \end{array}
       \end{array}
   \end{displaymath}
-  We even regard extended bindings $\Delta$ as the mapping of
+  We still regard extended bindings $\Delta$ as the mapping of
   $\mathbb{T} \mapsto \Delta$ as follow.
   \begin{displaymath}
     \Delta(t) \;\stackrel{\mathrm{def}}{:=} \,\left\{\begin{array}{l}
@@ -1010,51 +1386,53 @@ given from above definition of $t \simeq t_{\text{\it equ}}$.
 
 \begin{Definition}[binding domain extended]
   We define a set of terms $t$ and $t_{\text{\it equ}}$ comming from
-  $\Delta$ as $\mathpzc{Dom}(\Delta)$ s.t.
+  $\Delta$ where $\mathcal{S}_0 \in \{\text{\it gnd}, \text{\it def},
+  \text{\it nil}\}$, as $\mathpzc{Dom}(\Delta)$ s.t.
   \[ \mathpzc{Dom}(\Delta) \,\stackrel{\mathrm{def}}{:=}\,
   \bigl\{ t \ |\  (t, t_{\text{\it equ}}, \mathcal{R},
-  \mathcal{S}_{\mathpzc{fin}}, \Delta') \in \Delta \bigr\}
-  \!\begin{array}[t]{l}
-    \cup\; \bigl\{t_{\text{\it equ}}  \ |\  (t, t_{\text{\it equ}},
-     \mathcal{R},  \text{\it gnd}, \Delta') \in \Delta \bigr\}  \\
-    \cup\; \bigl\{t_{\text{\it equ}}  \ |\  (t, t_{\text{\it equ}},
-     \mathcal{R},  \text{\it def}, \Delta') \in \Delta \bigr\}  \\
-    \cup\; \bigl\{t_{\text{\it equ}}  \ |\  (t, t_{\text{\it equ}},
-     \mathcal{R}, \text{\it nil}, \Delta') \in \Delta \bigr\}
-  \end{array}
+  \mathcal{S}_{\mathpzc{fin}}, \Delta') \in \Delta \bigr\} \cup
+  \bigl\{t_{\text{\it equ}}  \ |\  (t, t_{\text{\it equ}},
+  \mathcal{R}, \mathcal{S}_0, \Delta') \in \Delta \bigr\} 
   \]
 \end{Definition}
 
 
 And we extend the inference rules to accept intuitionistic equivalence
-as follow.
+as follows.
 
 \begin{Definition}[matching rules on polymorphic equivalent terms]
-  We extend the matching rules on pure canonical terms defined above, to
-  enlarge the domain of patternmatching,
-  Here we use $t'$ s.t. $t \cong t'$ on matching, as follows.
+  We extend the matching rules on pure canonical terms, to
+  enlarge the domain of pattern matching as follows. 
   \begin{displaymath}
     \begin{array}{c}
-      
+
       \begin{array}{rl}
         \dfrac{
-          t \simeq t_0
-           \quad (t_0, \mathcal{R}_0) \in \Gamma_\text{\it gnd}
+          \dfrac{}{
+            \raisebox{0.5ex}[2.3ex][0ex]{
+              $t \simeq t_0
+                \quad (t_0, \mathcal{R}_0) \in \Gamma_\text{\it gnd}$
+            }
+          }
         }{
           \bigl\{(t, t_0, \mathcal{R}_0, \text{\it gnd}, \phi ) \bigr\}
-           \vdash t \triangleright \mathcal{R}_0
-        }  &  \!\!\text{\it (T-Atom0-xtend)}
+           \vdash t \triangleright \mathcal{R}_0          
+        }  &  \!\! \text{\it (T-Atom0-canon)}
       \end{array}  \\
       \\
       
       \begin{array}{rl}
         \dfrac{
-          t \simeq t_1
-           \quad (t_1, \mathcal{R}_1) \in \Gamma_\text{\it def}
+          \dfrac{}{
+            \raisebox{0.5ex}[2.3ex][0ex]{
+              $t \simeq t_1
+                \quad (t_1, \mathcal{R}_1) \in \Gamma_\text{\it def}$
+            }
+          }
         }{
           \bigl\{(t, t_1, \mathcal{R}_1, \text{\it def}, \phi ) \bigr\}
            \vdash t \triangleright \mathcal{R}_1
-        }  &  \!\!\text{\it (T-Atom1-xtend)}
+        }  &  \!\! \text{\it (T-Atom1-canon)}
       \end{array}  \\
       \\
       
@@ -1096,19 +1474,18 @@ as follow.
             (\Delta_1 \cup \Delta_2) \vdash
              t \triangleright \mathcal{R}_1 \vee \mathcal{R}_2
         }  &  \text{\it (T-Par-xtend)}
-      \end{array}
-      
-    \end{array}
-  \end{displaymath}
-    
-  \begin{displaymath}
-    \begin{array}{c}
-      
+      \end{array}  \\
+      \\
+
       \begin{array}{rl}
         \left. \begin{array}{rl}
           \dfrac{
-            t \simeq \{\}
-             \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
+            \dfrac{}{
+              \raisebox{0.6ex}[2.3ex][0ex]{
+                $t \simeq \{\}
+                \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}$
+              }
+            }
           }{
             \Bigl\{\bigl(t, \{\}, \mathcal{R}_1^*, \text{\it nil}, \phi
              \bigr) \Bigr\} \vdash t \triangleright {\mathcal{R}_1}^*
@@ -1155,8 +1532,13 @@ as follow.
             \end{array}
           }  &  (\infty)
         \end{array} \right\}  &  \text{\it (T-Cat0-xtend)}
-      \end{array}  \\
-      \\
+      \end{array}
+      
+    \end{array}
+  \end{displaymath}
+    
+  \begin{displaymath}
+    \begin{array}{c}
       
       \begin{array}{rl}
         \left. \begin{array}{rl}
@@ -1251,12 +1633,17 @@ as follow.
       
       \begin{array}{rl}
         \left. \begin{array}{rl}
+          
           \dfrac{
-            t \simeq \circ
-             \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
+            \dfrac{}{
+              \raisebox{0.5ex}[2.3ex][0ex]{
+                $t \simeq \circ
+                  \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}$
+              }
+            }
           }{
             \bigl\{(t, \circ, {\mathcal{R}_1}^?, \text{\it nil}, \phi)
-             \bigr\} \vdash t \triangleright {\mathcal{R}_1}^?           
+             \bigr\} \vdash t \triangleright {\mathcal{R}_1}^?
           }  &  (\text{\it nil}\,)  \\
           \\
           
@@ -1576,7 +1963,7 @@ as follow.
   \end{Proof}      
 \end{Lemma}
 
-\pagebreak
+
 \begin{Claim}
   \label{claim_for_soundness_on_extended_matching}
   \[ \{t_1, t_2\} \simeq t_1 \wedge \{t_2\}
@@ -2734,7 +3121,7 @@ termination Property, we implement our logic on machine.
 \begin{Definition}[intuitionistic equivalence for implementation]
   \label{equality_for_implementation}
   We define the set of equivalent terms of $t$ as $\mathpzc{Equ}(t)$,
-  in following rules.
+  on following rules.
   \begin{displaymath}
     \begin{array}{c}
       
@@ -3345,7 +3732,7 @@ and related functions are as follows.
 
 
 \pagebreak
-\begin{Lemma}
+\begin{Lemma}{equivalency on gathering}
   \label{semiequivalency_on_implementation}
   \[ t \simeq t'\ \text{\it where}\ t' \in \mathpzc{Equ}(t)
   \]
@@ -3635,7 +4022,7 @@ and related functions are as follows.
 \end{Lemma}
 
 
-\begin{Lemma}
+\begin{Lemma}{termination on gathering equivalents}
   \[ \mathpzc{Equ}(t)\ \text{\it has termination}.
   \]
   \begin{Proof}
@@ -3797,26 +4184,34 @@ and related functions are as follows.
   is also called as algorithmic form, as follows.
   \begin{displaymath}
     \begin{array}{c}
-
+      
       \begin{array}{rl}
         \dfrac{
-          t_0 \in \mathpzc{Equ}(t)
-           \quad (t_0, \mathcal{R}_0) \in \Gamma_\text{\it gnd}
+          \dfrac{}{
+            \raisebox{0.5ex}[2.3ex][0ex]{
+              $t_0 \in \mathpzc{Equ}(t)
+               \quad (t_0, \mathcal{R}_0) \in \Gamma_\text{\it gnd}$
+            }
+          }
         }{
           \bigl\{(t, t_0, \mathcal{R}_0, \text{\it gnd}, \phi ) \bigr\}
            \vdash t \blacktriangleright \mathcal{R}_0
-        }  &  \!\!\text{\it (T-Atom0-impl)}
+        }  &  \!\! \text{\it (T-Atom0-canon)}
       \end{array}  \\
       \\
-
+      
       \begin{array}{rl}
         \dfrac{
-          t_1 \in \mathpzc{Equ}(t)
-           \quad (t_1, \mathcal{R}_1) \in \Gamma_\text{\it def}
+          \dfrac{}{
+            \raisebox{0.5ex}[2.3ex][0ex]{
+              $t_1 \in \mathpzc{Equ}(t)
+                \quad (t_1, \mathcal{R}_1) \in \Gamma_\text{\it def}$
+            }
+          }
         }{
           \bigl\{(t, t_1, \mathcal{R}_1, \text{\it def}, \phi ) \bigr\}
            \vdash t \blacktriangleright \mathcal{R}_1
-        }  &  \!\!\text{\it (T-Atom1-impl)}
+        }  &  \!\! \text{\it (T-Atom1-canon)}
       \end{array}  \\
       \\
       
@@ -3862,10 +4257,15 @@ and related functions are as follows.
       \\
       
       \begin{array}{rl}
+
         \left. \begin{array}{rl}
           \dfrac{
-            \{\} \in \mathpzc{Equ}(t)
-             \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
+            \dfrac{}{
+              \raisebox{0.6ex}[2.3ex][0ex]{
+                $\{\} \in \mathpzc{Equ}(t)
+                  \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}$
+              }
+            }
           }{
             \Bigl\{\bigl(t, \{\}, \mathcal{R}_1^*, \text{\it nil}, \phi
              \bigr) \Bigr\} \vdash t \blacktriangleright {\mathcal{R}_1}^*
@@ -4013,10 +4413,15 @@ and related functions are as follows.
       \\
       
       \begin{array}{rl}
+
         \left. \begin{array}{rl}
           \dfrac{
-            \circ \in \mathpzc{Equ}(t)
-             \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}
+            \dfrac{}{
+              \raisebox{0.5ex}[2.3ex][0ex]{
+                $\circ \in \mathpzc{Equ}(t)
+                  \quad \mathcal{R}_1 \,\text{\it is}\, \text{\it Any}$
+              }
+            }
           }{
             \bigl\{(t, \circ, {\mathcal{R}_1}^?, \text{\it nil}, \phi)
              \bigr\} \vdash t \blacktriangleright {\mathcal{R}_1}^?

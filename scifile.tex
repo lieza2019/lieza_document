@@ -673,7 +673,8 @@ We easily find some properties on $\mathpzc{Dom}(\Gamma)$ as follows.
 \end{Definition}
 
 
-From def of pattern matching rules, next 2 lemmas are straitforward.
+\vspace{5mm}
+From def. of pattern matching rules, next 2 lemmas are straitforward.
 
 \begin{Lemma}{termination on canonical pattern matching.}
   \label{termination_on_canonical_matching}
@@ -939,7 +940,7 @@ Figure \ref{fig_of_patternmatching_ex1}.
     \UnaryInf$\Gamma_3 = \fCenter\
     \Bigl\{\bigl\{(\text{\it TLSR}_{2T} \vee {\text{\it NKR}_{\#2}}^?),
     (\text{\it TLSR}_{3T} \vee {\text{\it RKR}_{\#3}}^?)\bigr\} \wedge
-    (\text{\it TLSR}_{4T} \vee \text{\it TR}_{4}) \Bigr), \bigl(
+    (\text{\it TLSR}_{4T} \vee \text{\it TR}_{4}), \bigl(
     \text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^? \bigr)^*
     \wedge (\text{\it TLSR} \vee \text{\it TR})\Bigr\} \cup
     (\Gamma_6 \cup \Gamma_7)$
@@ -1024,9 +1025,10 @@ Figure \ref{fig_of_patternmatching_ex1}.
   $(\text{\it Cas})$: $\text{\it (T-Cas-canon)}$,
   $(\text{\it Par})$: $\text{\it (T-Par-canon)}$, 
   $(\infty)$: $\text{\it (T-Cat0-canon-$\infty$)}$,
+  $\bigl({\text{\it nil}}^?\bigr)$: $\text{\it (T-Opt-canon-nil)}$,
   $(?)$: $\text{\it (T-Opt-canon-sol)}$,
-  $\bigl({\text{\it nil}}^?\bigr)$: $\text{\it (T-Cat0-canon-nil)}$,
-  $(L)$: $\text{\it (T-Alt-canon-L)}$.
+  $(L)$: $\text{\it (T-Alt-canon-L)}$,
+  $(R)$: $\text{\it (T-Alt-canon-R)}$.
   \end{flushright}
   \end{tiny}
   \caption{pattern matching of interlocking logic example 1}
@@ -1056,7 +1058,7 @@ $\bigl(\text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^? \bigr)
 \wedge \Bigl(\bigl(\text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^?
 \bigr)^* \wedge (\text{\it TLSR} \vee \text{\it TR}) \Bigr)$
 matches with only former one since their associativity embedded in their
-own structures. Accordingly, we hope to describe instances more simple, and
+own structures. Accordingly, we hope to describe instances more simply, and
 match them more flexible. For example it's preferable that we can express
 more flexibly them above as
 $\text{\it TLSR}_{1T} \wedge (\text{\it TLSR}_{2T} \vee
@@ -1077,7 +1079,7 @@ terms, which allow us to regard distinct terms as equivalent, as follow.
 \pagebreak
 \begin{Definition}[intuitionistic equivalence over canonical terms]
   \label{equality_on_CANONICALS}
-  We define the set of intuitionistic equivalence terms of $t$ as follow.
+  We define the set of intuitionistic equivalence terms of $t$ as follows.
   We write $t \simeq t'$ if $t$ is intuitionistic equivalent to $t'$.
   \begin{displaymath}
     \begin{array}{c}
@@ -3732,7 +3734,7 @@ and related functions are as follows.
 
 
 \pagebreak
-\begin{Lemma}{equivalency on gathering}
+\begin{Lemma}{equivalency on gathering equivalents}
   \label{semiequivalency_on_implementation}
   \[ t \simeq t'\ \text{\it where}\ t' \in \mathpzc{Equ}(t)
   \]
@@ -4621,69 +4623,88 @@ we introduce it with practical examples.
 
 
 We can express the following interlocking logic as
-$\text{\it TR}_1 \wedge (\text{\it TR}_2 \vee \text{\it NKR}_{\#3}) \wedge
-\text{\it TLSR}_{{\text{\it TR}_4}}$.
+$\text{\it TLSR}_{1T} \wedge (\text{\it TLSR}_{2T} \vee
+\text{\it NKR}_{\#2}) \wedge (\text{\it TLSR}_{3T} \vee
+\text{\it RKR}_{\#3}) \wedge (\text{\it TLSR}_{4T} \vee
+\text{\it TR}_{4})$.
 
 Then, we are now trying to match above with the pattern of
-$\bigl(\text{\it TR} \vee
-{(\text{\it NKR} | \text{\it RKR})^\downarrow}^? \bigr)^+ \wedge
-(\text{\it TLSR} | \text{\it TRSR})^*$.
+$\bigl(\text{\it TLSR} \vee {(\text{\it NKR} | \text{\it RKR})}^? \bigr)^*
+\wedge (\text{\it TLSR} \vee \text{\it TR})$
 
-We can express above instance as \verb@TR_1&(TR_2|NKR_#3)&TLSR_TR4@,
-accroding to def. of term, and pattern is also expressed as
-\verb@(TR|(NKR%RKR)!?)+&(TLSR%TRSR)*@.
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[keepaspectratio, width=100mm]{fig1.eps}
+    \begin{displaymath}
+      \text{\it TLSR}_{1T} \wedge (\text{\it TLSR}_{2T} \vee
+      \text{\it NKR}_{\#2}) \wedge (\text{\it TLSR}_{3T} \vee
+      \text{\it RKR}_{\#3}) \wedge (\text{\it TLSR}_{4T} \vee
+      \text{\it TR}_{4}) : \mathcal{R}_{\text{\it TLSR}_{4T}}
+    \end{displaymath}
+    \begin{displaymath}
+      \text{\it where}\;\; \mathcal{R}_{\text{\it TLSR}_{4T}} =
+      \bigl(\text{\it TLSR} \vee
+      {(\text{\it NKR} | \text{\it RKR})}^? \bigr)^* \wedge
+      (\text{\it TLSR} \vee \text{\it TR})
+    \end{displaymath}
+    \caption{polymorphic matching of interlocking logic example 1}
+    \label{fig_of_polymatching_ex1}
+  \end{center}
+\end{figure}
+
+
+We can express above instance as
+\verb@TLSR_1T & (TLSR_2T | NKR_#2) & (TLSR_3T@
+\verb@ | RKR_#3) & (TLSR_4T | TR_4)@, accroding to def. of term,
+and pattern is also expressed
+as \verb@(TLSR | (NKR % RKR)?)* & (TLSR | TR)@.
 Consequently, we are trying patternmatching, and the result of it is
 shown as follows.
 \begin{verbatim}
-# term (typematch (compile "TR_1 & (TR_2 | NKR_#3) & TLSR_TR4 :
-(TR | (NKR % RKR)!?)+ & (TRSR % TLSR)*"));;
-- : string = "(TR_1 & ((((TR_2 | NKR_#3)) & TLSR_TR4)))"
+# term (typematch (compile "TLSR_1T & (TLSR_2T | NKR_#2) & (TLS
+R_3T | RKR_#3) & (TLSR_4T | TR_4) : (TLSR | (NKR % RKR)?)* & (T
+LSR | TR)"));;
+- : "(TLSR_1T & ((((TLSR_2T | NKR_#2)) & ((((TLSR_3T | RKR_#3))
+ & ((TLSR_4T | TR_4)))))))"
 \end{verbatim}
 
 Looking at the last line of above, it just been generated from her
 coginition, which shows that LIezA has successed to match given term with
-pattern, and recognized its structual meaning, which stored in the form of
-Binding internally. We can still access more specific ones on her
-cognition as follows.
+pattern, and recognized its structual meaning, which has been stored as
+the form of Binding internally. We can still access more specific ones on
+her cognition as follows.
 \begin{verbatim}
-# let sig_ctrl = cli_pat (compile "* : (TR | (NKR % RKR)!?)+");;
-val sig_ctrl : Lie_type.pattern = ...
-# foreach (resolv sig_ctrl (typematch (compile "TR_1 & (TR_2 |
-NKR_#3) & TLSR_TR4 : (TR | (NKR % RKR)!?)+ & (TRSR % TLSR)*")));;
-- : string list = ["(((TR_1 | *)) & ((TR_2 | NKR_#3)))"]
+# let sr_trg = cli_pat (compile "* : (TLSR | (NKR % RKR)?)*");;
+val sig_trg : Lie_type.pattern = ...
+# foreach (resolv sr_trg (typematch (compile "TLSR_1T & (TLSR_2
+T | NKR_#2) & (TLSR_3T | RKR_#3) & (TLSR_4T | TR_4) : (TLSR | (
+NKR % RKR)?)* & (TLSR | TR)")));;
+- : string list = ["(((TLSR_1T | *)) & ((((TLSR_2T | NKR_#2)) &
+ ((TLSR_3T | RKR_#3)))))"]
 \end{verbatim}
 
 The first command of above specifies the target pattern we refer.
 Then we try to refer the subterms bound to the target
-pattern, which is currently assigned to \verb|sig_ctrl|, on next command,
+pattern, which is currently assigned to \verb|sr_trg|, on next command,
 And we can find that the last line depicts the subterm bound to the target
 pattern we specified correctly.
 
-Similar to above, we can access other internal subterms again.
+Similar to above, we can access other internal subterms in her again.
 \begin{verbatim}
-# let sig_ctrl = cli_pat (compile "* : (NKR % RKR)!");;
+# let sr_rel = cli_pat (compile "* : (TLSR | TR)");;
 val sig_ctrl : Lie_type.pattern = ...
-# foreach (resolv sig_ctrl (typematch (compile "TR_1 & (TR_2 |
-NKR_#3) & TLSR_TR4 : (TR | (NKR % RKR)!?)+ & (TRSR % TLSR)*")));;
-- : string list = ["NKR_#3"]
-\end{verbatim}
-
-Bindings for counterpart condition, i.e.
-$\text{\it TLSR}_{{\text{\it TR}_4}}$, is also accessible as follow.
-\begin{verbatim}
-# let sig_ctrl = cli_pat (compile "* : (TRSR % TLSR)*");;
-val sig_ctrl : Lie_type.pattern = ...
-# foreach (resolv sig_ctrl (typematch (compile "TR_1 & (TR_2 |
-NKR_#3) & TLSR_TR4 : (TR | (NKR % RKR)!?)+ & (TRSR % TLSR)*")));;
-- : string list = ["TLSR_TR4"]
+# foreach (resolv sr_rel (typematch (compile "TLSR_1T & (TLSR_2
+T | NKR_#2) & (TLSR_3T | RKR_#3) & (TLSR_4T | TR_4) : (TLSR | (
+NKR % RKR)?)* & (TLSR | TR)")));;
+- : string list = ["(TLSR_4T | TR_4)"]
 \end{verbatim}
 
 Finally, we present more practical examples in the domain of railway
 signaling engineering.
 
 We suppose the following entity of interlocking logic, which is called as
-Signal Controlling Circuit, and we also know which can be expressed formally
-as
+Signal Controlling Circuit, and we also know which can be expressed
+generally as
 $\text{\it HR} \wedge \bigl(\text{\it LR} \vee
 (\text{\it NKR} | \text{\it RKR})^\downarrow \bigr)^* \wedge
 \bigl(\text{\it TR}^+ \vee (\text{\it TENR} \wedge \text{\it MSlR}) \vee

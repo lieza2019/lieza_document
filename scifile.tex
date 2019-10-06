@@ -1762,8 +1762,9 @@ as follows.
     $\mathpzc{Dom}(\Delta_j) = \mathpzc{Dom}(\Gamma_j)$ for each
     $1 \le j \le n$. Now we examines soundness for each cases,
     $j = 1$ and $j \ge 2$.
-    $(j = 1)$: For first case, we can derive $\{t_1\} \simeq t_1$ with
-    $(\text{\it Associativity-Cat0}_1)$ and (Symmetry), where we mention that
+    $(j = 1)$: For first case, we can derive $\{t_1\} \simeq t_1$ by
+    Claim \ref{claim_for_soundness_on_extended_matching}, where
+    we mention that
     $\{t_1\} \not\in \mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$
     s.t. $\Gamma_1 \vdash t_1 : \mathcal{R}_1$. Thus we derive    
     $\Bigl\{\bigl(\{t_1\}, t_1, {\mathcal{R}_1}^*, \text{\it sol}, \Delta_1
@@ -1789,7 +1790,8 @@ as follows.
     $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2) = \phi$
     respectively.
     And we can derive the term $\{t_2\}$ equivalent to $t_2$ i.e.
-    $\{t_2\} \simeq t_2$ from $(\text{\it Associativity-Cat0}_1)$, with
+    $\{t_2\} \simeq t_2$ similar by
+    Claim \ref{claim_for_soundness_on_extended_matching}, with
     the condition of
     $\{t_2\} \not\in \mathpzc{Dom}(\Delta_2) = \mathpzc{Dom}(\Gamma_2)$
     s.t. $\Gamma_2 \vdash t_2 : \mathcal{R}_1$ for
@@ -1975,10 +1977,10 @@ as follows.
 
 \begin{Claim}
   \label{claim_for_soundness_on_extended_matching}
-  \[ \{t_1, t_2\} \simeq t_1 \wedge \{t_2\}
+  \[ \{t_1\} \simeq t_1, \quad \{t_1, t_2\} \simeq t_1 \wedge \{t_2\}
   \]
   \begin{Proof}
-    See below derivation.\vspace{-7mm}
+    See below derivation for each.\vspace{-7mm}
     \def\proofSkipAmount{\vskip.8ex plus.8ex minus.4ex}
     \begin{prooftree}
       \AxiomC{}
@@ -1986,9 +1988,20 @@ as follows.
       \LeftLabel{$(\text{\it Identity})$}
       \UnaryInfC{$t_1 \simeq t_1$}
       
+      \LeftLabel{$(\text{\it Associativity-Cat0}_1)$}
+      \UnaryInfC{$t_1 \simeq \{t_1\}$}
+      
+      \LeftLabel{$(\text{\it Symmetry})$}
+      \UnaryInfC{$\{t_1\} \simeq t_1$}
+      
+      \AxiomC{}
+      \UnaryInfC{$t_1 \equiv t_1$}
+      \RightLabel{$(\text{\it Identity})$}
+      \UnaryInfC{$t_1 \simeq t_1$}
+      
       \AxiomC{}
       \UnaryInfC{$\{t_2\} \equiv \{t_2\}$}
-      \LeftLabel{$(\text{\it Identity})$}
+      \RightLabel{$(\text{\it Identity})$}
       \UnaryInfC{$\{t_2\} \simeq \{t_2\}$}
       
       \RightLabel{$(\text{\it Transparency-Cas})$}
@@ -1997,8 +2010,11 @@ as follows.
       \RightLabel{$(\text{\it AssociativityH-Cat0}_\infty)$}
       \UnaryInfC{$t_1 \wedge \{t_2\} \simeq \{t_1, t_2\}$}
       
-      \LeftLabel{$(\text{\it Symmetry})$}
+      \RightLabel{$(\text{\it Symmetry})$}
       \UnaryInfC{$\{t_1, t_2\} \simeq t_1 \wedge \{t_2\}$}
+      
+      \noLine
+      \BinaryInfC{}
     \end{prooftree}
     $\Box$
   \end{Proof}

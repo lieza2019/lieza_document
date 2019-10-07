@@ -1946,7 +1946,7 @@ as follows.
     
     Case (T-Dup-canon): Proof is same scheme to the case of (T-Cat1-canon).
 
-    Case (T-Opt-canon): Proof is same as the case of (T-Cat-canon-nil).
+    Case (T-Opt-canon): Proof is similar to the case of (T-Cat-canon-nil).
 
     Case (T-Alt-canon-L): In this case, we suppose
     $\bigl\{({t_1}^\leftarrow, \mathcal{R}_1 | \mathcal{R}_1) \bigr\} \cup
@@ -1969,7 +1969,7 @@ as follows.
     \{{t_1}^\leftarrow\} \cup \mathpzc{Dom}(\Gamma_1) =
     \mathpzc{Dom}(\Gamma)$.
 
-    Case (T-Alt-canon-R): Proof is same as the case of (T-Alt-canon-L).
+    Case (T-Alt-canon-R): Proof is similar to the case of (T-Alt-canon-L).
     $\Box$
   \end{Proof}      
 \end{Lemma}
@@ -2336,7 +2336,7 @@ as follows.
     $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2) = \phi$ s.t.
     $\Delta_1 \vdash t_1 \triangleright \mathcal{R}_1$ and
     $\Delta_2 \vdash t_2 \triangleright \mathcal{R}_2$ with
-    Lemma \ref{consistency_on_domain_independency}, then we even do
+    Property \ref{consistency_on_domain_independency}, then we even do
     $\mathpzc{Dom}(\Gamma_1) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
     \Delta_1(t_1) \bigr) \Bigr)$ and
     $\mathpzc{Dom}(\Gamma_2) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
@@ -2363,8 +2363,8 @@ as follows.
     $\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge
     \mathcal{M}\bigl(\Delta_2(t_2) \bigr) \not\in
     \Bigl(\mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}(\Gamma_2) \Bigr) =
-    \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2)$. Note that we express the
-    reason of that, i.e.
+    \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2)$. Note that we call the
+    reason of above, i.e.
     $\mathcal{M}\bigl(\Delta_1(t_1) \bigr) \wedge
     \mathcal{M}\bigl(\Delta_2(t_2) \bigr) \not\in
     \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2)$, as ``term size constraint''
@@ -2373,7 +2373,7 @@ as follows.
     Case (T-Par-xtend): Proof is same as the case of (T-Cas-xtend).
     
     Case (T-Cat0-xtend-nil): Similar to the case of (T-Atom0-xtend) as
-    follows. We suppose
+    follow. We suppose
     $\Bigl\{\bigl(t, \{\}, {\mathcal{R}_1}^*, \text{\it nil}, \phi \bigr)
     \Bigr\} \vdash t \triangleright {\mathcal{R}_1}^*$ s.t.
     $t \simeq \{\}$. Thus we can derive
@@ -2418,7 +2418,7 @@ as follows.
     $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ as respective.
     Additionally, there are 2 cases to be considered, focusing on
     the derivation of $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$
-    as follow.
+    as follows.
     Subcase (T-Cat0-xtend-sol): In this case, we suppose that
     the last applied rule on the derivation of
     $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ is
@@ -2432,10 +2432,10 @@ as follows.
     $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) : \mathcal{R}_1$
     for some $\Gamma_h$. Similarly, we can also obtain
     $\Gamma'_t \vdash \mathcal{M}\bigl(\Delta'_t(t'_t) \bigr) :
-    \mathcal{R}_1$ for some $\Gamma'_t$ from induction hypothesis with
+    \mathcal{R}_1$ for some $\Gamma'_t$ from induction hypothesis for
     $\Delta'_t \vdash t'_t \triangleright \mathcal{R}_1$.
     Accounting on the fact that
-    $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$ as
+    $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$ where
     $\Delta_t = \bigl\{(t_t, t'_t, {\mathcal{R}_1}^*, \text{\it sol},
     \Delta'_t) \bigr\} \cup \Delta'_t$, we find
     $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta'_t) = \phi$, because
@@ -2457,7 +2457,7 @@ as follows.
     \Delta'_t(t'_t) \bigr) \Bigr)$ from
     Property \ref{dom_of_Gamma}, thus we find
     $\mathpzc{Dom}(\Gamma_h) \cap \mathpzc{Dom}(\Gamma'_t) = \phi$.
-    Accordingly we obtain the conclusion as
+    Accordingly we obtain the conclusion that
     $\biggl\{\Bigl(\bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr),
     \mathcal{M}\bigl(\Delta'_t(t'_t) \bigr) \bigr\}, {\mathcal{R}_1}^*
     \Bigr) \biggr\} \cup (\Gamma_h \cup \Gamma'_t) \vdash
@@ -2473,7 +2473,7 @@ as follows.
     \mathcal{M}\bigl(\Delta'_t(t'_t) \bigr) \Bigr\}$ since
     $(\Delta_h \cup \Delta'_t)(t_h) = \Delta_h(t_h)$ and
     $(\Delta_h \cup \Delta'_t)(t'_t) = \Delta'_t(t'_t)$ from the fact of
-    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ as above,
+    $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta'_t) = \phi$ as above,
     thus $\Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr), \mathcal{M}\bigl(
     \Delta'_t(t'_t) \bigr) \Bigr\} \not\in \mathpzc{Dom}(\Gamma_h)$ and
     $\Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr), \mathcal{M}\bigl(
@@ -2502,8 +2502,8 @@ as follows.
     (T-Cat0-xtend-sol), we can predicate that the last one applied on
     $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$ is just
     (T-Cat0-xtend-$\infty$), since the constraint of $t'_t \neq \{\}$ on
-    $\Delta'_t = (t'_t, t''_t, {\mathcal{R}_1}^*, \mathcal{S}_{t'},
-    \Delta''_t)$ eliminates the case of (T-Cat0-xtend-nil) as the last
+    $\Delta_t(t_t) = (t_t, t'_t, {\mathcal{R}_1}^*, \mathcal{S}_{t},
+    \Delta'_t)$ eliminates the case of (T-Cat0-xtend-nil) as the last
     applied rule. Accordingly we suppose
     $\Delta_t = \bigl\{(t_t, t'_t, {\mathcal{R}_1}^*, \infty, \Delta'_t)
     \bigr\} \cup \Delta'_t$ s.t.
@@ -2546,7 +2546,7 @@ as follows.
     $t_h \not\in \mathpzc{Dom}(\Delta'_t)$. Note that
     $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ implies
     $t_h \in \mathpzc{Dom}(\Delta_h)$, thus
-    we can say $t_h \not\in \mathpzc{Dom}(\Delta'_t)$ as
+    we can say $t_h \not\in \mathpzc{Dom}(\Delta'_t)$ for
     $\mathpzc{Dom}(\Delta'_t) \subseteq \mathpzc{Dom}(\Delta_t)$ s.t.
     $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$. From
     def. of (T-Cat0-xtend-$\infty$) applied on
@@ -2560,6 +2560,8 @@ as follows.
     then we look for $\{t_2, \cdots t_n\} =
     \mathcal{M}_{\{\}}(t'_t, {\mathcal{R}_1}^*, \Delta'_t ) =
     \Bigl\{\mathcal{M}\bigl(\Delta'_t(t_{t_h}) \bigr), t'_2, \cdots t'_m
+    \Bigr\} =
+    \Bigl\{\mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr), t'_2, \cdots t'_m
     \Bigr\}$ where
     $\{t'_2, \cdots t'_m\} = \mathcal{M}_{\{\}}\biggl(
     t'_{t_t}, {\mathcal{R}_1}^*, \Bigr(\Delta'_t \setminus \bigl(
@@ -2598,12 +2600,12 @@ as follows.
     $\mathpzc{Dom}(\Gamma_{t_h}) \cap \bigcup_{j=2}^m\mathpzc{Dom}(
     \Gamma'_j) = \phi$ for
     $\bigcup_{j=2}^m\mathpzc{Dom}(\Gamma'_j) \subseteq \mathpzc{sub}\Bigl(
-    \mathcal{M}\bigl(\Delta_{t_t}(t_{t_t}) \bigr) \Bigr)$.
+    \mathcal{M}\bigl(\Delta_{t_t}(t_{t_t}) \bigr) \Bigr)$ above.
     Accounting on the facts that
     $\mathpzc{Dom}(\Delta_{t_h}) \subseteq \mathpzc{Dom}(\Delta_t)$ s.t.
     $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$, which
     implies $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_{t_h}) =
-    \phi$ we find that
+    \phi$, thus we find that
     $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_h(t_h) \bigr) \Bigr) \cap
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr)
     \Bigr) = \phi$ similarly to above argument with
@@ -2616,14 +2618,14 @@ as follows.
     \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr) \Bigr)$ s.t.
     $\Gamma_{t_h} \vdash \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr) :
     \mathcal{R}_1$ both are from
-    Lemma \ref{dom_of_Gamma}, then we obtain
+    Property \ref{dom_of_Gamma}, then we obtain
     $\mathpzc{Dom}(\Gamma_{t_h}) \cap \bigl(\mathpzc{Dom}(\Gamma_h) \cup
     \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \bigr) = \phi$ for
     $\mathpzc{Dom}(\Gamma_{t_h}) \cap \bigcup_{j=2}^m \mathpzc{Dom}(
-    \Gamma'_j) = \phi$. Similar to above, according to the facts of
+    \Gamma'_j) = \phi$ above. Similarly according to the facts of
     $\mathpzc{Dom}(\Delta_h) \cap \mathpzc{Dom}(\Delta_t) = \phi$ s.t.
-    $\Delta_h \vdash t_h : \mathcal{R}_1$ and
-    $\Delta_t \vdash t_t : {\mathcal{R}_1}^*$, we see that
+    $\Delta_h \vdash t_h \triangleright \mathcal{R}_1$ and
+    $\Delta_t \vdash t_t \triangleright {\mathcal{R}_1}^*$, we see that
     $\mathpzc{Dom}(\Gamma_h) \cap \mathpzc{Dom}(\Gamma_t) = \phi$ s.t
     $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) :
     \mathcal{R}_1$ and
@@ -2657,14 +2659,12 @@ as follows.
     \setminus \bigl(\Delta'_t(t_{t_h}) \cup \Delta'_{t_h} \bigr) \Bigr)
     \biggr) = \{t'_2, \cdots t'_m \}$ shown as above. Thus
     $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr) =
-    \mathpzc{sub}\bigl(\mathcal{M}(t_t, t'_t, {\mathcal{R}_1}^*, \infty,
-    \Delta'_t) \bigr) =
     \mathpzc{sub}\biggl(\Bigl\{\mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr),
     t'_2, \cdots t'_m \Bigr\} \biggr) \supseteq
     \bigcup_{j=2}^m \mathpzc{sub}(t'_j) \supseteq
     \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j)$ thus
-    $\bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \subseteq
-    \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr)$ s.t.
+    $\mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr)
+    \supseteq \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j)$ s.t.
     $\Gamma'_j \vdash t'_j : \mathcal{R}_1$ for each $2 \le j \le m$.
     Therefore
     $\mathpzc{Dom}(\Gamma_h) \cap \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j)
@@ -2673,7 +2673,7 @@ as follows.
     \mathpzc{sub}\Bigl(\mathcal{M}\bigl(\Delta_t(t_t) \bigr) \Bigr) =
     \phi$ with
     $\mathpzc{Dom}(\Gamma_h) \subseteq \mathpzc{sub}\Bigl(\mathcal{M}\bigl(
-    \Delta_h(t_h) \bigr) \Bigr)$ we revealed above, which even implies that
+    \Delta_h(t_h) \bigr) \Bigr)$ revealed above, which even implies that
     $\mathpzc{Dom}(\Gamma_h) \cap \bigl(\mathpzc{Dom}(\Gamma_{t_h}) \cup
     \bigcup_{j=2}^m \mathpzc{Dom}(\Gamma'_j) \bigr) = \phi$ since
     $\mathpzc{Dom}(\Gamma_h) \cap \mathpzc{Dom}(\Gamma_{t_h}) = \phi$ as
@@ -2689,8 +2689,9 @@ as follows.
     \Bigr) \biggr\} \cup \bigl(\Gamma_h \cup \Gamma_{t_h} \cup
     \bigcup_{j=2}^m \Gamma'_j \bigr) \vdash
     \mathcal{M}\bigl(\Delta(t) \bigr) : {\mathcal{R}_1}^*$ where
-    $\mathcal{M}\bigl(\Delta(t) \bigr) = \Bigl\{
-    \mathcal{M}\bigl(\Delta_h(t_h) \bigr),
+    $\mathcal{M}\bigl(\Delta(t) \bigr) =
+    \Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr), t_2, \cdots t_n \Bigr\} =
+    \Bigl\{\mathcal{M}\bigl(\Delta_h(t_h) \bigr),
     \mathcal{M}\bigl(\Delta_{t_h}(t_{t_h}) \bigr), t'_2, \cdots t'_m
     \Bigr\}$ s.t.
     $\Gamma_h \vdash \mathcal{M}\bigl(\Delta_h(t_h) \bigr) :
@@ -2719,10 +2720,10 @@ as follows.
     \ref{claim2_for_completeness}.
     
     Case (T-Dup-xtend-sol):
-    Proof is same as the case of case (T-Cat1-xtend-sol).
+    Proof is similar to the case of case (T-Cat1-xtend-sol).
     
     Case (T-Dup-xtend-$\infty$):
-    Proof is same as the case of (T-Cat1-xtend-$\infty$) with Claim
+    Proof is similar to the case of (T-Cat1-xtend-$\infty$) with Claim
     \ref{claim3_for_completeness}.
     
     Case (T-Opt-xtend-nil):
@@ -2758,7 +2759,7 @@ as follows.
     (T-Alt-canon-L).
     
     Case (T-Alt-xtend-R):
-    Proof is same as the case of (T-Alt-xtend-L), with (T-Alt-canon-R).
+    Proof is similar to the case of (T-Alt-xtend-L), with (T-Alt-canon-R).
     $\Box$
   \end{Proof}
 \end{Lemma}

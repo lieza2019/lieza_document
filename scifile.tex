@@ -81,7 +81,7 @@
 
 % Include your paper's title here
 
-\title{A Typed language for Interlocking Logic Programming} 
+\title{A Typed language for Interlocking Logic Verification} 
 
 
 % Place the author information here.  Please hand-code the contact
@@ -150,7 +150,7 @@ accounting on the fact that the engineers have plenty experience in design
 of traditional relay-based interlocking equipment.
 
 This research tries to find the methods to obtain modern environment
-for designing, manufacturing and debugging in interlocking
+for designing, verification and debugging in interlocking
 equipment development process, and increase our productivity.
 
 
@@ -1696,14 +1696,15 @@ as follows.
 
 \begin{Lemma}{soundness on extended matching}
   \label{soundness_on_extended_matching}
-  \[ \Delta \vdash t \triangleright \mathcal{R}\;\; \text{\it for some}\
-      \Delta\ \text{\it s.t.}\
-       \mathpzc{Dom}(\Delta) = \mathpzc{Dom}(\Gamma),\
-        \text{\it where}\ \Gamma \vdash t : \mathcal{R}.
+  \[ \Delta \vdash t \triangleright \mathcal{R}\
+      \text{\it with}\ \mathpzc{Dom}(\Delta) = \mathpzc{Dom}(\Gamma)\;\;
+       \text{\it for some}\ \Delta,\ \text{\it s.t.}\
+        \Gamma \vdash t  : \mathcal{R}
   \]
   \begin{Proof}
     Proof is induction on structure of term $t$ s.t.
-    $\Gamma \vdash t : \mathcal{R}$.
+    $\Gamma \vdash t : \mathcal{R}$ with
+    Claim \ref{claim_for_soundness_on_extended_matching_2}.
 
     Case (T-Atom0-canon): Proof for this case is trivial, which is directly
     from both def. of (T-Atom0-canon) and (T-Atom0-xtend) as follow.
@@ -1754,194 +1755,12 @@ as follows.
     Case (T-Par-canon): Proof is same scheme as the case of
     (T-Cat-canon),
     
-    Case (T-Cat0-canon-nil): It's trivial, proof for this case is directly
-    from def, of (T-Cat0-canon-nil) and (T-Cat0-xtend-nil),
-    
-    Case (T-Cat0-canon-$\infty$): From induction hypothesis we can assume
-    that $\Delta_j \vdash t_j \triangleright \mathcal{R}_j$ s.t.
-    $\mathpzc{Dom}(\Delta_j) = \mathpzc{Dom}(\Gamma_j)$ for each
-    $1 \le j \le n$. Now we examines soundness for each cases,
-    $j = 1$ and $j \ge 2$.
-    $(j = 1)$: For first case, we can derive $\{t_1\} \simeq t_1$ by
-    Claim \ref{claim_for_soundness_on_extended_matching_1}, where
-    we mention that
-    $\{t_1\} \not\in \mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$
-    s.t. $\Gamma_1 \vdash t_1 : \mathcal{R}_1$. Thus we derive    
-    $\Bigl\{\bigl(\{t_1\}, t_1, {\mathcal{R}_1}^*, \text{\it sol}, \Delta_1
-    \bigr) \Bigr\} \cup \Delta_1 \vdash \{t_1\}
-    \triangleright {\mathcal{R}_1}^*$ from (T-Cat0-xtend-sol),
-    with desired properties of
-    $\mathpzc{Dom}\biggl(\Bigl\{\bigl(\{t_1\}, t_1, {\mathcal{R}_1}^*,
-    \text{\it sol}, \Delta_1 \bigr) \Bigr\} \cup \Delta_1 \biggr) =
-    \bigl(\{t_1\} \cup \mathpzc{Dom}(\Delta_1) \bigr) =
-    \bigl(\{t_1\} \cup \mathpzc{Dom}(\Gamma_1) \bigr) =
-    \mathpzc{Dom}(\Gamma)$, where we let
-    $\Gamma = \Bigl\{\bigl(\{t_1\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
-    \Gamma_1$.
-    $(j \ge 2)$: Here we think of the case of $j = 2$ that
-    $\Bigl\{\bigl(\{t_1, t_2\}, {\mathcal{R}_1}^*\bigr) \Bigr\} \cup
-    (\Gamma_1 \cup \Gamma_2) \vdash \{t_1, t_2\} : {\mathcal{R}_1}^*$,
-    where we are also given several assumptions mentioned above as
-    $\Delta_1 \vdash t_1 \triangleright \mathcal{R}_1$,
-    $\Delta_2 \vdash t_2 \triangleright \mathcal{R}_2$, s.t.
-    $\mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$ and
-    $\mathpzc{Dom}(\Delta_2) = \mathpzc{Dom}(\Gamma_2)$ satisfying
-    $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2) = \phi$ for
-    $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2) = \phi$
-    respectively.
-    And we can derive the term $\{t_2\}$ equivalent to $t_2$ i.e.
-    $\{t_2\} \simeq t_2$ similar by
-    Claim \ref{claim_for_soundness_on_extended_matching_1}, with
-    the condition of
-    $\{t_2\} \not\in \mathpzc{Dom}(\Delta_2) = \mathpzc{Dom}(\Gamma_2)$
-    s.t. $\Gamma_2 \vdash t_2 : \mathcal{R}_1$ for
-    $\mathpzc{size}\bigl(\{t_2\} \bigr) > \mathpzc{size}(t_2)$ with
-    Property \ref{termsize_constraint_on_Gamma}. Then we derive
-    $\Delta_t \vdash \{t_2\} \triangleright {\mathcal{R}_1}^*$ from
-    (T-Cat0-xtend-sol), where we let
-    $\Delta_t = \Bigl\{\bigl(\{t_2\}, t_2, {\mathcal{R}_1}^*,
-    \text{\it sol},\Delta_2 \bigr) \Bigr\} \cup \Delta_2$ which sustains
-    the condition of
-    $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_t) = \phi$ for both
-    facts of $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_2) = \phi$
-    and $\{t_2\} \not\in \mathpzc{Dom}(\Gamma_1) = \mathpzc{Dom}(\Delta_1)$.
-    Note that we assume $\{t_2\} \in \mathpzc{Dom}(\Gamma_1)$ whose binding
-    $\Gamma_1$ comming from $\Gamma_1 \vdash t_1 : \mathcal{R}_1$ also
-    satisfies the condition of $\mathpzc{Dom}(\Gamma_1) =
-    \mathpzc{sub}(t_1)$ from Property \ref{dom_of_Gamma},
-    i.e. $\{t_2\} \in \mathpzc{sub}(t_1)$ implies that
-    $t_2 \in \mathpzc{Dom}(\Gamma_1)$ for $t_2 \in
-    \mathpzc{sub}\bigl(\{t_2\} \bigr) \subseteq \mathpzc{sub}(t_1) =
-    \mathpzc{Dom}(\Gamma_1)$ from
-    Property \ref{self_similarity_on_subterms}, which contradicts
-    $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_2) = \phi$.
-    Consequently, we can derive the equivalency
-    $\{t_1, t_2\} \simeq t_1 \wedge \{t_2\}$, which derivation's detail is
-    explained in Claim \ref{claim_for_soundness_on_extended_matching_1},
-    where both $\{t_1, t_2\}$ and $t_1 \wedge t_2$ aren't belonging to
-    $\mathpzc{Dom}(\Delta_1 \cup \Delta_t) =
-    \bigl(\mathpzc{Dom}(\Delta_1) \cup \mathpzc{Dom}(\Delta_t) \bigr) =
-    \Bigl(\mathpzc{Dom}(\Delta_1) \cup \bigl(\{t_2\} \cup
-    \mathpzc{Dom}({\Delta_2}) \bigr) \Bigr) =
-    \Bigl(\bigl(\mathpzc{Dom}(\Gamma_1) \cup \mathpzc{Dom}({\Gamma_2})
-    \bigr) \cup \{t_2\} \Bigr)$ for their size constraints.
-    Then we eventually derive our goal of this case as
-    $\Bigl\{\big(\{t_1, t_2\}, t_1 \wedge t_2', {\mathcal{R}_1}^*,
-    \infty, (\Delta_1 \cup \Delta_t') \bigr) \Bigr\} \cup
-    (\Delta_1 \cup \Delta_t') \vdash \{t_1, t_2\} \triangleright
-    {\mathcal{R}_1}^*$ where we let
-    $\Delta_t' = \Delta_t \setminus \Delta_t \bigl(\{t_2\} \bigr) =
-    \Delta_2$ and $t_2' = t_2$, from (T-Cat0-xtend-$\infty$).
-    That also satisfies the condition of
-    $\mathpzc{Dom}\biggl(\Bigl\{\big(\{t_1, t_2\}, t_1 \wedge t_2,
-    {\mathcal{R}_1}^*, \infty, (\Delta_1 \cup \Delta_2) \bigr) \Bigr\} \cup
-    (\Delta_1 \cup \Delta_2) \biggr) =
-    \bigl(\{t_1, t_2\} \cup \mathpzc{Dom}(\Delta_1 \cup \Delta_2) \bigr) =
-    \bigl(\{t_1, t_2\} \cup \mathpzc{Dom}(\Gamma_1 \cup \Gamma_2)\bigr) =
-    \mathpzc{Dom}(\Gamma)$ as desired, where we let
-    $\Gamma = \Bigl\{\bigl(\{t_1, t_2\}, {\mathcal{R}_1}^* \bigr) \Bigr\}
-    \cup (\Gamma_1 \cup \Gamma_2)$.
-    Next we think of the case of $j > 2$. In this case  we suppose the
-    situation of
-    $\Bigl\{\bigl(\{t_1 \cdots t_n\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
-    \bigcup_{j=1}^n\Gamma_j \vdash \{t_1 \cdots t_n\}: {\mathcal{R}_1}^*$,
-    which implies the facts that
-    $\Gamma_2 \vdash t_2 : \mathcal{R}_1 \cdots
-    \Gamma_n \vdash t_n: \mathcal{R}_1$ satisfying the conditions of
-    $\mathpzc{Dom}(\Gamma_j) \cap \mathpzc{Dom}(\Gamma_k) = \phi$ if
-    $j \neq k$. Accounting on the fact of
-    $\{t_2 \cdots t_n\} \not\in \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)$
-    since term size of $\{t_2 \cdots t_n\}$ is greater than any of
-    $t_2 \cdots t_n$ s.t. $\Gamma_2 \vdash t_2: \mathcal{R}_1 \cdots
-    \Gamma_n \vdash t_n: \mathcal{R}_1$ respectively, we can derive
-    $\Bigl\{\bigl(\{t_2 \cdots t_n\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
-    \bigcup_{j=2}^n\Gamma_j \vdash \{t_2 \cdots t_n\}: {\mathcal{R}_1}^*$
-    from (T-Cat0-canon). Here we let n be the number of subterms of
-    $\{t_1 \cdots t_n\}$, the cases of $n \in \{1, 2\}$ are shown as the
-    cases of $j \le 2$ above.
-    For the case of $j > 2$, we suppose the derivation
-    $\Bigl\{\bigl(\{t_2 \cdots t_n\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
-    \bigcup_{j=2}^n\Gamma_j \vdash \{t_2 \cdots t_n\}: {\mathcal{R}_1}^*$,
-    which gives us the fact of
-    $\Delta_t \vdash \{t_2 \cdots t_n\} \triangleright {\mathcal{R}_1}^*$
-    for some $\Delta_t$ satisfying the condition of
-    $\mathpzc{Dom}(\Delta_t) = \mathpzc{Dom}(\Gamma_t)$, where we let
-    $\Gamma_t = \Bigl\{\bigl(\{t_2 \cdots t_n\}, {\mathcal{R}_1}^* \bigr)
-    \Bigr\} \cup \bigcup_{j=2}^n\Gamma_j$ by induction hypothesis. Now
-    we mention again that the prerequisite of
-    $\Bigl\{\bigl(\{t_1 \cdots t_n\}, {\mathcal{R}_1}^* \bigr) \Bigr\} \cup
-    \bigcup_{j=1}^n\Gamma_j  \vdash \{t_1 \cdots t_n\}: {\mathcal{R}_1}^*$
-    includes the fact of $\Gamma_1 \vdash t_1 : \mathcal{R}_1$, 
-    which also brings us $\Delta_1 \vdash t_1 \triangleright \mathcal{R}_1$
-    with the condition of
-    $\mathpzc{Dom}(\Delta_1) = \mathpzc{Dom}(\Gamma_1)$ by
-    induction hypothesis. Thus we can still find the Property of
-    $\mathpzc{Dom}(\Delta_1) \cap \mathpzc{Dom}(\Delta_t) =
-    \mathpzc{Dom}(\Gamma_1) \cap
-    \bigl(\{t_2 \cdots t_n\} \cup \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j)
-    \bigr) = \phi$ since we assume
-    $\{t_2 \cdots t_n\} \in \mathpzc{Dom}(\Gamma_1)$, it seems to be
-    $t_j \in \mathpzc{sub}\bigl(\{t_2 \cdots t_n\} \bigr) \subseteq
-    \mathpzc{Dom}(\Gamma_1)$ s.t. $2 \le j \le n$, which condtradicts
-    $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_j) = \phi$ where
-    $2 \le j \le n$.
-    From similar reason both $\{t_1, \cdots t_n\}$ and $t_1 \wedge t_t'$
-    aren't belonging to $\mathpzc{Dom}(\Gamma_1) \cup \bigl(\{t_2 \cdots t_n\} 
-    \cup \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \bigr) =
-    \mathpzc{Dom}(\Delta_1 \cup \Delta_t)$, since
-    $t_1 \wedge t_t' \not\in \mathpzc{Dom}(\Gamma_1)$ is by term size
-    constraint, and each $t_1 \not\in \mathpzc{Dom}(\Gamma_j)$ implises
-    $t_1 \wedge t_t' \not\in \bigl(\{t_2 \cdots t_n\} \cup
-    \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \bigr)$, i.e. assumimg of
-    $t_1 \wedge t_t' \in \mathpzc{Dom}(\Gamma_j)$ for some $j$ imposes on
-    $t_1 \in \mathpzc{Dom}(\Gamma_j) = \mathpzc{sub}(t_j)$ s.t.
-    $\Gamma_j \vdash t_j : \mathcal{R}_1$ because of
-    $t_1 \in \mathpzc{sub}(t_1 \wedge t_t')$ s.t.
-    $t_1 \wedge t_t' \in \mathpzc{Dom}(\Gamma_j)$ from Property
-    \ref{self_similarity_on_subterms}, it contradicts the fact of
-    $\mathpzc{Dom}(\Gamma_1) \cap \mathpzc{Dom}(\Gamma_j) = \phi$.
-    Accounting on the fact that the last applied rule on
-    $\Delta_t \vdash \{t_2 \cdots t_n\} \triangleright {\mathcal{R}_1}^*$
-    where $n \ge 2$ is (T-Cat0-xtend-$\infty$) by
-    induction hypothesis\footnote{Recall the structure of deduction for
-    each cases of $n \le 2$ above, the last applied rule on
-    $\Delta_t \vdash \{t_2 \cdots t_n\} \triangleright {\mathcal{R}_1}^*$
-    where $n > 2$ is also determined by induction hypothesis.}, we find
-    $t_t' \not\in \mathpzc{Dom}(\Delta_t)$ because of $t_t = \{t_2 \cdots
-    t_n\} \neq t_t'$. We even can let
-    $t_t' = t_{t_h} \wedge t_{t_t}'$ s.t.
-    
-    $\Delta_2 \vdash t_2 \triangleright \mathcal{R}_1$ comming from
-    $\Gamma_2 \vdash t_2 : \mathcal{R}_1$, on which we can say
-    $t_t' \not\in \mathpzc{Dom}(\Delta_1)$ by similar reasoning above.
-    Consequently we obtain
-    $t_t' \not\in \mathpzc{Dom}(\Delta_1 \cup \Delta_t)$.
-    According to the facts we have revealed above, we can derive our
-    conclusion as $\Bigl\{\bigl(\{t_1 \cdots t_n\}, t_1 \wedge t_t',
-    {\mathcal{R}_1}^*, \infty, (\Delta_1 \cup \Delta_t') \bigr) \Bigr\} \cup
-    (\Delta_1 \cup \Delta_t') \vdash
-    \{t_1 \cdots t_n\} \triangleright {\mathcal{R}_1}^*$ s.t.
-    $\Delta_t' = \Delta_t \setminus \Delta_t\bigl(\{t_2 \cdots t_n\} \bigr)$
-    where $\Delta_t\bigl(\{t_2 \cdots t_n\} \bigr) =
-    \bigl(\{t_2 \cdots t_n\}, t_t', {\mathcal{R}_1}^*, \infty, \Delta_t'
-    \bigr)$ from (T-Cat0-xtend-$\infty$), with the Property of
-    $\mathpzc{Dom}\biggl(\Bigl\{\bigl(\{t_1 \cdots t_n\}, t_1 \wedge t_t',
-    {\mathcal{R}_1}^*, \infty, (\Delta_1 \cup \Delta_t') \bigr) \Bigr\} \cup
-    (\Delta_1 \cup \Delta_t') \biggr) =
-    \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \mathpzc{Dom}(\Delta_1 \cup
-    \Delta_t') =
-    \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \bigl(\mathpzc{Dom}(\Delta_1)
-    \cup \mathpzc{Dom}(\Delta_t') \bigr) =
-    \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \biggl(\mathpzc{Dom}(\Delta_1)
-    \cup \mathpzc{Dom}\Bigl(\Delta_t \setminus \Delta_t\bigl(\{t_2 \cdots
-    t_n\} \bigr) \Bigr) \biggr) =
-    \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \bigl(\mathpzc{Dom}(\Gamma_1)
-    \cup \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \bigr) =
-    \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \bigcup_{j=1}^n\mathpzc{Dom}(
-    \Gamma_j) = \mathpzc{Dom}(\Gamma)$ as desired.
+    Case (T-Cat0-canon-nil), (T-Cat0-canon-$\infty$):
+    Proof for these cases are from
+    Claim \ref{claim_for_soundness_on_extended_matching_2}.
     
     Case (T-Cat1-canon): Proof is same scheme to the case of
-    (T-Cat-canon-$\infty$).
+    (T-Cat0-canon-$\infty$).
     
     Case (T-Dup-canon): Proof is same scheme to the case of (T-Cat1-canon).
 
@@ -1975,52 +1794,6 @@ as follows.
 
 
 \begin{Claim}
-  \label{claim_for_soundness_on_extended_matching_1}
-  \[ \{t_1\} \simeq t_1, \quad \{t_1, t_2\} \simeq t_1 \wedge \{t_2\}
-  \]
-  \begin{Proof}
-    See below derivation for each.\vspace{-7mm}
-    \def\proofSkipAmount{\vskip.8ex plus.8ex minus.4ex}
-    \begin{prooftree}
-      \AxiomC{}
-      \UnaryInfC{$t_1 \equiv t_1$}
-      \LeftLabel{$(\text{\it Identity})$}
-      \UnaryInfC{$t_1 \simeq t_1$}
-      
-      \LeftLabel{$(\text{\it Associativity-Cat0}_1)$}
-      \UnaryInfC{$t_1 \simeq \{t_1\}$}
-      
-      \LeftLabel{$(\text{\it Symmetry})$}
-      \UnaryInfC{$\{t_1\} \simeq t_1$}
-      
-      \AxiomC{}
-      \UnaryInfC{$t_1 \equiv t_1$}
-      \RightLabel{$(\text{\it Identity})$}
-      \UnaryInfC{$t_1 \simeq t_1$}
-      
-      \AxiomC{}
-      \UnaryInfC{$\{t_2\} \equiv \{t_2\}$}
-      \RightLabel{$(\text{\it Identity})$}
-      \UnaryInfC{$\{t_2\} \simeq \{t_2\}$}
-      
-      \RightLabel{$(\text{\it Transparency-Cas})$}
-      \BinaryInfC{$t_1 \wedge \{t_2\} \simeq t_1 \wedge \{t_2\}$}
-      
-      \RightLabel{$(\text{\it AssociativityH-Cat0}_\infty)$}
-      \UnaryInfC{$t_1 \wedge \{t_2\} \simeq \{t_1, t_2\}$}
-      
-      \RightLabel{$(\text{\it Symmetry})$}
-      \UnaryInfC{$\{t_1, t_2\} \simeq t_1 \wedge \{t_2\}$}
-      
-      \noLine
-      \BinaryInfC{}
-    \end{prooftree}
-    $\Box$
-  \end{Proof}
-\end{Claim}
-
-
-\begin{Claim}
   \label{claim_for_soundness_on_extended_matching_2}
   \[ \begin{array}{l}
        \Delta \vdash \{t_1, \cdots t_n\} \triangleright \mathcal{R}\
@@ -2040,7 +1813,8 @@ as follows.
   \]
   \begin{Proof}
     Proof is induction on structure of $t$ s.t.
-    $\Gamma \vdash t : \mathcal{R}$.
+    $\Gamma \vdash t : \mathcal{R}$, with
+    Lemma \ref{soundness_on_extended_matching}.
     
     Case (T-Cat0-canon-nil): It's trivial, proof for this case is directly
     from def, of (T-Cat0-canon-nil) and (T-Cat0-xtend-nil),
@@ -2242,6 +2016,52 @@ as follows.
     \cup \bigcup_{j=2}^n\mathpzc{Dom}(\Gamma_j) \bigr) =
     \bigl\{\{t_1 \cdots t_n\} \bigr\} \cup \bigcup_{j=1}^n\mathpzc{Dom}(
     \Gamma_j) = \mathpzc{Dom}(\Gamma)$ as desired.
+    $\Box$
+  \end{Proof}
+\end{Claim}
+
+
+\begin{Claim}
+  \label{claim_for_soundness_on_extended_matching_1}
+  \[ \{t_1\} \simeq t_1, \quad \{t_1, t_2\} \simeq t_1 \wedge \{t_2\}
+  \]
+  \begin{Proof}
+    See below derivation for each.\vspace{-7mm}
+    \def\proofSkipAmount{\vskip.8ex plus.8ex minus.4ex}
+    \begin{prooftree}
+      \AxiomC{}
+      \UnaryInfC{$t_1 \equiv t_1$}
+      \LeftLabel{$(\text{\it Identity})$}
+      \UnaryInfC{$t_1 \simeq t_1$}
+      
+      \LeftLabel{$(\text{\it Associativity-Cat0}_1)$}
+      \UnaryInfC{$t_1 \simeq \{t_1\}$}
+      
+      \LeftLabel{$(\text{\it Symmetry})$}
+      \UnaryInfC{$\{t_1\} \simeq t_1$}
+      
+      \AxiomC{}
+      \UnaryInfC{$t_1 \equiv t_1$}
+      \RightLabel{$(\text{\it Identity})$}
+      \UnaryInfC{$t_1 \simeq t_1$}
+      
+      \AxiomC{}
+      \UnaryInfC{$\{t_2\} \equiv \{t_2\}$}
+      \RightLabel{$(\text{\it Identity})$}
+      \UnaryInfC{$\{t_2\} \simeq \{t_2\}$}
+      
+      \RightLabel{$(\text{\it Transparency-Cas})$}
+      \BinaryInfC{$t_1 \wedge \{t_2\} \simeq t_1 \wedge \{t_2\}$}
+      
+      \RightLabel{$(\text{\it AssociativityH-Cat0}_\infty)$}
+      \UnaryInfC{$t_1 \wedge \{t_2\} \simeq \{t_1, t_2\}$}
+      
+      \RightLabel{$(\text{\it Symmetry})$}
+      \UnaryInfC{$\{t_1, t_2\} \simeq t_1 \wedge \{t_2\}$}
+      
+      \noLine
+      \BinaryInfC{}
+    \end{prooftree}
     $\Box$
   \end{Proof}
 \end{Claim}

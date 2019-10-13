@@ -93,7 +93,7 @@
 \author
 {Nobody,$^{1\ast}$Somebody,$^{1}$Anybody$^{1}$\\
 \\
-\normalsize{$^{1}$THE NIPPON SIGNAL CO., LTD. Tokyo Japan}\\
+\normalsize{$^{1}$SOMETHING CONSTRUCTIVE  CO., LTD. Tokyo Japan}\\
 \normalsize{$^\ast$To whom correspondence should be addressed;
   E-mail: noname@nowhere.com.}
 }
@@ -4756,5 +4756,1749 @@ MSlR) | ASR)")));;
     $\Box$
   \end{Proof}
 \end{Claim}
+
+
+\pagebreak
+\section{Appendix 2: LIezA internal}
+\label{Appendix_2}
+
+Prototype of LIezA source codes written in Caml, experimental
+implementation.
+\vspace{5mm}
+
+lie\_main.ml:
+\begin{tiny}
+\begin{verbatim}
+(*
+  #load "lie_type.cmo";;
+  #load "lie_equiv.cmo";;
+  #load "lie_lexer.cmo";;
+  #load "lie_parser.cmo";;
+  #load "lie_main.cmo";;
+  open Lie_type;;
+  open Lie_equiv;;
+  open Lie_main;;
+ *)
+
+
+open List
+open Printf
+open Lie_type
+open Lie_parser
+open Lie_lexer
+open Lie_trans
+
+
+
+
+let pat_addr_initial = 1;;
+let ter_addr_initial = 1;;
+
+
+let carve_pat pat =
+  let rec carving p n =
+    match p with
+      Pat_ent (op, id, _) -> (Pat_ent (op, id, n), n + 1)
+    | Pat_una (op, p1, _) -> (match (carving p1 n) with
+                                (p1', n') -> (Pat_una (op, p1', n'), n' + 1) )
+    | Pat_bin (op, pl, pr, _) -> (match (carving pr n) with
+                                    (pr', n') -> (match (carving pl n') with
+                                                    (pl', n'') -> (Pat_bin (op, pl', pr',n'), n' + 1) )
+                                 )
+  in
+  match (carving pat pat_addr_initial) with
+    (carved_pat, m) -> carved_pat;;
+
+
+let carve_term ter =
+  let rec carving t n =
+    match t with
+      Term_ent (op, id, sp, _) -> (Term_ent (op, id, sp, n), n + 1)
+    | Term_una (op, t1) -> (match (carving t1 n) with
+                              (t1', n') -> (Term_una (op, t1'), n'))
+    | Term_bin (op, tl, tr) -> (match (carving tr n) with
+                                  (tr', n') -> (match (carving tl n') with
+                                                  (tl', n'') -> (Term_bin (op, tl', tr'), n''))
+                               )
+  in
+  match (carving ter ter_addr_initial) with
+    (carved_term, m) -> carved_term;;
+
+
+
+
+let cli src =
+  try
+    let pat = Lie_parser.main Lie_lexer.token (Lexing.from_string src) in
+    Some pat
+  with
+    (Lex_err msg) -> printf "%s.\n" msg;
+                     None;;
+let compile src =
+  match (cli src) with
+    Some CLI (ter, pat) -> Some (CLI( (carve_term ter), pat ))
+  | None -> None;;
+
+
+let cli_ter cli =
+  match cli with
+    Some CLI (ter, pat) -> ter;;
+
+
+let cli_pat cli =
+  match cli with
+    Some CLI (ter, pat) -> pat;;
+
+
+let compile_ter src_str =
+  cli_ter (compile (src_str ^ ": R*"));;
+
+
+let compile_pat pat_str =
+  cli_pat (compile ("{} :" ^ pat_str));;
+
+
+
+
+let rec discomp_ter ter =
+  let rec tail_cat0 t =
+    match t with
+      Term_bin (STAR, th, ts) -> (discomp_ter th) ^ "," ^ (tail_cat0 ts)
+    | _ -> (discomp_ter t)
+  in
+  let rec tail_cat1 t =
+    match t with
+      Term_bin (CROSS, th, ts) -> (discomp_ter th) ^ "," ^ (tail_cat1 ts)
+    | _ -> (discomp_ter t)
+  in
+  let rec tail_dup t =
+    match t with
+      Term_bin (STROK, th, ts) -> (discomp_ter th) ^ "," ^ (tail_dup ts)
+    | _ -> (discomp_ter t)
+  in
+  match ter with
+    Term_ent (op, id, sp, ad) -> id ^ (if (sp <> "") then  ("_" ^ sp) else "")
+  | Term_una (op, t1) -> (match op with
+                            STAR -> (match t1 with
+                                       Term_ent (NIL, _, _, _) -> "{}"
+                                     | _ -> "{" ^ (discomp_ter t1) ^ "}" )
+                          | CROSS -> "[" ^ (discomp_ter t1) ^ "]"
+                          | STROK -> "<" ^ (discomp_ter t1) ^ ">"
+                          | OPT -> (match t1 with
+                                      Term_ent (NIL, _, _, _) -> "*"
+                                    | _ -> (discomp_ter t1) ^ "?" )
+                          | LEFT -> (discomp_ter t1) ^ "<-"
+                          | RIGHT -> (discomp_ter t1) ^ "->"
+                          | _ -> raise (Illegal_ter_detected (ter, __LINE__, __FILE__))
+                         )
+  | Term_bin (STAR, th, ts) -> "{" ^ (tail_cat0 ter) ^ "}"
+  | Term_bin (CROSS, th, ts) -> "{" ^ (tail_cat1 ter) ^ "}"
+  | Term_bin (STROK, th, ts) -> "{" ^ (tail_dup ter) ^ "}"
+  | Term_bin (WEDGE, tl, tr) -> (match tl with
+                                   Term_ent (ENT, id1, sp1, ad1) ->
+                                    (match tr with
+                                       Term_ent (ENT, _, _, _) -> "(" ^ (discomp_ter tl) ^ " & " ^ (discomp_ter tr) ^ ")"
+                                     | Term_una (_, t1) -> "(" ^ (discomp_ter tl) ^ " & " ^ (discomp_ter tr) ^ ")"
+                                     | Term_bin (_, trl, trr) -> "(" ^ (discomp_ter tl) ^ " & (" ^ (discomp_ter tr) ^ "))"
+                                     | _ -> raise (Illegal_ter_detected (tr, __LINE__, __FILE__)) )
+                                 | Term_una (_, tl1) ->
+                                    (match tr with
+                                       Term_ent (ENT, _, _, _) -> "(" ^ (discomp_ter tl) ^ " & " ^ (discomp_ter tr) ^ ")"
+                                     | Term_una (_, t1) -> "(" ^ (discomp_ter tl) ^ " & " ^ (discomp_ter tr) ^ ")"
+                                     | Term_bin (_, trl, trr) -> "(" ^ (discomp_ter tl) ^ " & (" ^ (discomp_ter tr) ^ "))"
+                                     | _ -> raise (Illegal_ter_detected (tr, __LINE__, __FILE__)) )
+                                 | Term_bin (_, tll, tlr) ->
+                                    (match tr with
+                                       Term_ent (ENT, _, _, _) -> "((" ^ (discomp_ter tl) ^ ") & " ^ (discomp_ter tr) ^ ")"
+                                     | Term_una (_, t1) -> "((" ^ (discomp_ter tl) ^ ") & " ^ (discomp_ter tr) ^ ")"
+                                     | Term_bin (_, trl, trr) -> "((" ^ (discomp_ter tl) ^ ") & (" ^ (discomp_ter tr) ^ "))"
+                                     | _ -> raise (Illegal_ter_detected (tr, __LINE__, __FILE__)) )
+                                 | _ -> raise (Illegal_ter_detected (tl, __LINE__, __FILE__))
+                                )
+  | Term_bin (VEE, tl, tr) -> (match tl with
+                                 Term_ent (ENT, id1, sp1, ad1) ->
+                                  (match tr with
+                                     Term_ent (ENT, _, _, _) -> "(" ^ (discomp_ter tl) ^ " | " ^ (discomp_ter tr) ^ ")"
+                                   | Term_una (_, t1) -> "(" ^ (discomp_ter tl) ^ " | " ^ (discomp_ter tr) ^ ")"
+                                   | Term_bin (_, trl, trr) -> "(" ^ (discomp_ter tl) ^ " | (" ^ (discomp_ter tr) ^ "))"
+                                   | _ -> raise (Illegal_ter_detected (tr, __LINE__, __FILE__)) )
+                               | Term_una (_, tl1) ->
+                                  (match tr with
+                                     Term_ent (ENT, _, _, _) -> "(" ^ (discomp_ter tl) ^ " | " ^ (discomp_ter tr) ^ ")"
+                                   | Term_una (_, t1) -> "(" ^ (discomp_ter tl) ^ " | " ^ (discomp_ter tr) ^ ")"
+                                   | Term_bin (_, trl, trr) -> "(" ^ (discomp_ter tl) ^ " | (" ^ (discomp_ter tr) ^ "))"
+                                   | _ -> raise (Illegal_ter_detected (tr, __LINE__, __FILE__)) )
+                               | Term_bin (_, tll, tlr) ->
+                                  (match tr with
+                                     Term_ent (ENT, _, _, _) -> "((" ^ (discomp_ter tl) ^ ") | " ^ (discomp_ter tr) ^ ")"
+                                   | Term_una (_, t1) -> "((" ^ (discomp_ter tl) ^ ") | " ^ (discomp_ter tr) ^ ")"
+                                   | Term_bin (_, trl, trr) -> "((" ^ (discomp_ter tl) ^ ") | (" ^ (discomp_ter tr) ^ "))"
+                                   | _ -> raise (Illegal_ter_detected (tr, __LINE__, __FILE__)) )
+                               | _ -> raise (Illegal_ter_detected (tl, __LINE__, __FILE__))
+                              )
+  | _ -> raise (Illegal_ter_detected (ter, __LINE__, __FILE__));;
+
+
+let term0 t =
+  discomp_ter t;;
+
+
+let term1 t =
+  match t with
+    Some t -> term0 t
+  | None -> "";;
+
+
+let foreach ts =
+  match ts with
+    None -> []
+  | Some tl -> map term0 tl;;
+
+
+let term judgement =
+  match judgement with
+    Some {ter = t} -> term0 t
+  | None -> "";;
+
+
+let cterm judgement =
+  match (canon judgement) with
+    Some c_t -> term0 c_t
+  | None -> "";;
+\end{verbatim}
+\end{tiny}
+
+\pagebreak
+lie\_type.ml:
+\begin{tiny}
+\begin{verbatim}
+type term_ope =
+  | NIL
+  | ENT
+  | STAR
+  | CROSS
+  | STROK
+  | OPT
+  | ALT
+  | LEFT
+  | RIGHT
+  | WEDGE
+  | VEE
+  | SEQ;;
+
+type pattern =
+  | Pat_ent of term_ope * string * int
+  | Pat_una of term_ope * pattern * int
+  | Pat_bin of term_ope * pattern * pattern * int
+
+type term =
+  | Term_ent of term_ope * string * string * int
+  | Term_una of term_ope * term
+  | Term_bin of term_ope * term * term;;
+
+type cli =
+  | CLI of term * pattern;;
+
+
+type fin_sym =
+  | FIN_GND
+  | FIN_DEF
+  | FIN_WEDGE
+  | FIN_VEE
+  | FIN_NIL
+  | FIN_SOL
+  | FIN_INFTY
+  | FIN_L
+  | FIN_R;;
+  
+type binding =
+  {ter:term; equ:term; pat:pattern; fin:fin_sym; bindings:binding list};;
+
+
+
+exception Illegal_pat_detected of pattern * int * string;;
+exception Illformed_bindings_detected of term * pattern * int * string;;
+exception Illformed_equterm_detected of term * pattern * int * string;;
+exception Illegal_ter_detected of term * int * string;;
+
+
+
+let rec term_size t =
+  match t with
+    Term_ent (NIL, "", sp, ad) -> 0
+  | Term_ent (ENT, id, sp, ad) -> 1
+  | Term_una (STAR, t_1) ->(term_size t_1) + 1
+  | Term_bin (STAR, t_h, t_tl) -> (match t_tl with
+                                     Term_bin (STAR, _, _) -> (term_size t_h) + (term_size t_tl)
+                                   | _ -> (term_size t_h) + (term_size t_tl) + 1 )
+  | Term_una (CROSS, t_1) ->(term_size t_1) + 1
+  | Term_bin (CROSS, t_h, t_tl) -> (match t_tl with
+                                      Term_bin (CROSS, _, _) -> (term_size t_h) + (term_size t_tl)
+                                    | _ -> (term_size t_h) + (term_size t_tl) + 1 )
+  | Term_una (STROK, t_1) ->(term_size t_1) + 1
+  | Term_bin (STROK, t_h, t_tl) -> (match t_tl with
+                                      Term_bin (STROK, _, _) -> (term_size t_h) + (term_size t_tl)
+                                    | _ -> (term_size t_h) + (term_size t_tl) + 1 )
+  | Term_una (OPT, t_1) -> (term_size t_1) + 1
+  | Term_una (LEFT, t_1) -> (term_size t_1) + 1
+  | Term_una (RIGHT, t_1) -> (term_size t_1) + 1
+  | Term_bin (WEDGE, t_1, t_2) -> (term_size t_1) + (term_size t_2) + 1
+  | Term_bin (VEE, t_1, t_2) -> (term_size t_1) + (term_size t_2) + 1
+  | _ -> raise (Illegal_ter_detected (t, __LINE__, __FILE__));;
+
+
+let rec pat_size p =
+  match p with
+  | Pat_ent (NIL, "", ad) -> 0
+  | Pat_ent (ENT, id, ad) -> 1
+  | Pat_bin (WEDGE, p_1, p_2, ad) -> (pat_size p_1) + (pat_size p_2) + 1
+  | Pat_bin (VEE, p_1, p_2, ad) -> (pat_size p_1) + (pat_size p_2) + 1
+  | Pat_una (STAR, p_1, ad) -> (pat_size p_1) + 1
+  | Pat_una (CROSS, p_1, ad) -> (pat_size p_1) + 1
+  | Pat_una (STROK, p_1, ad) -> (pat_size p_1) + 1
+  | Pat_una (OPT, p_1, ad) -> (pat_size p_1) + 1
+  | Pat_bin (ALT, p_L, p_R, ad) -> (pat_size p_L) + (pat_size p_R) + 1
+  | _ -> raise (Illegal_pat_detected (p, __LINE__, __FILE__));;
+
+
+let rec set_nelems tl =
+  match tl with
+    [] -> 0
+  | (t::ts) -> (set_nelems ts) + 1
+
+
+let rec pat_ident p1 p2 =
+  match p1 with
+    Pat_ent (op1, id1, ad1) -> (match p2 with
+                                  Pat_ent (op2, id2, ad2) -> ((op1 = op2) && (id1 = id2))
+                                | _ -> false )
+  | Pat_una (op1, p1_pri, ad1) -> (match p2 with
+                                     Pat_una (op2, p2_pri, ad2) -> ((op1 = op2) && (pat_ident p1_pri p2_pri))
+                                   | _ -> false )
+  | Pat_bin (op1, p1_l, p1_r, ad1) -> (match p2 with
+                                         Pat_bin (op2, p2_l, p2_r, ad2) -> ((op1 = op2) && (pat_ident p1_l p2_l) && (pat_ident p1_r p2_r))
+                                       | _ -> false )
+
+
+let rec term_ident t1 t2 =
+  match t1 with
+    Term_ent (op1, id1, sp1, ad1) -> (match t2 with
+                                        Term_ent (op2, id2, sp2, ad2) -> ((op1 = op2) && (id1 = id2) && (sp1 = sp2) && (ad1 = ad2))
+                                      | _ -> false )
+  | Term_una (op1, t1_pri) -> (match t2 with
+                                 Term_una (op2, t2_pri) -> ((op1 = op2) && (term_ident t1_pri t2_pri))
+                               | _ -> false )
+  | Term_bin (op1, t1_l, t1_r) -> (match t2 with
+                                     Term_bin (op2, t2_l, t2_r) ->
+                                      ((op1 == op2) && (term_ident t1_l t2_l) && (term_ident t1_r t2_r))
+                                   | _ -> false )
+
+
+let rec set_sub s1 s2 =
+  let rec rid t hd tl =
+    match tl with
+      [] -> hd
+    | (x::xs) -> if (term_ident x t) then (hd @ xs) else (rid t (hd @ [x]) xs)
+  in
+  match s1 with
+    [] -> s2
+  | (x::xs) -> set_sub xs (rid x [] s2)
+
+
+let rec set_union det s1 s2 =
+  let add t tl =
+    let rec exists t tl =
+      match tl with
+        [] -> false
+      | x::xs -> if (det x t) then true else (exists t xs)
+    in
+    if (exists t tl) then tl else (t::tl)
+  in
+  match s1 with
+    [] -> s2
+  | x::xs -> set_union det xs (add x s2);;
+\end{verbatim}
+\end{tiny}
+
+
+\pagebreak
+lie\_equiv.ml:
+\begin{tiny}
+\begin{verbatim}
+open Lie_type
+
+
+type assoc_dir =
+  | L2R
+  | R2L;;
+
+
+(* Brings next equivalent term over associativity on cascade connectivity. *)
+let rec equiv_assoc_cas (t, dir) =
+  match t with
+    Term_ent (op, id, sp, ad) -> (None, dir)
+  | Term_una (op, t1) -> (None, dir)
+  | Term_bin (WEDGE, Term_ent (op_l, id_l, sp_l, ad_l), Term_ent (op_r, id_r, sp_r, ad_r)) -> (None, dir)
+  | Term_bin (WEDGE, Term_ent (op_l, id_l, sp_l, ad_l), Term_una (op_r, t_r)) -> (None, dir)
+  | Term_bin (WEDGE, Term_una (op_l, t_l), Term_ent (op_r, id_r, sp_r, ad_r)) -> (None, dir)
+  | Term_bin (WEDGE, Term_una (op_l, t_l), Term_una (op_r, t_r)) -> (None, dir)
+  | Term_bin (WEDGE, l, r) -> assoc_cas_family l r dir
+  | Term_bin (_, l, r) -> (None, dir)
+and assoc_cas_family l r d =
+  let assoc_cas_R l r =
+    let rec sft2_r l r =
+      match l with
+        Term_ent (op, id, sp, ad) -> None
+      | Term_una (op, l1) -> None
+      | Term_bin (WEDGE, ll, Term_ent (op_lr, id_lr, sp_lr, ad_lr)) -> Some (ll, Term_bin (WEDGE, Term_ent (op_lr, id_lr, sp_lr, ad_lr), r))
+      | Term_bin (WEDGE, ll, Term_una (op_lr, lr1)) -> Some (ll, Term_bin (WEDGE, Term_una (op_lr, lr1), r))
+      | Term_bin (WEDGE, ll, lr) -> (match lr with
+                                       Term_bin (WEDGE, _, _) -> (match (sft2_r lr r) with
+                                                                    None -> None
+                                                                  | Some (pl, pr) -> Some (Term_bin (WEDGE, ll, pl), pr) )
+                                     | _ -> Some (ll, Term_bin (WEDGE, lr, r)) )
+      | Term_bin (_, ll, lr) -> None
+    in
+    match (sft2_r l r) with
+      None -> None
+    | Some (l', r') -> Some (Term_bin (WEDGE, l', r'))
+  in
+  let assoc_cas_L l r =
+    let rec sft2_l l r =
+      match r with
+        Term_ent (op, id, sp, ad) -> None
+      | Term_una (op, r1) -> None
+      | Term_bin (WEDGE, Term_ent (op_rl, id_rl, sp_rl, ad_rl), rr) -> Some (Term_bin (WEDGE, l, Term_ent (op_rl, id_rl, sp_rl, ad_rl)), rr)
+      | Term_bin (WEDGE, Term_una (op_rl, rl1), rr) -> Some (Term_bin (WEDGE, l, Term_una (op_rl, rl1)), rr)
+      | Term_bin (WEDGE, rl, rr) -> (match rl with
+                                       Term_bin (WEDGE, _, _) -> (match (sft2_l l rl) with
+                                                                    None -> None
+                                                                  | Some (pl, pr) -> Some (pl, Term_bin (WEDGE, pr, rr)) )
+                                     | _ -> Some (Term_bin (WEDGE, l, rl), rr) )
+      | Term_bin (_, rl, rr) -> None
+    in
+    match (sft2_l l r) with
+      None -> None
+    | Some (l', r') -> Some (Term_bin (WEDGE, l', r'))
+  in
+  match d with
+    L2R -> (match l with
+              Term_bin (WEDGE, ll, lr) -> ((assoc_cas_R l r), L2R)
+            | _ -> (None, L2R) )
+  | R2L -> (match r with
+              Term_bin (WEDGE, rl, rr) -> ((assoc_cas_L l r), R2L)
+            | _ -> (None, R2L) );;
+
+
+
+
+let rec equiv_assoc_par (t, dir) =
+  match t with
+    Term_ent (op, id, sp, ad) -> (None, dir)
+  | Term_una (op, t1) -> (None, dir)
+  | Term_bin (VEE, Term_ent (op_l, id_l, sp_l, ad_l), Term_ent (op_r, id_r, sp_r, ad_r)) -> (None, dir)
+  | Term_bin (VEE, Term_ent (op_l, id_l, sp_l, ad_l), Term_una (op_r, t_r)) -> (None, dir)
+  | Term_bin (VEE, Term_una (op_l, t_l), Term_ent (op_r, id_r, sp_r, ad_r)) -> (None, dir)
+  | Term_bin (VEE, Term_una (op_l, t_l), Term_una (op_r, t_r)) -> (None, dir)
+  | Term_bin (VEE, l, r) -> assoc_par_family l r dir
+  | Term_bin (_, l, r) -> (None, dir)
+and assoc_par_family l r d =
+  let assoc_par_R l r =
+    let rec sft2_r l r =
+      match l with
+        Term_ent (op, id, sp, ad) -> None
+      | Term_una (op, l1) -> None
+      | Term_bin (VEE, ll, Term_ent (op_lr, id_lr, sp_lr, ad_lr)) -> Some (ll, Term_bin (VEE, Term_ent (op_lr, id_lr, sp_lr, ad_lr), r))
+      | Term_bin (VEE, ll, Term_una (op_lr, lr1)) -> Some (ll, Term_bin (VEE, Term_una (op_lr, lr1), r))
+      | Term_bin (VEE, ll, lr) -> (match lr with
+                                       Term_bin (VEE, _, _) -> (match (sft2_r lr r) with
+                                                                    None -> None
+                                                                  | Some (pl, pr) -> Some (Term_bin (VEE, ll, pl), pr) )
+                                     | _ -> Some (ll, Term_bin (VEE, lr, r)) )
+      | Term_bin (_, ll, lr) -> None
+    in
+    match (sft2_r l r) with
+      None -> None
+    | Some (l', r') -> Some (Term_bin (VEE, l', r'))
+  in
+  let assoc_par_L l r =
+    let rec sft2_l l r =
+      match r with
+        Term_ent (op, id, sp, ad) -> None
+      | Term_una (op, r1) -> None
+      | Term_bin (VEE, Term_ent (op_rl, id_rl, sp_rl, ad_rl), rr) -> Some (Term_bin (VEE, l, Term_ent (op_rl, id_rl, sp_rl, ad_rl)), rr)
+      | Term_bin (VEE, Term_una (op_rl, rl1), rr) -> Some (Term_bin (VEE, l, Term_una (op_rl, rl1)), rr)
+      | Term_bin (VEE, rl, rr) -> (match rl with
+                                       Term_bin (VEE, _, _) -> (match (sft2_l l rl) with
+                                                                    None -> None
+                                                                  | Some (pl, pr) -> Some (pl, Term_bin (VEE, pr, rr)) )
+                                     | _ -> Some (Term_bin (VEE, l, rl), rr) )
+      | Term_bin (_, rl, rr) -> None
+    in
+    match (sft2_l l r) with
+      None -> None
+    | Some (l', r') -> Some (Term_bin (VEE, l', r'))
+  in
+  match d with
+    L2R -> (match l with
+              Term_bin (VEE, ll, lr) -> ((assoc_par_R l r), L2R)
+            | _ -> (None, L2R) )
+  | R2L -> (match r with
+              Term_bin (VEE, rl, rr) -> ((assoc_par_L l r), R2L)
+            | _ -> (None, R2L) );;
+
+
+
+
+(* gathering by "Associativity-Cas" and "Associativity-Par" *)
+let equiv_assocs (t_orig, t_resume, assoc_dir) =
+  match t_resume with
+    Term_ent (op, id, sp, ad) -> (None, assoc_dir)
+  | Term_una (op, t1) -> (None, assoc_dir)
+  | Term_bin (WEDGE, l, r) -> let t_res' = (equiv_assoc_cas (t_resume, assoc_dir)) in
+                              (match t_res' with
+                                 (None, R2L) -> (None, R2L)
+                               | (None, L2R) -> equiv_assoc_cas (t_orig, R2L)
+                               | (Some e, _) -> t_res' )
+  | Term_bin (VEE, l, r) -> let t_res' = (equiv_assoc_par (t_resume, assoc_dir)) in
+                              (match t_res' with
+                                 (None, R2L) -> (None, R2L)
+                               | (None, L2R) -> equiv_assoc_par (t_orig, R2L)
+                               | (Some e, _) -> t_res' )
+  | Term_bin (_, l, r) -> (None, assoc_dir);;
+
+
+
+
+let rec equiv_terms (t_orig, t_resume, assoc_dir) ena_bumpup =
+  let derive t =
+    let equ_ph2 = (gath_equivs t) in
+    let equ_ph3 = (gath_equ_ph3 equ_ph2) in
+    let equ_ph4 = if ena_bumpup then (gath_equ_ph4 equ_ph2) else equ_ph2
+    in
+    (set_union term_ident equ_ph2 (set_union term_ident equ_ph3 equ_ph4))
+  in    
+  match t_resume with
+    None -> (Some t_orig, (derive t_orig), L2R)
+  | Some t_res -> let equ_assoc = (equiv_assocs (t_orig, t_res, assoc_dir))
+                  in
+                  match equ_assoc with
+                    (None, dir) -> (None, [], dir)
+                  | (Some e, dir) -> (Some e, (derive e), dir)
+
+
+and gath_equivs t =
+  (* gathering equivalents by "Identity" and
+     "Associativity-Cat0_1", "Associativity-Cat1_1", "Associativity-Dup_1",
+     "AssociativityH-Cat0_infty", "AssociativityH-Cat1_infty", "AssociativityH-Dup_infty",
+     "Optional", "Alt-L", "Alt-R". *)
+  let rec gath_equ_ph2 equiv =
+    let strip_grp t =
+      match t with
+        Term_una (STAR, t1) -> (match t1 with
+                                  Term_ent (NIL, "", "", ad) -> []
+                                | _ -> [t1])
+      | Term_una (CROSS, t1) -> [t1]
+      | Term_una (STROK, t1) -> [t1]
+      | Term_una (OPT, t1) -> (match t1 with
+                                 Term_ent (NIL, "", "", ad) -> []
+                               | _ -> [t1])
+      | Term_una (LEFT, t1) -> [t1]
+      | Term_una (RIGHT, t1) -> [t1]
+      | _ -> []
+    in
+    let split_grp t =
+      match t with
+      | Term_bin (STAR, tl, tr) -> let tr' = (match tr with
+                                                Term_ent (op, id, sp, ad) -> Term_una (STAR, tr)
+                                              | _ -> tr)
+                                   in
+                                   [Term_bin (WEDGE, tl, tr')]
+      | Term_bin (CROSS, tl, tr) -> let tr' = (match tr with
+                                                 Term_ent (op, id, sp, ad) -> Term_una (CROSS, tr)
+                                               | _ -> tr)
+                                    in
+                                    [Term_bin (WEDGE, tl, tr')]
+      | Term_bin (STROK, tl, tr) -> let tr' = (match tr with
+                                                 Term_ent (op, id, sp, ad) -> Term_una (STROK, tr)
+                                               | _ -> tr)
+                                    in
+                                    [Term_bin (VEE, tl, tr')]                                   
+      | _ -> []
+    in
+    match equiv with
+    | Term_ent (op, id, sp, ad) -> [equiv]
+    | Term_una (op, t1) ->  [equiv] @ (strip_grp equiv)
+    | Term_bin (WEDGE, tl, tr) -> [equiv]
+    | Term_bin (VEE, tl, tr) -> [equiv]
+    | Term_bin (_, _, _) -> [equiv] @ (split_grp equiv)
+  in
+  gath_equ_ph2 t
+
+
+(* gathering by "RevealH-Cas_{}", "RevealT-Cas_{}", "RevealH-Par_{}", "RevealT-Par_{}" and
+   "RevealH-Cas_o", "RevealT-Cas_o", "RevealH-Par_o", "RevealT-Par_o". *)
+and gath_equ_ph3 equivs =
+  match equivs with
+    [] -> []
+  | (e::es) -> (match e with
+                  Term_ent (op, id, sp, ad) -> e
+                | Term_una (op, t1) -> e
+                | Term_bin (WEDGE, Term_una ( STAR, Term_ent (NIL, "", "", ad) ), t_r) -> t_r
+                | Term_bin (WEDGE, t_l, Term_una ( STAR, Term_ent (NIL, "", "", ad) )) -> t_l
+                | Term_bin (VEE, Term_una ( STAR, Term_ent (NIL, "", "", ad) ), t_r) -> t_r
+                | Term_bin (VEE, t_l, Term_una ( STAR, Term_ent (NIL, "", "", ad) )) -> t_l
+                | Term_bin (WEDGE, Term_una ( OPT, Term_ent (NIL, "", "", ad) ), t_r) -> t_r
+                | Term_bin (WEDGE, t_l, Term_una ( OPT, Term_ent (NIL, "", "", ad) )) -> t_l
+                | Term_bin (VEE, Term_una ( OPT, Term_ent (NIL, "", "", ad) ), t_r) -> t_r
+                | Term_bin (VEE, t_l, Term_una ( OPT, Term_ent (NIL, "", "", ad) )) -> t_l
+                | Term_bin (_, _, _) -> e ) :: (gath_equ_ph3 es)
+
+
+(* gathering by "PhonyH-Cas_{}", "PhonyT-Cas_{}", "PhonyH-Par_{}", "PhonyT-Par_{}" and
+   "PhonyH-Cas_o", "PhonyT-Cas_o", "PhonyH-Par_o", "PhonyT-Par_o".  *)
+and gath_equ_ph4 equivs =
+  let rec max_addr_term ter =
+    match ter with
+      Term_ent (_, _, _, ad) -> ad
+    | Term_una (_, t1) -> max_addr_term t1
+    | Term_bin (_, tl, tr) -> let max_l = (max_addr_term tl) in
+                              let max_r = (max_addr_term tr)
+                              in
+                              if (max_l > max_r) then max_l else max_r
+  in
+  match equivs with
+    [] -> []
+  | (e::es) ->
+     let bumped_ones = (match e with
+                          Term_bin (WEDGE, Term_una( STAR, Term_ent (NIL, "", "", ad) ), _) -> e
+                        | _ -> Term_bin (WEDGE, Term_una( STAR, Term_ent (NIL, "", "", (max_addr_term e) + 1) ), e))
+                       :: (match e with
+                             Term_bin (WEDGE, _, Term_una( STAR, Term_ent (NIL, "", "", ad) )) -> e
+                           | _ -> Term_bin (WEDGE, e, Term_una( STAR, Term_ent (NIL, "", "", (max_addr_term e) + 1)) ))
+                       :: (match e with
+                             Term_bin (VEE, Term_una( STAR, Term_ent (NIL, "", "", ad) ), _) -> e
+                           | _ -> Term_bin (VEE, Term_una( STAR, Term_ent (NIL, "", "", (max_addr_term e) + 1) ), e))
+                       :: (match e with
+                             Term_bin (VEE, _, Term_una( STAR, Term_ent (NIL, "", "", ad) )) -> e
+                           | _ -> Term_bin (VEE, e, Term_una( STAR, Term_ent (NIL, "", "", (max_addr_term e) + 1)) ))
+                       :: (match e with
+                             Term_bin (WEDGE, Term_una( OPT, Term_ent (NIL, "", "", ad) ), _) -> e
+                           | _ -> Term_bin (WEDGE, Term_una( OPT, Term_ent (NIL, "", "", (max_addr_term e) + 1) ), e))
+                       :: (match e with
+                             Term_bin (WEDGE, _, Term_una( OPT, Term_ent (NIL, "", "", ad) )) -> e
+                           | _ -> Term_bin (WEDGE, e, Term_una( OPT, Term_ent (NIL, "", "", (max_addr_term e) + 1)) ))
+                       :: (match e with
+                             Term_bin (VEE, Term_una( OPT, Term_ent (NIL, "", "", ad) ), _) -> e
+                           | _ -> Term_bin (VEE, Term_una( OPT, Term_ent (NIL, "", "", (max_addr_term e) + 1) ), e))
+                       :: (match e with
+                             Term_bin (VEE, _, Term_una( OPT, Term_ent (NIL, "", "", ad) )) -> [e]
+                           | _ -> [Term_bin (VEE, e, Term_una( OPT, Term_ent (NIL, "", "", (max_addr_term e) + 1) ))])
+     in
+     set_union term_ident bumped_ones (gath_equ_ph4 es);;
+
+
+
+
+let rec  merge_wedge tr_l tr_r =
+  let rec attach l tr_r =
+    match tr_r with
+      [] -> []
+    | r::rs -> (Term_bin (WEDGE, l, r))::(attach l rs)
+  in
+  match tr_l with
+    [] -> []
+  | l::ls -> (attach l tr_r) @ (merge_wedge ls tr_r);;
+
+
+let rec merge_vee tr_l tr_r =
+  let rec attach l tr_r =
+    match tr_r with
+      [] -> []
+    | r::rs -> (Term_bin (VEE, l, r))::(attach l rs)
+  in
+  match tr_l with
+    [] -> []
+  | l::ls -> (attach l tr_r) @ (merge_vee ls tr_r);;
+\end{verbatim}
+\end{tiny}
+
+
+\pagebreak
+lie\_match.ml:
+\begin{tiny}
+\begin{verbatim}
+open Lie_type
+open Lie_equiv
+
+
+
+let rec idx_lkup pat idx =
+  let addr pat =
+    match pat with
+      Pat_ent (_, _, ad) -> ad
+    | Pat_una (_, _, ad) -> ad
+    | Pat_bin (_, _, _, ad) -> ad
+  in
+  match idx with
+    [] -> -1
+  | i::is -> match i with
+               (ad, prefix_size) -> if (ad = (addr pat)) then prefix_size 
+                                    else (idx_lkup pat is);;
+
+
+(* fetches "equivs" the new equivalent set derived from next equivalent term over associativity,
+   and tries to infer with given rule "cmp" for each equivalents. *)
+let boost cmp (ter_orig, ena_bumpup) pat idx =
+  let oracle p t = (term_size t) >= (idx_lkup p idx)
+  in
+  let rec revolver cmp (ter_orig, ter_crnt, assoc_dir, ena_bumpup) pat =
+    if (oracle pat ter_orig) then    
+      let equivs = (equiv_terms (ter_orig, ter_crnt, assoc_dir) ena_bumpup) in
+      match equivs with
+        (None, _, _) -> None
+      | (Some ter', e_ts, dir) -> match (cmp e_ts pat) with
+                                    Some found -> Some found;
+                                  | None -> revolver cmp (ter_orig, (Some ter'), dir, ena_bumpup) pat
+    else None
+  in
+  revolver cmp (ter_orig, None, L2R, ena_bumpup) pat;;
+
+
+let binds_union bindings1 bindings2 =
+  match bindings1 with
+    []-> (match bindings2 with
+            [] -> []
+          | bs2 -> bs2)
+  | bs1 -> match bindings2 with
+             [] -> bs1
+           | bs2 -> (bs1 @ bs2);;
+
+
+(* namely, null predicator with slight inteligence. *)
+let rec is_nil t =
+  match t with
+    Term_ent (NIL, id, sp, ad) -> Some t
+  | Term_una (op, t1) ->
+     (match op with
+        STAR -> (match (is_nil t1) with
+                   Some (Term_ent (NIL, id, sp, ad)) -> Some (Term_una ( STAR, (Term_ent (NIL, id, sp, ad)) ))
+                 | Some t1' -> Some t1'
+                 | None -> None)
+      | CROSS -> is_nil t1
+      | STROK -> is_nil t1
+      | OPT -> (match (is_nil t1) with
+                  Some (Term_ent (NIL, id, sp, ad)) -> Some (Term_una ( OPT, (Term_ent (NIL, id, sp, ad)) ))
+                | Some t1' -> Some t1'
+                | None -> None)
+      | LEFT -> is_nil t1
+      | RIGHT -> is_nil t1
+      | _ -> None)
+  | Term_bin (op, t_l, t_r) ->
+     if ((op == WEDGE) || (op == VEE)) then
+       (match (is_nil t_l) with
+          None -> None
+        | Some nil_l -> (match (is_nil t_r) with
+                           None -> None
+                         | Some nil_r -> Some nil_r) )
+     else None
+  | _ -> None;;
+
+
+(* matching engine core, ITS THE COMPLEX OF WISDOM. *)
+let rec tourbillon ter pat idx =
+  (* Decides the rule to be applied for inference according to syntax of given pattern. *)
+  match pat with
+    (* for the case of "t_Atom0_impl" *)
+    Pat_ent (ENT, id, ad) -> (match (t_Atom0_impl ter pat idx) with
+                                None -> None
+                              | Some judge_matched -> Some judge_matched)
+  (* for the case of "t_Cas_impl" *)
+  | Pat_bin (WEDGE, p_1, p_2, ad) -> (match (t_Cas_impl ter pat idx) with
+                                        None -> None
+                                      | Some judge_matched -> Some judge_matched)
+  (* for the case of "t_Par_impl" *)
+  | Pat_bin (VEE, p_1, p_2, ad) -> (match (t_Par_impl ter pat idx) with
+                                      None -> None
+                                    | Some judge_matched -> Some judge_matched)
+  (* for the case of "t_Cat0_impl_nil" *)
+  | Pat_una (STAR, p_1, ad) -> (match (t_Cat0_impl_nil ter pat) with
+                                  Some judge_matched -> Some judge_matched
+                                | None -> (match (t_Cat0_impl_sol ter p_1 idx) with
+                                             Some judge_matched -> Some judge_matched
+                                           |  None -> (match (t_Cat0_impl_infty ter p_1 idx) with
+                                                         None -> None
+                                                       | Some judge_matched -> Some judge_matched) ) )
+  (* for the case of "t_Cat1_impl_sol" *)
+  | Pat_una (CROSS, p_1, ad) -> (match (t_Cat1_impl_sol ter p_1 idx) with
+                                   Some judge_matched -> Some judge_matched
+                                 |  None -> (match (t_Cat1_impl_infty ter p_1 idx) with
+                                               None -> None
+                                             | Some judge_matched -> Some judge_matched) )
+  (* for the case of "t_Dup_impl_sol" *)
+  | Pat_una (STROK, p_1, ad) -> (match (t_Dup_impl_sol ter p_1 idx) with
+                                   Some judge_matched -> Some judge_matched
+                                 |  None -> (match (t_Dup_impl_infty ter p_1 idx) with
+                                               None -> None
+                                             | Some judge_matched -> Some judge_matched) )
+  (* for the case of "t_Opt_xtend_nil" *)
+  | Pat_una (OPT, p_1, ad) -> (match (t_Opt_xtend_nil ter pat idx) with
+                                 Some judge_matched -> Some judge_matched
+                               | None -> (match (t_Opt_impl_sol ter p_1 idx) with
+                                            None -> None
+                                          | Some judge_matched -> Some judge_matched) )
+  (* for the case of "t_Alt_impl" *)
+  | Pat_bin (ALT, p_L, p_R, ad) -> (match (t_Alt_impl ter pat idx) with
+                                      None -> None
+                                    | Some judge_matched -> Some judge_matched)
+  | _ -> raise (Illegal_pat_detected (pat, __LINE__, __FILE__))
+
+
+and t_Atom0_impl ter pat idx =
+  let rec cmp_atomic t pat =
+    match pat with
+      Pat_ent (ENT, p_id, p_ad) ->
+       (match t with   
+          Term_ent (ENT, t_id, t_sp, t_ad) -> if (t_id = p_id) then Some t else None
+        | _ -> None)
+    | _ -> raise (Illegal_pat_detected (pat, __LINE__, __FILE__))
+  and match_atomic tl pat =
+    match tl with
+      [] -> None
+    | (x::xs) -> match (cmp_atomic x pat) with
+                   Some found -> Some {ter = ter; equ = found; pat = pat; fin = FIN_GND; bindings = []}
+                 | None -> match_atomic xs pat
+  in
+  boost match_atomic (ter, false) pat idx
+
+
+and t_Cas_impl ter pat idx =
+  let rec cmp_cat t pat =
+    match pat with
+      Pat_bin (WEDGE, p_1, p_2, ad) ->
+       (match t with
+          Term_bin (WEDGE, t_l, t_r) ->
+           let r_1st = (tourbillon t_l p_1 idx)
+           in
+           (match r_1st with
+            | None -> None
+            | Some b_1st -> let r_2nd = (tourbillon t_r p_2 idx)
+                            in
+                            (match r_2nd with
+                             | None -> None
+                             | Some b_2nd ->
+                                let bindings' = (binds_union [b_1st] [b_2nd])
+                                in
+                                (match bindings' with
+                                   [] -> raise (Illformed_bindings_detected (t, pat, __LINE__, __FILE__))
+                                 | b -> let e = Term_bin (WEDGE, b_1st.ter, b_2nd.ter) in
+                                        Some {ter = ter; equ = e; pat = pat; fin = FIN_WEDGE; bindings = b} )
+                            )
+           )
+        | _ -> None
+       )
+    | _ -> raise (Illegal_pat_detected (pat, __LINE__, __FILE__))
+  and match_cat tl pat =
+    match tl with
+      [] -> None
+    | (x::xs) -> match (cmp_cat x pat) with
+                   Some found -> Some found
+                 | None -> match_cat xs pat
+  in
+  boost match_cat (ter, true) pat idx
+
+
+and t_Par_impl ter pat idx =
+  let rec cmp_par t pat =
+    match pat with
+      Pat_bin (VEE, p_1, p_2, ad) ->
+       (match t with
+          Term_bin (VEE, t_l, t_r) ->
+           let r_1st = (tourbillon t_l p_1 idx)
+           in
+           (match r_1st with
+            | None -> None
+            | Some b_1st -> let r_2nd = (tourbillon t_r p_2 idx)
+                            in
+                            (match r_2nd with
+                             | None -> None
+                             | Some b_2nd ->
+                                let bindings' = (binds_union [b_1st] [b_2nd])
+                                in
+                                (match bindings' with
+                                   [] -> raise (Illformed_bindings_detected (t, pat, __LINE__, __FILE__))
+                                 | b -> let e = Term_bin (VEE, b_1st.ter, b_2nd.ter) in
+                                        Some {ter = ter; equ = e; pat = pat; fin = FIN_VEE; bindings = b} )
+                            )
+           )
+        | _ -> None
+       )
+    | _ -> raise (Illegal_pat_detected (pat, __LINE__, __FILE__))
+  and match_par tl pat =
+    match tl with
+      [] -> None
+    | (x::xs) -> match (cmp_par x pat) with
+                   Some found -> Some found
+                 | None -> match_par xs pat
+  in
+  boost match_par (ter, true) pat idx
+
+
+and t_Cat0_impl_nil ter pat =
+  match (is_nil ter) with
+    None -> None
+  | Some v ->
+     let v' = (match v with
+                 Term_una ( STAR, Term_ent (NIL, id, sp, ad) ) -> v
+               | Term_una ( OPT, Term_ent (NIL, id, sp, ad) ) -> Term_una ( STAR, Term_ent (NIL, id, sp, ad) )
+               | _ -> raise (Illformed_equterm_detected (v, pat, __LINE__, __FILE__)) )
+     in
+     Some {ter = ter; equ = v'; pat = pat; fin = FIN_NIL; bindings = []}
+
+
+and t_Cat0_impl_sol ter pat idx =
+  let rec match_sol tl pat =
+    match tl with
+      [] -> None
+    | (x::xs) -> match (tourbillon x pat idx) with
+                   Some found -> Some {ter = ter; equ = found.ter; pat = (Pat_una (STAR, found.pat, -1)); fin = FIN_SOL; bindings = [found]}
+                 | None -> match_sol xs pat
+  in
+  boost match_sol (ter, true) pat idx
+
+
+and t_Cat0_impl_infty ter pat idx =
+  let disbumping ter =
+    match ter with
+      Term_bin (WEDGE, Term_una ( STAR, Term_ent (NIL, "", "", ad) ), t_t) ->
+       (match t_t with
+          Term_bin (WEDGE, t_t_h, t_t_t) -> Some (t_t_h, t_t_t)
+        | _ -> None)
+    | Term_bin (WEDGE, t_h, t_t) -> Some (t_h, t_t)
+    | _ -> None
+  in
+  let rec cmp_cat0 t pat =
+    match (disbumping t) with
+      Some (t_h, t_t) ->
+       let r_h = (tourbillon t_h pat idx)
+       in
+       (match r_h with
+        | None -> None
+        | Some b_h -> let r_t = (tourbillon t_t (Pat_una (STAR, pat, -1)) idx)
+                      in
+                      (match r_t with
+                       | None -> None
+                       | Some b_t -> let bindings' = (binds_union [b_h] b_t.bindings)
+                                     in
+                                     (match bindings' with
+                                        [] -> raise (Illformed_bindings_detected (t, pat, __LINE__, __FILE__))
+                                      | b -> let e = Term_bin (WEDGE, b_h.ter, b_t.equ)
+                                             in
+                                             Some {ter = ter; equ = e; pat = Pat_una (STAR, pat, -1); fin = FIN_INFTY; bindings = b} )
+                      )
+       )
+    | _ -> None
+  and match_cat0 tl pat =
+    match tl with
+      [] -> None
+    | (x::xs) -> match (cmp_cat0 x pat) with
+                   Some found -> Some found
+                 | None -> match_cat0 xs pat
+  in
+  boost match_cat0 (ter, true) pat idx
+
+
+and t_Cat1_impl_sol ter pat idx =
+  let rec match_sol tl pat =
+    match tl with
+      [] -> None
+    | (x::xs) -> match (tourbillon x pat idx) with
+                   Some found -> Some {ter = ter; equ = found.ter; pat = (Pat_una (CROSS, found.pat, -1)); fin = FIN_SOL; bindings = [found]}
+                 | None -> match_sol xs pat
+  in
+  boost match_sol (ter, true) pat idx
+
+
+and t_Cat1_impl_infty ter pat idx =
+  let disbumping ter =
+    match ter with
+      Term_bin (WEDGE, Term_una ( STAR, Term_ent (NIL, "", "", ad) ), t_t) ->
+       (match t_t with
+          Term_bin (WEDGE, t_t_h, t_t_t) -> Some (t_t_h, t_t_t)
+        | _ -> None)
+    | Term_bin (WEDGE, t_h, t_t) -> Some (t_h, t_t)
+    | _ -> None
+  in
+  let rec cmp_cat1 t pat =
+    match (disbumping t) with
+      Some (t_h, t_t) ->
+       let r_h = (tourbillon t_h pat idx)
+       in
+       (match r_h with
+        | None -> None
+        | Some b_h -> let r_t = (tourbillon t_t (Pat_una (CROSS, pat, -1)) idx)
+                      in
+                      (match r_t with
+                       | None -> None
+                       | Some b_t -> let bindings' = (binds_union [b_h] b_t.bindings)
+                                     in
+                                     (match bindings' with
+                                        [] -> raise (Illformed_bindings_detected (t, pat, __LINE__, __FILE__))
+                                      | b -> let e = Term_bin (WEDGE, b_h.ter, b_t.equ)
+                                             in
+                                             Some {ter = ter; equ = e; pat = Pat_una (CROSS, pat, -1); fin = FIN_INFTY; bindings = b}
+                                     )
+                      )
+       )
+    | _ -> None
+  and match_cat1 tl pat =
+    match tl with
+      [] -> None
+    | (x::xs) -> match (cmp_cat1 x pat) with
+                   Some found -> Some found
+                 | None -> match_cat1 xs pat
+  in
+  boost match_cat1 (ter, true) pat idx
+
+
+and t_Dup_impl_sol ter pat idx =
+  let rec match_sol tl pat =
+    match tl with
+      [] -> None
+    | (x::xs) -> match (tourbillon x pat idx) with
+                   Some found -> Some {ter = ter; equ = found.ter; pat = (Pat_una (STROK, found.pat, -1)); fin = FIN_SOL; bindings = [found]}
+                 | None -> match_sol xs pat
+  in
+  boost match_sol (ter, true) pat idx
+
+
+and t_Dup_impl_infty ter pat idx =
+  let disbumping ter =
+    match ter with
+      Term_bin (VEE, Term_una ( STAR, Term_ent (NIL, "", "", ad) ), t_t) ->
+       (match t_t with
+          Term_bin (VEE, t_t_h, t_t_t) -> Some (t_t_h, t_t_t)
+        | _ -> None)
+    | Term_bin (VEE, t_h, t_t) -> Some (t_h, t_t)
+    | _ -> None
+  in
+  let rec cmp_dup t pat =
+    match (disbumping t) with
+      Some (t_h, t_t) ->
+       let r_h = (tourbillon t_h pat idx)
+       in
+       (match r_h with
+        | None -> None
+        | Some b_h -> let r_t = (tourbillon t_t (Pat_una (STROK, pat, -1)) idx)
+                      in
+                      (match r_t with
+                       | None -> None
+                       | Some b_t -> let bindings' = (binds_union [b_h] b_t.bindings)
+                                     in
+                                     (match bindings' with
+                                        [] -> raise (Illformed_bindings_detected (t, pat, __LINE__, __FILE__))
+                                      | b -> let e = Term_bin (VEE, b_h.ter, b_t.equ)
+                                             in
+                                             Some {ter = ter; equ = e; pat = Pat_una (STROK, pat, -1); fin = FIN_INFTY; bindings = b}
+                                     )
+                      )
+       )
+    | _ -> None
+  and match_dup tl pat =
+    match tl with
+      [] -> None
+    | (x::xs) -> match (cmp_dup x pat) with
+                   Some found -> Some found
+                 | None -> match_dup xs pat
+  in
+  boost match_dup (ter, true) pat idx
+
+
+and t_Opt_xtend_nil ter pat idx =
+  match (is_nil ter) with
+    None -> None
+  | Some v -> let v' = (match v with
+                        | Term_una ( STAR, Term_ent (NIL, id, sp, ad) ) -> Term_una ( OPT, Term_ent (NIL, id, sp, ad) )
+                        | Term_una ( OPT, Term_ent (NIL, id, sp, ad) ) -> v
+                        | _ -> raise (Illformed_equterm_detected (v, pat, __LINE__, __FILE__)) )
+              in
+              Some {ter = ter; equ = v'; pat = pat; fin = FIN_NIL; bindings = []}
+
+
+and t_Opt_impl_sol ter pat idx =
+  let rec match_sol tl pat =
+    match tl with
+      [] -> None
+    | (x::xs) -> match (tourbillon x pat idx) with
+                   Some found -> Some {ter = ter; equ = found.ter; pat = (Pat_una (OPT, found.pat, -1)); fin = FIN_SOL; bindings = [found]}
+                 | None -> match_sol xs pat
+  in
+  boost match_sol (ter, true) pat idx
+
+
+and t_Alt_impl ter pat idx =
+  let rec cmp_alt t pat =
+    match pat with
+      Pat_bin (ALT, p_L, p_R, ad) ->
+       let r_L = (tourbillon t p_L idx)
+       in
+       (match r_L with
+          Some b_L -> Some {ter = ter; equ = b_L.ter; pat = pat; fin = FIN_L; bindings = [b_L]}
+        | None -> let r_R = (tourbillon t p_R idx)
+                  in
+                  (match r_R with
+                   | Some b_R -> Some {ter = t; equ = b_R.ter; pat = pat; fin = FIN_R; bindings = [b_R]}
+                   | None -> None
+                  )
+       )
+    | _ -> raise (Illegal_pat_detected (pat, __LINE__, __FILE__))
+  and match_alt tl pat =
+    match tl with
+      [] -> None
+    | (x::xs) -> match (cmp_alt x pat) with
+                   Some found -> Some found
+                 | None -> match_alt xs pat
+  in
+  boost match_alt (ter, true) pat idx;;
+
+
+
+
+let first pat =
+  let rec gath_prefix p =
+    let is_nil prefix = pat_ident prefix (Pat_ent (NIL, "", -1))
+    in
+    match p with
+      Pat_ent (ENT, id, ad) -> p
+    | Pat_bin (WEDGE, p_1, p_2, ad) -> let fir_1 = (gath_prefix p_1) in
+                                       let fir_2 = (gath_prefix p_2) in
+                                       if (is_nil fir_1) then
+                                         if (is_nil fir_2) then Pat_ent (NIL, "", -1) else fir_2
+                                       else
+                                         if (is_nil fir_2) then fir_1 else Pat_bin (WEDGE, fir_1, fir_2, -1)
+    | Pat_bin (VEE, p_1, p_2, ad) -> let fir_1 = (gath_prefix p_1) in
+                                     let fir_2 = (gath_prefix p_2) in
+                                     if (is_nil fir_1) then
+                                       if (is_nil fir_2) then Pat_ent (NIL, "", -1) else fir_2
+                                     else
+                                       if (is_nil fir_2) then fir_1 else Pat_bin (VEE, fir_1, fir_2, -1)
+    | Pat_una (STAR, p_1, ad) -> Pat_ent (NIL, "", -1)
+    | Pat_una (CROSS, p_1, ad) -> gath_prefix p_1
+    | Pat_una (STROK, p_1, ad) -> gath_prefix p_1
+    | Pat_una (OPT, p_1, ad) -> Pat_ent (NIL, "", -1)
+    | Pat_bin (ALT, p_L, p_R, ad) -> let fir_L = (gath_prefix p_L) in
+                                     let fir_R = (gath_prefix p_R) in
+                                     if (pat_size fir_L) >= (pat_size fir_R) then fir_L else fir_R
+    | _ -> raise (Illegal_pat_detected (pat, __LINE__, __FILE__))
+  in
+  gath_prefix pat;;
+
+
+let rec perf_index pat =
+  match pat with
+    Pat_ent (ENT, id, ad) -> [(ad, pat_size (first pat))]
+  | Pat_bin (WEDGE, p_1, p_2, ad) -> (perf_index p_1) @ (perf_index p_2) @ [(ad, pat_size (first pat))]
+  | Pat_bin (VEE, p_1, p_2, ad) -> (perf_index p_1) @ (perf_index p_2) @ [(ad, pat_size (first pat))]
+  | Pat_una (STAR, p_1, ad) -> (perf_index p_1) @ [(ad, pat_size (first pat))]
+  | Pat_una (CROSS, p_1, ad) -> (perf_index p_1) @ [(ad, pat_size (first pat))]
+  | Pat_una (STROK, p_1, ad) -> (perf_index p_1) @ [(ad, pat_size (first pat))]
+  | Pat_una (OPT, p_1, ad) -> (perf_index p_1) @ [(ad, pat_size (first pat))]
+  | Pat_bin (ALT, p_1, p_2, ad) -> (perf_index p_1) @ (perf_index p_2) @ [(ad, pat_size (first pat))]
+  | _ -> raise (Illegal_pat_detected (pat, __LINE__, __FILE__));;
+
+
+let rec curve pat ad =
+  match pat with
+    Pat_ent (ENT, id, _) -> (Pat_ent (ENT, id, ad), ad)
+  | Pat_bin (WEDGE, p_1, p_2, _) -> let r1 = (curve p_1 ad) in
+                                    (match r1 with
+                                       (p_1', ad_1') -> let r2 = (curve p_2 (ad_1' + 1)) in
+                                                        (match r2 with
+                                                           (p_2', ad_2') -> (Pat_bin (WEDGE, p_1', p_2', (ad_2' + 1)), (ad_2' + 1)) )
+                                    )
+  | Pat_bin (VEE, p_1, p_2, _) -> let r1 = (curve p_1 ad) in
+                                    (match r1 with
+                                       (p_1', ad_1') -> let r2 = (curve p_2 (ad_1' + 1)) in
+                                                        (match r2 with
+                                                           (p_2', ad_2') -> (Pat_bin (VEE, p_1', p_2', (ad_2' + 1)), (ad_2' + 1)) )
+                                    )
+  | Pat_una (STAR, p_1, _) -> (match (curve p_1 ad) with
+                                 (p_1', ad') -> (Pat_una (STAR, p_1', (ad' + 1)), (ad' + 1)) )
+  | Pat_una (CROSS, p_1, _) -> (match (curve p_1 ad) with
+                                  (p_1', ad') -> (Pat_una (CROSS, p_1', (ad' + 1)), (ad' + 1)) )
+  | Pat_una (STROK, p_1, _) -> (match (curve p_1 ad) with
+                                  (p_1', ad') -> (Pat_una (STROK, p_1', (ad' + 1)), (ad' + 1)) )
+  | Pat_una (OPT, p_1, _) -> (match (curve p_1 ad) with
+                                (p_1', ad') -> (Pat_una (OPT, p_1', (ad' + 1)), (ad' + 1)) )
+  | Pat_bin (ALT, p_L, p_R, _) -> let rL = (curve p_L ad) in
+                                  (match rL with
+                                     (p_L', ad_L') -> let rR = (curve p_R (ad_L' + 1)) in
+                                                      (match rR with
+                                                         (p_R', ad_R') -> (Pat_bin (ALT, p_L', p_R', (ad_R' + 1)), (ad_R' + 1)) )
+                                  )
+  | _ -> raise (Illegal_pat_detected (pat, __LINE__, __FILE__));;
+
+
+let typematch cli =
+  match cli with
+    None -> None
+  | Some CLI (ter, pat) -> match (curve pat 1) with
+                             (pat', _) -> tourbillon ter pat' (perf_index pat');;
+\end{verbatim}
+\end{tiny}
+
+
+\pagebreak
+lie\_trans.ml:
+\begin{tiny}
+\begin{verbatim}
+open Lie_type
+
+
+let rec bindings_sub bindings1 bindings2 =
+  let rec rid b hd bl =
+    let ident b1 b2 =
+      match b1 with
+        {ter = t_1} -> match b2 with
+                         {ter = t_2} -> (t_1 = t_2)
+    in
+    match bl with
+      [] -> hd
+    | (x::xs) -> if (ident x b) then (hd @ xs) else (rid b (hd @ [x]) xs)
+  in
+  match bindings1 with
+    [] -> bindings2
+  | (b::bs) -> bindings_sub bs (rid b [] bindings2);;
+
+
+let lkup_bindings ter bindings =
+  let rec descend ter binding =
+    match binding with
+      {ter = t; bindings = bindings'} -> if (term_ident t ter) then (Some binding)
+                                        else (traverse ter bindings')
+  and traverse ter bindings =
+    match bindings with
+      [] -> None
+    | (b::bs) -> let found = (descend ter b)
+                 in
+                 match found with
+                   Some binding -> found
+                 | None -> (traverse ter bs)
+  in
+  traverse ter bindings;;
+
+
+let rec synthesize binding = 
+  match binding with
+    {ter = t; equ = t_e; pat = p; fin = fin_sym; bindings = bindings'} ->
+    (match fin_sym with
+       FIN_GND -> t_e
+     | FIN_DEF -> t_e
+     | FIN_NIL -> t_e
+     | FIN_WEDGE -> (match t_e with
+                       Term_bin (WEDGE, e_l, e_r) -> resolv_bin WEDGE t (e_l, e_r) p bindings'
+                     | _ -> raise (Illformed_equterm_detected (t_e, p, __LINE__, __FILE__)) )
+     | FIN_VEE -> (match t_e with
+                     Term_bin (VEE, e_l, e_r) -> resolv_bin VEE t (e_l, e_r) p bindings'
+                   | _ -> raise (Illformed_equterm_detected (t_e, p, __LINE__, __FILE__)) )
+     | FIN_SOL -> let t1's_binding = (lkup_bindings t_e bindings')
+                  in (match t1's_binding with
+                        Some b_1 -> synthesize b_1
+                      | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+     | FIN_INFTY -> (match t_e with
+                       Term_bin (WEDGE, e_h, e_t') -> resolv_n'ary WEDGE t (e_h, e_t') p bindings'
+                     | Term_bin (VEE, e_h, e_t') -> resolv_n'ary VEE t (e_h, e_t') p bindings'
+                     | _ -> raise (Illformed_equterm_detected (t_e, p, __LINE__, __FILE__)) )
+     | FIN_L -> let t1's_binding = (lkup_bindings t_e bindings')
+                in (match t1's_binding with
+                      Some b_l -> synthesize b_l
+                    | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+     | FIN_R -> let t1's_binding = (lkup_bindings t_e bindings')
+                in (match t1's_binding with
+                      Some b_r -> synthesize b_r
+                    | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+    )
+
+
+and resolv_bin op ter (e_l, e_r) pat bindings' = 
+  let e_l's_binding = (lkup_bindings e_l bindings') in
+  let e_r's_binding = (lkup_bindings e_r bindings')
+  in
+  match e_l's_binding with
+    Some b_l -> (match e_r's_binding with
+                   Some b_r -> Term_bin (op, (synthesize b_l), (synthesize b_r))
+                  | None -> raise (Illformed_bindings_detected (ter, pat, __LINE__, __FILE__)) )
+  | None -> raise (Illformed_bindings_detected (ter, pat, __LINE__, __FILE__))
+
+
+and resolv_n'ary op ter (e_l, e_r) pat bindings' = 
+  let e_l's_binding = (lkup_bindings e_l bindings')
+  in
+  match e_l's_binding with
+    Some b_l ->
+     let bindings'' = (bindings_sub [b_l] bindings')
+     in (match bindings'' with
+           (b_t'::bs) -> (match bs with
+                            [] -> Term_bin (op, (synthesize b_l), (synthesize b_t'))
+                          | b_t_t'' ->
+                             let b_t = {ter = e_r; equ = e_r; pat = pat; fin = FIN_INFTY; bindings = bindings''}
+                             in (Term_bin (op, (synthesize b_l), (synthesize b_t))) )
+         | _ -> raise (Illformed_bindings_detected (ter, pat, __LINE__, __FILE__))
+        )
+  | None -> raise (Illformed_bindings_detected (ter, pat, __LINE__, __FILE__));;
+
+
+let matched_form judgement =
+  match judgement with
+    None -> None
+  | Some binding -> Some [(synthesize binding)];;
+
+
+let rec resolv pat judgement =
+  let combine r_h r_tl =
+    match r_h with
+      None -> r_tl
+    | Some ts_h -> (match r_tl with
+                      None -> r_h
+                    | Some ts_tl -> Some (ts_h @ ts_tl) )
+  in
+  let rec walk bl =
+    match bl with
+      [] -> None
+    | (b::bs) -> combine (resolv pat (Some b)) (walk bs)
+  in
+  match judgement with
+    None -> None
+  | Some binding -> match binding with
+                      {ter = t; pat = p; bindings = bindings'} ->
+                      if (pat_ident pat p) then (matched_form (Some binding))
+                      else
+                        (match p with
+                           Pat_ent (ENT, id, ad) -> None
+                         | Pat_bin (WEDGE, p_1, p_2, ad) ->
+                            (match bindings' with
+                               (b_1::b_2::[]) -> let r_1 = (resolv pat (Some b_1))
+                                                 in (match r_1 with
+                                                       None -> (resolv pat (Some b_2))
+                                                     | Some ts_1 -> (match (resolv pat (Some b_2)) with
+                                                                       None -> r_1
+                                                                     | Some ts_2 -> Some (ts_1 @ ts_2) )
+                                                    )
+                             | _ -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+                         | Pat_bin (VEE, p_1, p_2, ad) ->
+                            (match bindings' with
+                               (b_1::b_2::[]) -> let r_1 = (resolv pat (Some b_1))
+                                                 in (match r_1 with
+                                                       None -> (resolv pat (Some b_2))
+                                                     | Some ts_1 -> (match (resolv pat (Some b_2)) with
+                                                                       None -> r_1
+                                                                     | Some ts_2 -> Some (ts_1 @ ts_2) )
+                                                    )
+                             | _ -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+                         | Pat_una (STAR, p_1, ad) -> walk bindings'
+                         | Pat_una (CROSS, p_1, ad) -> walk bindings'
+                         | Pat_una (STROK, p_1, ad) -> walk bindings'
+                         | Pat_una (OPT, p_1, ad) ->
+                            (match bindings' with
+                               [] -> None
+                             | (b_opt::[]) -> resolv pat (Some b_opt)
+                             | _ -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+                         | Pat_bin (ALT, p_L, p_R, ad) ->
+                            (match bindings' with
+                               (b_alt::[]) -> resolv pat (Some b_alt)
+                             | _ -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+                         | _ -> raise (Illegal_pat_detected (p, __LINE__, __FILE__))
+                        );;
+
+
+let rec canonicalize judgement = 
+  match judgement with
+    {ter = t; equ = t_e; pat = p; fin = fin_sym; bindings = bindings'} ->
+    (match fin_sym with
+       FIN_GND -> t_e
+     | FIN_DEF -> t_e
+     | FIN_NIL -> t_e
+     | FIN_WEDGE -> (match t_e with
+                       Term_bin (WEDGE, e_1, e_2) ->
+                        (match (lkup_bindings e_1 bindings') with
+                           Some b_1 -> let c_1 = (canonicalize b_1)
+                                       in
+                                       (match (lkup_bindings e_2 bindings') with
+                                          Some b_2 -> let c_2 = (canonicalize b_2) in Term_bin (WEDGE, c_1, c_2)
+                                        | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__))
+                                       )
+                         | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__))
+                        )
+                     | _ -> raise (Illformed_equterm_detected (t_e, p, __LINE__, __FILE__))
+                    )
+     | FIN_VEE -> (match t_e with
+                     Term_bin (VEE, e_1, e_2) ->
+                      (match (lkup_bindings e_1 bindings') with
+                         Some b_1 -> let c_1 = (canonicalize b_1)
+                                     in
+                                     (match (lkup_bindings e_2 bindings') with
+                                        Some b_2 -> let c_2 = (canonicalize b_2) in Term_bin (VEE, c_1, c_2)
+                                      | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__))
+                                     )
+                       | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__))
+                      )
+                   | _ -> raise (Illformed_equterm_detected (t_e, p, __LINE__, __FILE__))
+                  )
+     | FIN_SOL -> (match p with
+                     Pat_una (STAR, p1, ad) -> (match (lkup_bindings t_e bindings') with
+                                                  Some b -> Term_una (STAR, (canonicalize b))
+                                                | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+                   | Pat_una (CROSS, p1, ad) -> (match (lkup_bindings t_e bindings') with
+                                                   Some b -> Term_una (CROSS, (canonicalize b))
+                                                 | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+                   | Pat_una (STROK, p1, ad) -> (match (lkup_bindings t_e bindings') with
+                                                   Some b -> Term_una (STROK, (canonicalize b))
+                                                 | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+                   | Pat_una (OPT, p1, ad) -> (match (lkup_bindings t_e bindings') with
+                                                 Some b -> Term_una (OPT, (canonicalize b))
+                                               | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+                   | _ -> raise (Illegal_pat_detected (p, __LINE__, __FILE__))
+                  )
+     | FIN_INFTY -> (match p with
+                       Pat_una (STAR, p1, ad) ->
+                        (match t_e with
+                           Term_bin (WEDGE, e_h, e_t) ->
+                            (match (lkup_bindings e_h bindings') with
+                               Some b_h -> (match (lkup_bindings e_t bindings') with
+                                              Some b_t -> Term_bin ( STAR, (canonicalize b_h), (canonicalize b_t) )
+                                            | None -> (match (bindings_sub [b_h] bindings') with
+                                                         [] -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__))
+                                                       | b_ts -> Term_bin ( STAR, (canonicalize b_h), (canon_cat0 t e_t p b_ts) ) )
+                                                       
+                                           )
+                             | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+                         | _ -> raise (Illformed_equterm_detected (t_e, p, __LINE__, __FILE__))
+                        )
+                     | Pat_una (CROSS, p1, ad) ->
+                        (match t_e with
+                           Term_bin (WEDGE, e_h, e_t) ->
+                            (match (lkup_bindings e_h bindings') with
+                               Some b_h -> (match (lkup_bindings e_t bindings') with
+                                              Some b_t -> Term_bin ( CROSS, (canonicalize b_h), (canonicalize b_t) )
+                                            | None -> (match (bindings_sub [b_h] bindings') with
+                                                         [] -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__))
+                                                        | b_ts -> Term_bin ( CROSS, (canonicalize b_h), (canon_cat1 t e_t p b_ts) ) )
+                                           )
+                             | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+                         | _ -> raise (Illformed_equterm_detected (t_e, p, __LINE__, __FILE__))
+                        )
+                     | Pat_una (STROK, p1, ad) ->
+                        (match t_e with
+                           Term_bin (VEE, e_h, e_t) ->
+                            (match (lkup_bindings e_h bindings') with
+                               Some b_h -> (match (lkup_bindings e_t bindings') with
+                                              Some b_t -> Term_bin ( STROK, (canonicalize b_h), (canonicalize b_t) )
+                                            | None -> (match (bindings_sub [b_h] bindings') with
+                                                         [] -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__))
+                                                        | b_ts -> Term_bin ( STROK, (canonicalize b_h), (canon_dup t e_t p b_ts) ) )
+                                           )
+                             | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+                         | _ -> raise (Illformed_equterm_detected (t_e, p, __LINE__, __FILE__))
+                        )
+                     | _ -> raise (Illegal_pat_detected (p, __LINE__, __FILE__))
+                    )
+     | FIN_L -> (match (lkup_bindings t_e bindings') with
+                   Some b -> Term_una (LEFT, (canonicalize b))
+                 | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+     | FIN_R -> (match (lkup_bindings t_e bindings') with
+                   Some b -> Term_una (RIGHT, (canonicalize b))
+                 | None -> raise (Illformed_bindings_detected (t, p, __LINE__, __FILE__)) )
+    )
+
+
+and canon_cat0 t_orig t p b =
+  match (lkup_bindings t b) with
+    Some b' -> Term_una ( STAR, (canonicalize b') )
+  | None -> (match t with
+               Term_bin (WEDGE, t_h, t_t) ->
+                (match (lkup_bindings t_h b) with
+                   Some b_h -> (match (bindings_sub [b_h] b) with
+                                  [] -> raise (Illformed_bindings_detected (t_orig, p, __LINE__, __FILE__))
+                                | b_ts -> let c_tl = (canon_cat0 t_orig t_t p b_ts)
+                                          in
+                                          (match c_tl with
+                                             Term_una (STAR, tl) -> Term_bin (STAR, (canonicalize b_h), tl)
+                                           | _ -> Term_bin (STAR, (canonicalize b_h), c_tl) )
+                               )
+                 | None -> Term_una ( STAR, t )
+                )
+             | _ -> Term_una ( STAR, t )
+            )
+
+
+and canon_cat1 t_orig t p b =
+  match (lkup_bindings t b) with
+    Some b' -> Term_una ( CROSS, (canonicalize b') )
+  | None -> (match t with
+               Term_bin (WEDGE, t_h, t_t) ->
+                (match (lkup_bindings t_h b) with
+                   Some b_h -> (match (bindings_sub [b_h] b) with
+                                  [] -> raise (Illformed_bindings_detected (t_orig, p, __LINE__, __FILE__))
+                                | b_ts -> let c_tl = (canon_cat1 t_orig t_t p b_ts)
+                                          in
+                                          (match c_tl with
+                                             Term_una (CROSS, tl) -> Term_bin (CROSS, (canonicalize b_h), tl)
+                                           | _ -> Term_bin (CROSS, (canonicalize b_h), c_tl) )
+                               )
+                 | None -> Term_una ( CROSS, t )
+                )
+             | _ -> Term_una ( CROSS, t )
+            )
+    
+
+and canon_dup t_orig t p b =
+  match (lkup_bindings t b) with
+    Some b' -> Term_una ( STROK, (canonicalize b') )
+  | None -> (match t with
+               Term_bin (VEE, t_h, t_t) ->
+                (match (lkup_bindings t_h b) with
+                   Some b_h -> (match (bindings_sub [b_h] b) with
+                                  [] -> raise (Illformed_bindings_detected (t_orig, p, __LINE__, __FILE__))
+                                | b_ts -> let c_tl = (canon_dup t_orig t_t p b_ts)
+                                          in
+                                          (match c_tl with
+                                             Term_una (STROK, tl) -> Term_bin (STROK, (canonicalize b_h), tl)
+                                           | _ -> Term_bin (STROK, (canonicalize b_h), c_tl) )
+                               )
+                 | None -> Term_una ( STROK, t )
+                )
+             | _ -> Term_una ( STROK, t )
+            );;
+
+
+
+let canon judgement =
+  match judgement with
+    Some j -> Some (canonicalize j)
+  | None  -> None;;
+\end{verbatim}
+\end{tiny}
+
+
+\pagebreak
+lie\_lexer.mll
+\begin{tiny}
+\begin{verbatim}
+{
+  open Lie_parser
+  exception Lex_err of string
+}
+(* lexer definition *)
+let space = [' ' '\t' '\n' '\r']
+let digit = ['0'-'9']
+let alpha = ['A'-'Z' 'a'-'z']
+let alnum = alpha | digit | ['#']
+
+rule token = parse
+  (* operators *)
+  | "<-" { LEFT }
+  | "->" { RIGHT }
+  | '&' { WEDGE }
+  | '|' { VEE }
+  | '*' { STAR }
+  | '+' { CROSS }
+  | '?' { OPT }
+  | '!' { STROK }
+  | '%' { ALT }
+  | '(' { LPAR }
+  | ')' { RPAR }
+  | '{' { LBRA }
+  | '}' { RBRA }
+  | '[' { LSQB }
+  | ']' { RSQB }
+  | '<' { LBIL }
+  | '>' { RBIL }
+  | ',' { COMMA }
+  | ':' { COLON }
+  | '_' { SPECIFIER }
+  
+  (* entities *)
+  | alpha alnum* { IDENT1 (Lexing.lexeme lexbuf) }
+  | alnum+ {IDENT0 (Lexing.lexeme lexbuf) }
+  | space+ { token lexbuf }
+  | eof { EOI }
+  | _ {
+        let msg = Printf.sprintf
+                    "unknown token %s near characters %d-%d"
+                    (Lexing.lexeme lexbuf)
+                    (Lexing.lexeme_start lexbuf)
+                    (Lexing.lexeme_end lexbuf)
+        in
+        raise (Lex_err msg)
+      }
+\end{verbatim}
+\end{tiny}
+
+
+\pagebreak
+lie\_parser.mly:
+\begin{tiny}
+\begin{verbatim}
+%{
+open Lie_type
+%}
+%token <string> IDENT0
+%token <string> IDENT1
+%token LBRA RBRA
+%token LSQB RSQB
+%token LBIL RBIL
+%token COMMA
+%token LPAR RPAR
+
+%Token COLON
+%token SPECIFIER
+
+%token STAR CROSS STROK OPT
+%token ALT
+%token LEFT
+%token RIGHT
+%token WEDGE VEE
+%token EOI
+
+%right WEDGE VEE
+%right ALT
+%nonassoc STAR CROSS STROK OPT
+%nonassoc LEFT RIGHT
+
+%start main
+%type <Lie_type.cli> main
+
+%%
+main:
+  expr_term COLON expr_pat EOI    { CLI ($1, $3) }
+;
+
+expr_term:
+  IDENT1    { Term_ent (ENT, $1, "", -1 ) }
+| IDENT1 SPECIFIER IDENT0    { Term_ent (ENT, $1, $3, -1 ) }
+| IDENT1 SPECIFIER IDENT1    { Term_ent (ENT, $1, $3, -1 ) }
+| LPAR expr_term RPAR    { $2 }
+| LBRA RBRA    { Term_una ( STAR, Term_ent (NIL, "", "", -1) ) }
+| STAR    { Term_una ( OPT, Term_ent (NIL, "", "", -1) ) }
+| LBRA expr_term RBRA    { Term_una (STAR, $2) }
+| LBRA expr_term COMMA expr_star_lst RBRA    { Term_bin (STAR, $2, $4) }
+| LSQB expr_term RSQB    { Term_una (CROSS, $2) }
+| LSQB expr_term COMMA expr_cross_lst RSQB    { Term_bin (CROSS, $2, $4) }
+| LBIL expr_term RBIL    { Term_una (STROK, $2) }
+| LBIL expr_term COMMA expr_strok_lst RBIL    { Term_bin (STROK, $2, $4) }
+| expr_term OPT    { Term_una (OPT, $1) }
+| expr_term LEFT    { Term_una (LEFT, $1) }
+| expr_term RIGHT    { Term_una (RIGHT, $1) }
+| expr_term WEDGE expr_term    { Term_bin (WEDGE, $1, $3) }
+| expr_term VEE expr_term    { Term_bin (VEE, $1, $3) }
+;
+
+expr_star_lst:
+  expr_term    { $1 }
+| expr_term COMMA expr_star_lst    { Term_bin (STAR, $1, $3) }
+;
+expr_cross_lst:
+  expr_term    { $1 }
+| expr_term COMMA expr_cross_lst    { Term_bin (CROSS, $1, $3) }
+;
+expr_strok_lst:
+  expr_term    { $1 }
+| expr_term COMMA expr_strok_lst    { Term_bin (STROK, $1, $3) }
+;
+  
+expr_pat:
+  IDENT1    { Pat_ent (ENT, $1, -1) }
+| LPAR expr_pat RPAR    { $2 }
+| expr_pat STAR    { Pat_una (STAR, $1, -1) }
+| expr_pat CROSS    { Pat_una (CROSS, $1, -1) }
+| expr_pat STROK    { Pat_una (STROK, $1, -1) }
+| expr_pat OPT    { Pat_una (OPT, $1, -1) }
+| expr_pat ALT expr_pat    { Pat_bin (ALT, $1, $3, -1) }
+| expr_pat WEDGE expr_pat    { Pat_bin (WEDGE, $1, $3, -1) }
+| expr_pat VEE expr_pat    { Pat_bin (VEE, $1, $3, -1) }
+\end{verbatim}
+\end{tiny}
+
+\pagebreak
+Makefile
+\begin{tiny}
+\begin{verbatim}
+CC = ocamlc
+CFLAGS = -c
+
+YACC = ocamlyacc
+LEX = ocamllex
+
+RM = rm
+TOUCH = touch
+
+EXEC_SUFFIX = cmo
+EXP_SUFFIX = cmi
+
+
+built_done: lie_type.$(EXEC_SUFFIX) lie_equiv.$(EXEC_SUFFIX) lie_match.$(EXEC_SUFFIX) lie_trans.$(EXEC_SUFFIX)\
+            compiler_done lie_main.$(EXEC_SUFFIX)
+	$(TOUCH) $@
+compiler_done: lie_type.$(EXEC_SUFFIX) lie_parser.$(EXP_SUFFIX) lie_parser.$(EXEC_SUFFIX) lie_lexer.$(EXEC_SUFFIX)
+	$(TOUCH) $@
+
+
+lie_type.$(EXEC_SUFFIX): lie_type.ml
+	$(CC) $(CFLAGS) $<
+lie_equiv.$(EXEC_SUFFIX): lie_equiv.ml
+	$(CC) $(CFLAGS) $<
+lie_match.$(EXEC_SUFFIX): lie_match.ml
+	$(CC) $(CFLAGS) $<
+lie_trans.$(EXEC_SUFFIX): lie_trans.ml
+	$(CC) $(CFLAGS) $<
+lie_main.$(EXEC_SUFFIX): lie_main.ml
+	$(CC) $(CFLAGS) $<
+
+lie_parser.$(EXEC_SUFFIX): lie_parser.ml
+	$(CC) $(CFLAGS) $<
+lie_parser.$(EXP_SUFFIX): lie_parser.mli
+	$(CC) $(CFLAGS) $<
+lie_parser.ml: lie_parser.mly
+	$(YACC) $<
+lie_parser.mli: lie_parser.mly
+	$(YACC) $<
+
+lie_lexer.$(EXEC_SUFFIX): lie_lexer.ml
+	$(CC) $(CFLAGS) $<
+lie_lexer.ml: lie_lexer.mll
+	$(LEX) $<
+
+
+.PHONY: clean
+clean:
+	-$(RM) a.out
+	-$(RM) compiler_done built_done
+	-$(RM) lie_lexer.ml lie_parser.ml lie_parser.mli
+	-$(RM) *.cmi
+	-$(RM) *.cmo
+	-$(RM) *~
+	-$(RM) \#*
+\end{verbatim}
+\end{tiny}
+
+\vspace{5mm}
+.ocamlinit:
+\begin{tiny}
+\begin{verbatim}
+#load "lie_type.cmo";;
+#load "lie_equiv.cmo";;
+#load "lie_match.cmo";;
+#load "lie_trans.cmo";;
+#load "lie_lexer.cmo";;
+#load "lie_parser.cmo";;
+#load "lie_main.cmo";;
+open List
+open Lie_type;;
+open Lie_equiv;;
+open Lie_match;;
+open Lie_trans;;
+open Lie_main;;
+\end{verbatim}
+\end{tiny}
 
 \end{document}

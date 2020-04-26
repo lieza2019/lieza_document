@@ -1419,7 +1419,7 @@ as follows.
         }{
           \bigl\{(t, t_0, \mathcal{R}_0, \text{\it gnd}, \phi ) \bigr\}
            \vdash t \triangleright \mathcal{R}_0          
-        }  &  \!\! \text{\it (T-Atom0-canon)}
+        }  &  \!\! \text{\it (T-Atom0-xtend)}
       \end{array}  \\
       \\
       
@@ -1434,7 +1434,7 @@ as follows.
         }{
           \bigl\{(t, t_1, \mathcal{R}_1, \text{\it def}, \phi ) \bigr\}
            \vdash t \triangleright \mathcal{R}_1
-        }  &  \!\! \text{\it (T-Atom1-canon)}
+        }  &  \!\! \text{\it (T-Atom1-xtend)}
       \end{array}  \\
       \\
       
@@ -2689,9 +2689,7 @@ and related functions are as follows.
     \wedge t_{{1r}_r}, t_2 ) = \mathpzc{assoc_{cas}R}(t_{1r}, t_2)$.
     For the case of $t'_{{1r}_l} \wedge t'_{{1r}_r} = t_{1r} \wedge t_2$,
     which implies the facts of $t'_{{1r}_l} = t_{1r}$ and
-    $t'_{{1r}_r} = t_2$. Therefore prerequisite isn't satisfied, i.e.
-    $t_1 \wedge t_2 = t'_1 \wedge t'_2$ where
-    $t'_1 \wedge t'_2 = \mathpzc{assoc_{cas}R}(t_1, t_2)$, since
+    $t'_{{1r}_r} = t_2$. Therefore prerequisite isn't satisfied, since
     $\mathpzc{assoc_{cas}R}(t_1, t_2) =
     (t_{1l} \wedge t'_{{1r}_l}) \wedge t'_{{1r}_r} =
     (t_{1l} \wedge t_{1r}) \wedge t_2 = t_1 \wedge t_2$.
@@ -2699,8 +2697,8 @@ and related functions are as follows.
     we know $\mathpzc{size}(t_{1r}) > \mathpzc{size}(t'_{{1r}_l})$ by
     induction hypothesis, thus
     $\mathpzc{size}(t_1) = \mathpzc{size}(t_{1l} \wedge t_{1r})
-    = \mathpzc{size}(t_{1l}) \wedge \mathpzc{size}(t_{1r}) + 1
-    > \mathpzc{size}(t_{1l}) \wedge \mathpzc{size}(t'_{{1r}_l}) + 1
+    = \mathpzc{size}(t_{1l}) + \mathpzc{size}(t_{1r}) + 1
+    > \mathpzc{size}(t_{1l}) + \mathpzc{size}(t'_{{1r}_l}) + 1
     = \mathpzc{size}(t_{1l} \wedge t'_{{1r}_l})
     = \mathpzc{size}(t'_1)$ as desired.
     $\Box$
@@ -3177,7 +3175,7 @@ and related functions are as follows.
   \]
   \begin{Proof}
     The only definitions on $\mathpzc{Equ}$, which we should consider
-    for termination, is $\mathpzc{Assoc}_\wedge(t_1, t_2)$e and
+    for termination, is $\mathpzc{Assoc}_\wedge(t_1, t_2)$ and
     $\mathpzc{Assoc}_\vee(t_1, t_2)$.
     
     For former, termination on both $\mathpzc{assoc_{cas}R}(t_1, t_2)$ and
@@ -3192,18 +3190,18 @@ and related functions are as follows.
     $t'_1 \wedge t'_2 = \mathpzc{assoc_{cas}R}(t_1, t_2)$, from
     def. of $\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R})$.
     
-    Otherwise, i.e. $t'_1 \wedge t'_2 \neq t_1 \wedge t_2$, we know that
-    $\mathpzc{size}(t_1) > \mathpzc{size}(t'_1)$ from Property
+    Otherwise, i.e. $t'_1 \wedge t'_2 \neq t_1 \wedge t_2$, where we know
+    that $\mathpzc{size}(t_1) > \mathpzc{size}(t'_1)$ from Property
     \ref{property2_for_semiequiv_impl}. Therefore we conclude that
     $\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{L_2R})$ has
-    termination, since $\mathpzc{Assoc}_\wedge(t'_1, t'_2, \mathpzc{L_2R})$
-    also has termination from induction hypothesis.
+    termination, since it contradicts the fact that
+    $t'_1$ of $\mathpzc{Assoc}_\wedge(t'_1, t'_2, \mathpzc{L_2R})$ has
+    finite and positve size.
 
     We can find termination on
     $\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{R_2L})$ similarly, with
     Property \ref{property4_for_semiequiv_impl} according to the
-    ordering scheme over $(t_1, t_2)$ for
-    $\mathpzc{Assoc}_\wedge(t_1, t_2, \mathpzc{R_2L})$ as below.
+    ordering scheme over $(t_1, t_2)$ as below.
     \[ \begin{array}{l}
       (t_1, t_2) > (t'_1, t'_2) \quad
        \text{\it if}\ \mathpzc{size}(t_2) > \mathpzc{size}(t'_2)  \\
@@ -3346,7 +3344,7 @@ and related functions are as follows.
         }{
           \bigl\{(t, t_0, \mathcal{R}_0, \text{\it gnd}, \phi ) \bigr\}
            \vdash t \blacktriangleright \mathcal{R}_0
-        }  &  \!\! \text{\it (T-Atom0-canon)}
+        }  &  \!\! \text{\it (T-Atom0-impl)}
       \end{array}  \\
       \\
       
@@ -3361,7 +3359,7 @@ and related functions are as follows.
         }{
           \bigl\{(t, t_1, \mathcal{R}_1, \text{\it def}, \phi ) \bigr\}
            \vdash t \blacktriangleright \mathcal{R}_1
-        }  &  \!\! \text{\it (T-Atom1-canon)}
+        }  &  \!\! \text{\it (T-Atom1-impl)}
       \end{array}  \\
       \\
       
@@ -3439,8 +3437,10 @@ and related functions are as follows.
                \quad \Lambda_t \vdash t_t \blacktriangleright {\mathcal{R}_1}^*
                 \quad \mathpzc{Dom}(\Lambda_h) \cap \mathpzc{Dom}(\Lambda_t)
                 = \phi  \\
-               \{\} \wedge (t_h \wedge t_t) \in \mathpzc{Equ}(t)\;\;
-                \text{\it or}\;\; t_h \wedge t_t \in \mathpzc{Equ}(t) \\
+               t' \in \mathpzc{Equ}(t)\ \text{\it s.t.}\
+                t' = \{\} \wedge (t_h \wedge t_t)\;\; \text{\it or}\;\;
+                 \circ \wedge \,(t_h \wedge t_t) \;\; \text{\it or}\;\;
+                  t_h \wedge t_t  \\
                \left\{\begin{array}{l}
                  \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
                   \Lambda_h \cup \Lambda_t) = \phi\quad \text{\it if}\
@@ -3490,8 +3490,14 @@ and related functions are as follows.
                \quad \Lambda_t \vdash t_t \blacktriangleright {\mathcal{R}_1}^+
                 \quad \mathpzc{Dom}(\Lambda_h) \cap \mathpzc{Dom}(\Lambda_t)
                  = \phi  \\
-              \{\} \wedge (t_h \wedge t_t) \in \mathpzc{Equ}(t)\;\;
-               \text{\it or}\;\; t_h \wedge t_t \in \mathpzc{Equ}(t)  \\
+               t' \in \mathpzc{Equ}(t)\ \text{\it s.t.}\
+                t' = \!\!\begin{array}[t]{l}
+                  \{\} \wedge (t_h \wedge t_t)\;\; \text{\it or}\;\;
+                   \circ \wedge \,(t_h \wedge t_t)  \\
+                  (t_h \wedge t_t) \wedge \{\} \;\; \text{\it or}\;\;
+                   (t_h \wedge t_t) \wedge \circ  \;\; \text{\it or}\;\;
+                    t_h \wedge t_t
+                \end{array}  \\
               \left\{\begin{array}{l}
                 \{t,\, t_h \wedge t'_t \} \cap \mathpzc{Dom}(
                  \Lambda_h \cup \Lambda_t) = \phi\quad \text{\it if}\
@@ -3536,8 +3542,14 @@ and related functions are as follows.
                 {\mathcal{R}_1}^\downarrow
                  \quad \mathpzc{Dom}(\Lambda_h) \cap \mathpzc{Dom}(\Lambda_t)
                   = \phi  \\
-              \{\} \vee (t_h \vee t_t) \in \mathpzc{Equ}(t)\;\;
-               \text{\it or}\;\; t_h \vee t_t \in \mathpzc{Equ}(t)  \\
+              t' \in \mathpzc{Equ}(t)\ \text{\it s.t.}\
+               t' = \!\!\begin{array}[t]{l}
+                 \{\} \vee (t_h \vee t_t)\;\; \text{\it or}\;\;
+                  \circ \vee \,(t_h \vee t_t)  \\
+                 (t_h \vee t_t) \vee \{\} \;\; \text{\it or}\;\;
+                  (t_h \vee t_t) \vee \circ  \;\; \text{\it or}\;\;
+                   t_h \vee t_t
+               \end{array}  \\
               \left\{\begin{array}{l}
                 \{t,\, t_h \vee t'_t \} \cap \mathpzc{Dom}(
                  \Lambda_h \cup \Lambda_t) = \phi\quad \text{\it if}\
@@ -3647,19 +3659,37 @@ and related functions are as follows.
     We suppose $t_t$ s.t.
     $\{\} \wedge (t_h \wedge t_t) \in \mathpzc{Equ}(t)$. Then we find
     $\mathpzc{size}(t_t) < \mathpzc{size}(t)$ since
-    $\mathpzc{size}\bigl(\{\} \bigr) + \bigl(\mathpzc{size}(t_h) +
+    $\mathpzc{size}\bigl(\{\} \wedge (t_t \wedge t_t) \bigr) =
+    \mathpzc{size}\bigl(\{\} \bigr) + \bigl(\mathpzc{size}(t_h) +
     \mathpzc{size}(t_t) + 1\bigr) + 1 =
-    \mathpzc{size}\bigl(\{\} \wedge (t_t \wedge t_t) \bigr) \le
+    \bigl(\mathpzc{size}(t_h) + \mathpzc{size}(t_t) + 1\bigr) + 2 \le
     \mathpzc{size}(t) + 2$ from Property
     \ref{size_restriction_on_equivalency_of_implementation},
     which implies the fact of
-    $({\mathcal{R}_1}^*, t_t) < ({\mathcal{R}_1}^*, t)$. Therefore
+    $\mathpzc{size}(t_t) < \mathpzc{size}(t)$. Therefore
     we conclude that
     $\Lambda_t \vdash t_t \blacktriangleright {\mathcal{R}_1}^*$ has
-    termination from induction hypothesis.
+    termination from induction hypothesis for
+    $({\mathcal{R}_1}^*, t_t) < ({\mathcal{R}_1}^*, t)$.
+    The similar case of $\circ \wedge (t_h \wedge t_t)$ is also from
+    reasoning as above case.
     
-    The other case, which is $t_h \wedge t_t\in \mathpzc{Equ}(t)$, is
-    also from similar reasoning as above case.
+    For the cases that $t' \in \mathpzc{Equ}(t)$ s.t.
+    $t = t'' \wedge \{\}$ or $t = t'' \wedge \circ$ for some $t''$, where
+    we let $t_t = \{\}$ or $\circ$ repectively, from def. of
+    (T-Cat01-impl-$\infty$). Consequently
+    ${\Lambda}_t \vdash t_t \blacktriangleright {\mathcal{R}_1}^*$ from
+    (T-Cat0-impl-nil) and (T-Opt-impl-nil), for
+    $\{\} \in \mathpzc{Equ}\bigl(\{\} \bigr)$ and
+    $\circ \in \mathpzc{Equ}(\circ)$ as respective.
+    
+    For other cases, where we let as $t_h \wedge t_t\in \mathpzc{Equ}(t)$
+    such that both $t_h$ and $t_t$ are neither $\{\}$ nor $\circ$.
+    That excludes the cases where the rules, which increases original term
+    size with phony elements of $\{\}$ and $\circ$, are applied on $t$ of
+    $\mathpzc{Equ}(t)$ to induce $t_h \wedge t_t$.
+    Accordingly $\mathpzc{size}(t_t) < \mathpzc{size}(t)$, we found from
+    def. of $\mathpzc{Equ}(t)$.
     
     Case of (T-Cat1-impl-$\infty$) and (T-Dup-impl-$\infty$) are
     similar to the case of (T-Cat0-impl-$\infty$).

@@ -3682,14 +3682,23 @@ and related functions are as follows.
     (T-Cat0-impl-nil) and (T-Opt-impl-nil), for
     $\{\} \in \mathpzc{Equ}\bigl(\{\} \bigr)$ and
     $\circ \in \mathpzc{Equ}(\circ)$ as respective.
-    
-    For other cases, where we let as $t_h \wedge t_t\in \mathpzc{Equ}(t)$
-    such that both $t_h$ and $t_t$ are neither $\{\}$ nor $\circ$.
+
+    Finally we cosider other cases, where we let as
+    $t_h \wedge t_t\in \mathpzc{Equ}(t)$ such that
+    both $t_h$ and $t_t$ are neither $\{\}$ nor $\circ$.
     That excludes the cases where the rules, which increases original term
     size with phony elements of $\{\}$ and $\circ$, are applied on $t$ of
     $\mathpzc{Equ}(t)$ to induce $t_h \wedge t_t$.
     Accordingly $\mathpzc{size}(t_t) < \mathpzc{size}(t)$, we found from
-    def. of $\mathpzc{Equ}(t)$.
+    def. of $\mathpzc{Equ}(t)$. Particularly for the case that the last
+    applied rules are
+    $\mathpzc{Assoc}_\wedge(t_1, t_2) \subseteq \mathpzc{Equ}(t)$ and
+    $\mathpzc{Assoc}_\vee(t_1, t_2) \subseteq \mathpzc{Equ}(t)$ where $t$ is
+    $t_1 \wedge t_2$ and $t_1 \vee t_2$ respectively, see Property
+    \ref{size_restriction_on_equivalency_of_implementation} for the reason   
+    of $\mathpzc{size}(t') = \mathpzc{size}(t)$, where
+    $t' \in \mathpzc{Assoc}_\wedge(t_1, t_2)$ and
+    $t' \in \mathpzc{Assoc}_\vee(t_1, t_2)$ as respective.
     
     Case of (T-Cat1-impl-$\infty$) and (T-Dup-impl-$\infty$) are
     similar to the case of (T-Cat0-impl-$\infty$).
@@ -3867,7 +3876,8 @@ pattern, which is currently assigned to \verb|sr_trg|, on next command,
 And we can find that the last line depicts the subterm bound to the target
 pattern we specified correctly.
 
-Similar to above, we can access other internal subterms in her again.
+Similar to above, we can access other internal subterms in her cognition,
+again.
 \begin{verbatim}
 # let sr_rel = cli_pat (compile "* : (TLSR | TR)");;
 val sig_ctrl : Lie_type.pattern = ...

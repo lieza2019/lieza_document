@@ -5,7 +5,8 @@ lieza_spec.pdf: lieza_spec.dvi
 	$(DVI2PDF) $<
 
 lieza_spec.dvi: lieza_spec.tex
-	$(TEX) lieza_spec.tex
+	$(TEX) $<
+	$(TEX) $<
 
 
 .PHONY: clean

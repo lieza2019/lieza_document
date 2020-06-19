@@ -14,6 +14,15 @@ clean:
 	-$(RM) *.log
 	-$(RM) *.aux
 	-$(RM) *.dvi
+	-$(RM) *~
+	-$(RM) #*
+
+
+.PHONY: purge
+purge:
+	-$(RM) *.log
+	-$(RM) *.aux
+	-$(RM) *.dvi
 	-$(RM) *.pdf
 	-$(RM) *~
 	-$(RM) #*

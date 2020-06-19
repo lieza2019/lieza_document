@@ -1,11 +1,11 @@
 DVI2PDF = dvipdfmx
 TEX = platex --kanji=euc
 
-main.pdf: main.dvi
+lieza_spec.pdf: lieza_spec.dvi
 	$(DVI2PDF) $<
 
-main.dvi: main.tex canon.tex extended.tex implement.tex
-	$(TEX) main.tex
+lieza_spec.dvi: lieza_spec.tex
+	$(TEX) lieza_spec.tex
 
 
 .PHONY: clean
